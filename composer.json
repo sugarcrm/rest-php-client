@@ -1,5 +1,5 @@
 {
-  "name": "michaelj2324/sugarcrm-restv10-sdk",
+  "name": "sugarcrm/rest-php-client",
   "description": "An SDK for interacting with Sugar's REST v10 API.",
   "license": "Apache-2.0",
   "authors": [
