@@ -35,14 +35,14 @@ class Helpers {
     }
 
     /**
-     * Return the list of EntryPoints that come with the SDK
+     * Return the list of Endpoints that come with the SDK
      * @return array
      */
-    public static function getSDKEntryPointRegistry(){
+    public static function getSDKEndpointRegistry(){
         $entryPoints = array();
         require __DIR__.DIRECTORY_SEPARATOR.'registry.php';
         foreach ($entryPoints as $funcName => $className) {
-            $className = "SugarAPI\\SDK\\EntryPoint\\" . $className;
+            $className = "SugarAPI\\SDK\\Endpoint\\" . $className;
             $entryPoints[$funcName] = $className;
         }
         return $entryPoints;

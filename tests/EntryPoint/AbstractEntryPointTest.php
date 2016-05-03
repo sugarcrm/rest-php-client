@@ -3,7 +3,7 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint;
+namespace SugarAPI\SDK\Tests\Endpoint;
 
 use SugarAPI\SDK\Request\DELETE;
 use SugarAPI\SDK\Request\GET;
@@ -12,16 +12,16 @@ use SugarAPI\SDK\Request\POST;
 use SugarAPI\SDK\Request\POSTFile;
 use SugarAPI\SDK\Request\PUT;
 use SugarAPI\SDK\Response\JSON;
-use SugarAPI\SDK\Tests\Stubs\EntryPoint\EntryPointStub;
+use SugarAPI\SDK\Tests\Stubs\Endpoint\EndpointStub;
 use SugarAPI\SDK\Tests\Stubs\Response\ResponseStub;
 
 /**
- * Class AbstractEntryPointTest
- * @package SugarAPI\SDK\Tests\EntryPoint
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\Abstracts\AbstractEntryPoint
+ * Class AbstractEndpointTest
+ * @package SugarAPI\SDK\Tests\Endpoint
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\Abstracts\AbstractEndpoint
  * @group entrypoints
  */
-class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
+class AbstractEndpointTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -48,12 +48,12 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return EntryPointStub $Stub
+     * @return EndpointStub $Stub
      * @covers ::__construct
      * @group abstractEP
      */
     public function testConstructor(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $this->assertEquals('http://localhost/rest/v10/$test',$Stub->getUrl());
         $this->assertEquals(array(),$Stub->getOptions());
         $this->assertEmpty($Stub->getData());
@@ -61,7 +61,7 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($Stub->getResponse());
 
         unset($Stub);
-        $Stub = new EntryPointStub($this->url,$this->options);
+        $Stub = new EndpointStub($this->url,$this->options);
         $this->assertEquals($this->url.'foo',$Stub->getUrl());
         $this->assertEquals($this->options,$Stub->getOptions());
         $this->assertEmpty($Stub->getData());
@@ -72,8 +72,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testConstructor
      * @covers ::setOptions
      * @covers ::getOptions
@@ -94,8 +94,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testSetOptions
      * @covers ::setData
      * @covers ::getData
@@ -116,8 +116,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testSetData
      * @covers ::setRequest
      * @covers ::getRequest
@@ -151,8 +151,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testSetRequest
      * @covers ::setAuth
      * @covers ::authRequired
@@ -165,8 +165,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testSetAuth
      * @covers ::execute
      * @covers ::configureRequest
@@ -194,7 +194,7 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotEmpty($Stub->getResponse()->getInfo());
         unset($Stub);
 
-        $Stub = new EntryPointStub($this->url,$this->options);
+        $Stub = new EndpointStub($this->url,$this->options);
         $Stub->setRequest(new GET());
         $Stub->setAuth('1234');
         $Stub->execute($this->data);
@@ -206,8 +206,8 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param EntryPointStub $Stub
-     * @return EntryPointStub $Stub
+     * @param EndpointStub $Stub
+     * @return EndpointStub $Stub
      * @depends testExecute
      * @covers ::setResponse
      * @covers ::getResponse
@@ -225,7 +225,7 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
      * @group abstractEP
      */
     public function testSetUrl(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $Stub->setUrl($this->url."foo");
         $this->assertEquals($this->url."foo",$Stub->getUrl());
         $Stub->setAuth('1234a');
@@ -237,12 +237,12 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::verifyDataType
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\RequiredDataException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\RequiredDataException
      * @expectedExceptionMessageRegExp /Valid DataType is array/
      * @group abstractEP
      */
     public function testInvalidDataType(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $Stub->setOptions($this->options);
         $Stub->setRequest(new POST());
         $class = new \stdClass();
@@ -253,12 +253,12 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::verifyRequiredData
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\RequiredDataException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\RequiredDataException
      * @expectedExceptionMessageRegExp /Missing data for/
      * @group abstractEP
      */
     public function testInvalidData(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $Stub->setOptions($this->options);
         $Stub->setRequest(new POST());
         $Stub->setData(array());
@@ -267,12 +267,12 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::execute
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\InvalidRequestException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\InvalidRequestException
      * @expectedExceptionMessageRegExp /Request property not configured/
      * @group abstractEP
      */
     public function testInvalidRequest(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $Stub->setOptions($this->options);
         $Stub->setData($this->data);
         $Stub->execute();
@@ -280,12 +280,12 @@ class AbstractEntryPointTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::verifyUrl
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\InvalidURLException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\InvalidURLException
      * @expectedExceptionMessageRegExp /Configured URL is/
      * @group abstractEP
      */
     public function testInvalidURL(){
-        $Stub = new EntryPointStub($this->url);
+        $Stub = new EndpointStub($this->url);
         $Stub->setRequest(new POST());
         $Stub->execute($this->data);
     }

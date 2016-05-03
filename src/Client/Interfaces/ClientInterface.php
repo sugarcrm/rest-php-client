@@ -29,12 +29,12 @@ interface ClientInterface {
     public function getAPIUrl();
 
     /**
-     * Register Methods to EntryPoint objects on the SDK Client
+     * Register Methods to Endpoint objects on the SDK Client
      * @param $function - method/function name to be registered on the SDK Client
-     * @param $EntryPoint - EPInterface Class Name
+     * @param $Endpoint - EPInterface Class Name
      * @return $this
      */
-    public function registerEntryPoint($function,$EntryPoint);
+    public function registerEndpoint($function,$Endpoint);
 
     /**
      * Login to the configured SugarCRM server

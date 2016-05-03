@@ -3,14 +3,14 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint\POST;
+namespace SugarAPI\SDK\Tests\Endpoint\POST;
 
-use SugarAPI\SDK\EntryPoint\POST\ModuleRecordFileField;
+use SugarAPI\SDK\Endpoint\POST\ModuleRecordFileField;
 
 /**
  * Class ModuleRecordFileFieldTest
- * @package SugarAPI\SDK\Tests\EntryPoint\POST
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\POST\ModuleRecordFileField
+ * @package SugarAPI\SDK\Tests\Endpoint\POST
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\POST\ModuleRecordFileField
  * @group entryPoints
  */
 class ModuleRecordFileFieldTest extends \PHPUnit_Framework_TestCase {
@@ -97,7 +97,7 @@ class ModuleRecordFileFieldTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::configureData
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\RequiredOptionsException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\RequiredOptionsException
      * @expectedExceptionMessageRegExp /Options are required, when passing String for data/
      * @group sdkEP
      */

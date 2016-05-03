@@ -3,11 +3,11 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\Stubs\EntryPoint;
+namespace SugarAPI\SDK\Tests\Stubs\Endpoint;
 
-use SugarAPI\SDK\EntryPoint\Abstracts\DELETE\AbstractDeleteEntryPoint;
+use SugarAPI\SDK\Endpoint\Abstracts\DELETE\AbstractDeleteEndpoint;
 
-class DeleteEntryPointStub extends AbstractDeleteEntryPoint {
+class DeleteEndpointStub extends AbstractDeleteEndpoint {
 
     protected $_URL = '$test';
 

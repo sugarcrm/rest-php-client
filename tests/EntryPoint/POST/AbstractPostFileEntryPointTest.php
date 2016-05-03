@@ -3,16 +3,16 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint\POST;
+namespace SugarAPI\SDK\Tests\Endpoint\POST;
 
-use SugarAPI\SDK\Tests\Stubs\EntryPoint\PostFileEntryPointStub;
+use SugarAPI\SDK\Tests\Stubs\Endpoint\PostFileEndpointStub;
 
 /**
- * Class AbstractPostFileEntryPointTest
- * @package SugarAPI\SDK\Tests\EntryPoint\POST
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\Abstracts\POST\AbstractPostFileEntryPoint
+ * Class AbstractPostFileEndpointTest
+ * @package SugarAPI\SDK\Tests\Endpoint\POST
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostFileEndpoint
  */
-class AbstractPostFileEntryPointTest extends \PHPUnit_Framework_TestCase {
+class AbstractPostFileEndpointTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -39,12 +39,12 @@ class AbstractPostFileEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return PostFileEntryPointStub $Stub
+     * @return PostFileEndpointStub $Stub
      * @covers ::__construct
      * @group abstractEP
      */
     public function testConstructor(){
-        $Stub = new PostFileEntryPointStub($this->url);
+        $Stub = new PostFileEndpointStub($this->url);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\POSTFile',$Stub->getRequest());
         $this->assertEquals('http://localhost/rest/v10/$test',$Stub->getUrl());
         $this->assertEquals(array(),$Stub->getOptions());
@@ -52,7 +52,7 @@ class AbstractPostFileEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('SugarAPI\\SDK\\Response\\JSON',$Stub->getResponse());
 
         unset($Stub);
-        $Stub = new PostFileEntryPointStub($this->url,$this->options);
+        $Stub = new PostFileEndpointStub($this->url,$this->options);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\POSTFile',$Stub->getRequest());
         $this->assertEquals($this->url.'foo',$Stub->getUrl());
         $this->assertEquals($this->options,$Stub->getOptions());

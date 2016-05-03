@@ -62,10 +62,10 @@ class HelpersTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @test
-     * @covers ::getSDKEntryPointRegistry
+     * @covers ::getSDKEndpointRegistry
      * @group default
      */
-    public function testGetSDKEntryPointRegistry(){
-        $this->assertNotEmpty(Helpers::getSDKEntryPointRegistry());
+    public function testGetSDKEndpointRegistry(){
+        $this->assertNotEmpty(Helpers::getSDKEndpointRegistry());
     }
 }

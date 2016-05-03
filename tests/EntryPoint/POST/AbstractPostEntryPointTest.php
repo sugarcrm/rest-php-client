@@ -3,17 +3,17 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint\POST;
+namespace SugarAPI\SDK\Tests\Endpoint\POST;
 
-use SugarAPI\SDK\Tests\Stubs\EntryPoint\PostEntryPointStub;
+use SugarAPI\SDK\Tests\Stubs\Endpoint\PostEndpointStub;
 
 /**
- * Class AbstractEntryPointTest
- * @package SugarAPI\SDK\Tests\EntryPoint
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\Abstracts\POST\AbstractPostEntryPoint
+ * Class AbstractEndpointTest
+ * @package SugarAPI\SDK\Tests\Endpoint
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostEndpoint
  * @group entrypoints
  */
-class AbstractPostEntryPointTest extends \PHPUnit_Framework_TestCase {
+class AbstractPostEndpointTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -40,12 +40,12 @@ class AbstractPostEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return PostEntryPointStub $Stub
+     * @return PostEndpointStub $Stub
      * @covers ::__construct
      * @group abstractEP
      */
     public function testConstructor(){
-        $Stub = new PostEntryPointStub($this->url);
+        $Stub = new PostEndpointStub($this->url);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\POST',$Stub->getRequest());
         $this->assertEquals('http://localhost/rest/v10/$test',$Stub->getUrl());
         $this->assertEquals(array(),$Stub->getOptions());
@@ -53,7 +53,7 @@ class AbstractPostEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('SugarAPI\\SDK\\Response\\JSON',$Stub->getResponse());
 
         unset($Stub);
-        $Stub = new PostEntryPointStub($this->url,$this->options);
+        $Stub = new PostEndpointStub($this->url,$this->options);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\POST',$Stub->getRequest());
         $this->assertEquals($this->url.'foo',$Stub->getUrl());
         $this->assertEquals($this->options,$Stub->getOptions());

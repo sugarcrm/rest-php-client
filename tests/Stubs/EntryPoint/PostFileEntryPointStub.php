@@ -3,11 +3,11 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\Stubs\EntryPoint;
+namespace SugarAPI\SDK\Tests\Stubs\Endpoint;
 
-use SugarAPI\SDK\EntryPoint\Abstracts\POST\AbstractPostFileEntryPoint;
+use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostFileEndpoint;
 
-class PostFileEntryPointStub extends AbstractPostFileEntryPoint {
+class PostFileEndpointStub extends AbstractPostFileEndpoint {
 
     protected $_URL = '$test';
 

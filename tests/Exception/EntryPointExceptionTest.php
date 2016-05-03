@@ -5,15 +5,15 @@
 
 namespace SugarAPI\SDK\Tests\Exception;
 
-use SugarAPI\SDK\Exception\EntryPoint\EntryPointException;
+use SugarAPI\SDK\Exception\Endpoint\EndpointException;
 
 /**
- * Class EntryPointExceptionTest
+ * Class EndpointExceptionTest
  * @package SugarAPI\SDK\Tests\Exception
- * @coversDefaultClass SugarAPI\SDK\Exception\EntryPoint\EntryPointException
+ * @coversDefaultClass SugarAPI\SDK\Exception\Endpoint\EndpointException
  * @group exceptions
  */
-class EntryPointExceptionTest extends \PHPUnit_Framework_TestCase {
+class EndpointExceptionTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -36,9 +36,9 @@ class EntryPointExceptionTest extends \PHPUnit_Framework_TestCase {
     /**
      * @covers ::__construct
      * @group entryPointException
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\EntryPointException
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\EndpointException
      */
     public function testJson(){
-        throw new EntryPointException(get_called_class(),"Test");
+        throw new EndpointException(get_called_class(),"Test");
     }
 }

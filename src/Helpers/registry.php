@@ -5,7 +5,7 @@
 // @codeCoverageIgnoreStart
 
 $entryPoints = array(
-    //GET API EntryPoints
+    //GET API Endpoints
     'ping' => 'GET\\Ping',
     'getRecord' => 'GET\\ModuleRecord',
     'getAttachment' => 'GET\\ModuleRecordFileField',
@@ -15,7 +15,7 @@ $entryPoints = array(
     'me' => 'GET\\Me',
     'search' => 'GET\\Search',
 
-    //POST API EntryPoints
+    //POST API Endpoints
     'oauth2Token' => 'POST\\OAuth2Token',
     'oauth2Refresh' => 'POST\\RefreshToken',
     'createRecord' => 'POST\\Module',
@@ -26,11 +26,11 @@ $entryPoints = array(
     'linkRecords' => 'POST\\ModuleRecordLinkRecord',
     'bulk' => 'POST\\Bulk',
 
-    //PUT API EntryPoints
+    //PUT API Endpoints
     'updateRecord' => 'PUT\\ModuleRecord',
     'favorite' => 'PUT\\ModuleRecordFavorite',
 
-    //DELETE API EntryPoints
+    //DELETE API Endpoints
     'deleteRecord' => 'DELETE\\ModuleRecord',
     'unfavorite' => 'DELETE\\ModuleRecordFavorite',
     'deleteFile' => 'DELETE\\ModuleRecordFileField',

@@ -6,9 +6,9 @@
 namespace SugarAPI\SDK\Client\Abstracts;
 
 use SugarAPI\SDK\Client\Interfaces\ClientInterface;
-use SugarAPI\SDK\Exception\EntryPoint\EntryPointException;
+use SugarAPI\SDK\Exception\Endpoint\EndpointException;
 use SugarAPI\SDK\Helpers\Helpers;
-use SugarAPI\SDK\EntryPoint\POST\OAuth2Logout;
+use SugarAPI\SDK\Endpoint\POST\OAuth2Logout;
 use SugarAPI\SDK\Exception\Authentication\AuthenticationException;
 
 /**
@@ -83,7 +83,7 @@ abstract class AbstractClient implements ClientInterface {
     protected $expiration;
 
     /**
-     * The list of registered EntryPoints
+     * The list of registered Endpoints
      * @var array
      */
     protected $entryPoints = array();
@@ -93,7 +93,7 @@ abstract class AbstractClient implements ClientInterface {
         $this->setServer($server);
         $credentials = (empty($credentials)?$this->credentials:$credentials);
         $this->setCredentials($credentials);
-        $this->registerSDKEntryPoints();
+        $this->registerSDKEndpoints();
     }
 
     /**
@@ -166,13 +166,13 @@ abstract class AbstractClient implements ClientInterface {
     }
 
     /**
-     * Register the defined EntryPoints in SDK, located in src/EntryPoint/registry.php file
-     * @throws EntryPointException
+     * Register the defined Endpoints in SDK, located in src/Endpoint/registry.php file
+     * @throws EndpointException
      */
-    protected function registerSDKEntryPoints(){
-        $entryPoints = Helpers::getSDKEntryPointRegistry();
+    protected function registerSDKEndpoints(){
+        $entryPoints = Helpers::getSDKEndpointRegistry();
         foreach ($entryPoints as $funcName => $className){
-            $this->registerEntryPoint($funcName, $className);
+            $this->registerEndpoint($funcName, $className);
         }
     }
 
@@ -180,36 +180,36 @@ abstract class AbstractClient implements ClientInterface {
      * @param $funcName
      * @param $className
      * @return self
-     * @throws EntryPointException
+     * @throws EndpointException
      */
-    public function registerEntryPoint($funcName, $className){
+    public function registerEndpoint($funcName, $className){
         $implements = class_implements($className);
-        if (is_array($implements) && in_array('SugarAPI\SDK\EntryPoint\Interfaces\EPInterface',$implements)){
+        if (is_array($implements) && in_array('SugarAPI\SDK\Endpoint\Interfaces\EPInterface',$implements)){
             $this->entryPoints[$funcName] = $className;
         }else{
-            throw new EntryPointException($className,'Class must extend SugarAPI\SDK\EntryPoint\Interfaces\EPInterface');
+            throw new EndpointException($className,'Class must extend SugarAPI\SDK\Endpoint\Interfaces\EPInterface');
         }
         return $this;
     }
 
     /**
-     * Generates the EntryPoint objects based on a Method name that was called
+     * Generates the Endpoint objects based on a Method name that was called
      * @param $name
      * @param $params
      * @return mixed
-     * @throws EntryPointException
+     * @throws EndpointException
      */
     public function __call($name, $params){
         if (array_key_exists($name, $this->entryPoints)){
             $Class = $this->entryPoints[$name];
-            $EntryPoint = new $Class($this->apiURL, $params);
+            $Endpoint = new $Class($this->apiURL, $params);
 
-            if ($EntryPoint->authRequired() && $this->authenticated()){
-                $EntryPoint->setAuth($this->token->access_token);
+            if ($Endpoint->authRequired() && $this->authenticated()){
+                $Endpoint->setAuth($this->token->access_token);
             }
-            return $EntryPoint;
+            return $Endpoint;
         }else{
-            throw new EntryPointException($name,'Unregistered EntryPoint');
+            throw new EndpointException($name,'Unregistered Endpoint');
         }
     }
 

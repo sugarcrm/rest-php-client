@@ -6,7 +6,7 @@
 namespace SugarAPI\SDK;
 
 use SugarAPI\SDK\Client\Abstracts\AbstractClient;
-use SugarAPI\SDK\EntryPoint\Interfaces\EPInterface;
+use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
 
 /**
  * The default SDK Client Implemntation

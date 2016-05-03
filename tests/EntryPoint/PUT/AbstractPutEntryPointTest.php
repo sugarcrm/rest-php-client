@@ -3,17 +3,17 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint\PUT;
+namespace SugarAPI\SDK\Tests\Endpoint\PUT;
 
-use SugarAPI\SDK\Tests\Stubs\EntryPoint\PutEntryPointStub;
+use SugarAPI\SDK\Tests\Stubs\Endpoint\PutEndpointStub;
 
 /**
- * Class AbstractEntryPointTest
- * @package SugarAPI\SDK\Tests\EntryPoint
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\Abstracts\PUT\AbstractPutEntryPoint
+ * Class AbstractEndpointTest
+ * @package SugarAPI\SDK\Tests\Endpoint
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\Abstracts\PUT\AbstractPutEndpoint
  * @group entrypoints
  */
-class AbstractPutEntryPointTest extends \PHPUnit_Framework_TestCase {
+class AbstractPutEndpointTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -40,12 +40,12 @@ class AbstractPutEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return PutEntryPointStub $Stub
+     * @return PutEndpointStub $Stub
      * @covers ::__construct
      * @group abstractEP
      */
     public function testConstructor(){
-        $Stub = new PutEntryPointStub($this->url);
+        $Stub = new PutEndpointStub($this->url);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\PUT',$Stub->getRequest());
         $this->assertEquals('http://localhost/rest/v10/$test',$Stub->getUrl());
         $this->assertEquals(array(),$Stub->getOptions());
@@ -53,7 +53,7 @@ class AbstractPutEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('SugarAPI\\SDK\\Response\\JSON',$Stub->getResponse());
 
         unset($Stub);
-        $Stub = new PutEntryPointStub($this->url,$this->options);
+        $Stub = new PutEndpointStub($this->url,$this->options);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\PUT',$Stub->getRequest());
         $this->assertEquals($this->url.'foo',$Stub->getUrl());
         $this->assertEquals($this->options,$Stub->getOptions());

@@ -57,7 +57,7 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * @return ClientStub $Stub
      * @covers ::__construct
-     * @covers ::registerSDKEntryPoints
+     * @covers ::registerSDKEndpoints
      * @group abstractClient
      */
     public function testConstructor(){
@@ -200,42 +200,42 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * @param ClientStub
      * @depends testSetToken
-     * @covers ::registerEntryPoint
+     * @covers ::registerEndpoint
      * @covers ::__call
      * @group abstractClients
      * @return ClientStub
      */
-    public function testRegisterEntryPoint($Stub){
-        $Stub->registerEntryPoint('unitTest','SugarAPI\\SDK\\Tests\\Stubs\\EntryPoint\\GetEntryPointStub');
+    public function testRegisterEndpoint($Stub){
+        $Stub->registerEndpoint('unitTest','SugarAPI\\SDK\\Tests\\Stubs\\Endpoint\\GetEndpointStub');
         $UnitTestEP = $Stub->unitTest();
-        $this->assertInstanceOf('SugarAPI\\SDK\\Tests\\Stubs\\EntryPoint\\GetEntryPointStub',$UnitTestEP);
+        $this->assertInstanceOf('SugarAPI\\SDK\\Tests\\Stubs\\Endpoint\\GetEndpointStub',$UnitTestEP);
         return $Stub;
     }
 
     /**
      * @param ClientStub $Stub
-     * @depends testRegisterEntryPoint
-     * @covers ::registerEntryPoint
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\EntryPointException
-     * @expectedExceptionMessageRegExp /Class must extend SugarAPI\\SDK\\EntryPoint\\Interfaces\\EPInterface/
+     * @depends testRegisterEndpoint
+     * @covers ::registerEndpoint
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\EndpointException
+     * @expectedExceptionMessageRegExp /Class must extend SugarAPI\\SDK\\Endpoint\\Interfaces\\EPInterface/
      * @group abstractClients
      * @return ClientStub
      */
     public function testInvalidRegistration($Stub){
-        $Stub->registerEntryPoint('invalidEP','SugarAPI\SDK\SugarAPI');
+        $Stub->registerEndpoint('invalidEP','SugarAPI\SDK\SugarAPI');
         return $Stub;
     }
 
     /**
      * @param ClientStub $Stub
-     * @depends testRegisterEntryPoint
+     * @depends testRegisterEndpoint
      * @covers ::__call
-     * @expectedException SugarAPI\SDK\Exception\EntryPoint\EntryPointException
-     * @expectedExceptionMessageRegExp /Unregistered EntryPoint/
+     * @expectedException SugarAPI\SDK\Exception\Endpoint\EndpointException
+     * @expectedExceptionMessageRegExp /Unregistered Endpoint/
      * @group abstractClients
      * @return ClientStub
      */
-    public function testUnregisteredEntryPoint($Stub){
+    public function testUnregisteredEndpoint($Stub){
         $Stub->test();
         return $Stub;
     }

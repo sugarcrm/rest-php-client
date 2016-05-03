@@ -3,17 +3,17 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\EntryPoint\GET;
+namespace SugarAPI\SDK\Tests\Endpoint\GET;
 
-use SugarAPI\SDK\Tests\Stubs\EntryPoint\GetFileEntryPointStub;
+use SugarAPI\SDK\Tests\Stubs\Endpoint\GetFileEndpointStub;
 
 /**
- * Class AbstractEntryPointTest
- * @package SugarAPI\SDK\Tests\EntryPoint
- * @coversDefaultClass SugarAPI\SDK\EntryPoint\Abstracts\GET\AbstractGetFileEntryPoint
+ * Class AbstractEndpointTest
+ * @package SugarAPI\SDK\Tests\Endpoint
+ * @coversDefaultClass SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetFileEndpoint
  * @group entrypoints
  */
-class AbstractGetFileEntryPointTest extends \PHPUnit_Framework_TestCase {
+class AbstractGetFileEndpointTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
@@ -40,12 +40,12 @@ class AbstractGetFileEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return GetFileEntryPointStub $Stub
+     * @return GetFileEndpointStub $Stub
      * @covers ::__construct
      * @group abstractEP
      */
     public function testConstructor(){
-        $Stub = new GetFileEntryPointStub($this->url);
+        $Stub = new GetFileEndpointStub($this->url);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\GETFile',$Stub->getRequest());
         $this->assertEquals('http://localhost/rest/v10/$test',$Stub->getUrl());
         $this->assertEquals(array(),$Stub->getOptions());
@@ -53,7 +53,7 @@ class AbstractGetFileEntryPointTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('SugarAPI\\SDK\\Response\\File',$Stub->getResponse());
 
         unset($Stub);
-        $Stub = new GetFileEntryPointStub($this->url,$this->options);
+        $Stub = new GetFileEndpointStub($this->url,$this->options);
         $this->assertInstanceOf('SugarAPI\\SDK\\Request\\GET',$Stub->getRequest());
         $this->assertEquals($this->url.'foo',$Stub->getUrl());
         $this->assertEquals($this->options,$Stub->getOptions());
@@ -65,7 +65,7 @@ class AbstractGetFileEntryPointTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param GetFileEntryPointStub $Stub
+     * @param GetFileEndpointStub $Stub
      * @depends testConstructor
      * @covers ::downloadTo
      * @covers ::getDownloadDir

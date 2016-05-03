@@ -3,11 +3,11 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\Stubs\EntryPoint;
+namespace SugarAPI\SDK\Tests\Stubs\Endpoint;
 
-use SugarAPI\SDK\EntryPoint\Abstracts\AbstractEntryPoint;
+use SugarAPI\SDK\Endpoint\Abstracts\AbstractEndpoint;
 
-class EntryPointStub extends AbstractEntryPoint {
+class EndpointStub extends AbstractEndpoint {
 
     protected $_URL = '$test';
 
