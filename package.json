@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "name": "rest-php-client",
+  "description": "An SDK for interacting with Sugar's REST v10 API.",
+  "version": "1.1",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "phpunit || true",
+    "coverage": "phpunit --coverage-html=coverage || true",
+    "doc": "phpdoc -d ./src -t ./doc/ || true",
+    "quality": "phpcs --standard=./ruleset.xml src/ || true",
+    "all": "npm run coverage && npm run doc && npm run quality"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sugarcrm/rest-php-client"
+  },
+  "bugs": {
+    "url": "https://github.com/sugarcrm/rest-php-client/issues"
+  },
+  "homepage": "https://github.com/sugarcrm/rest-php-client"
+}
