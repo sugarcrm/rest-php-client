@@ -11,21 +11,23 @@ use SugarAPI\SDK\Response\Interfaces\ResponseInterface;
 interface EPInterface {
 
     /**
-     * Set the URL options on the Endpoint, such as Record ID
-     * @param array
+     * Set any options on the Endpoint, needed to manage the url, data, requests, response any logic really
+     * @param array $options
      * @return self
      */
     public function setOptions(array $options);
 
     /**
-     * Actually sets the data on the Endpoint, and on the Request object. Raw data is passed here
-     * @param $data
+     * Sets the data on the Endpoint Object, that will be passed to Request Object
+     * @param string $data
+     * @return self
      */
     public function setData($data);
 
     /**
      * Set the full URL that the Endpoint submits data to
      * @param $url
+     * @return self
      */
     public function setUrl($url);
 
@@ -45,7 +47,7 @@ interface EPInterface {
 
     /**
      * Configure OAuth Token on Header
-     * @param string
+     * @param mixed
      * @return self
      */
     public function setAuth($accessToken);

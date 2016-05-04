@@ -125,6 +125,7 @@ abstract class AbstractEndpoint implements EPInterface {
 
     /**
      * @inheritdoc
+     * @param string
      */
     public function setAuth($accessToken) {
         $this->accessToken = $accessToken;
