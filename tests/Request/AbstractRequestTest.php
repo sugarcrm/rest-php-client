@@ -58,11 +58,12 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('',$Stub->getType());
         $this->assertEmpty($Stub->getCurlResponse());
         $this->assertEmpty($Stub->getHeaders());
-        $this->assertEquals('SugarAPI-SDK-PHP',$Stub->getOptions()[CURLOPT_USERAGENT]);
-        $this->assertEquals(TRUE,$Stub->getOptions()[CURLOPT_HEADER]);
-        $this->assertEquals(CURL_HTTP_VERSION_1_0,$Stub->getOptions()[CURLOPT_HTTP_VERSION]);
-        $this->assertEquals(FALSE,$Stub->getOptions()[CURLOPT_SSL_VERIFYPEER]);
-        $this->assertEquals(FALSE,$Stub->getOptions()[CURLOPT_FOLLOWLOCATION]);
+        $options = $Stub->getOptions();
+        $this->assertEquals('SugarAPI-SDK-PHP',$options[CURLOPT_USERAGENT]);
+        $this->assertEquals(TRUE,$options[CURLOPT_HEADER]);
+        $this->assertEquals(CURL_HTTP_VERSION_1_0,$options[CURLOPT_HTTP_VERSION]);
+        $this->assertEquals(FALSE,$options[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertEquals(FALSE,$options[CURLOPT_FOLLOWLOCATION]);
         unset($Stub);
 
         $Stub = new RequestStub($this->url);
@@ -75,11 +76,12 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($Stub->getCurlResponse());
         $this->assertNotEmpty($Stub->getOptions());
         $this->assertEmpty($Stub->getHeaders());
-        $this->assertEquals('SugarAPI-SDK-PHP',$Stub->getOptions()[CURLOPT_USERAGENT]);
-        $this->assertEquals(TRUE,$Stub->getOptions()[CURLOPT_HEADER]);
-        $this->assertEquals(CURL_HTTP_VERSION_1_0,$Stub->getOptions()[CURLOPT_HTTP_VERSION]);
-        $this->assertEquals(FALSE,$Stub->getOptions()[CURLOPT_SSL_VERIFYPEER]);
-        $this->assertEquals(FALSE,$Stub->getOptions()[CURLOPT_FOLLOWLOCATION]);
+        $options = $Stub->getOptions();
+        $this->assertEquals('SugarAPI-SDK-PHP',$options[CURLOPT_USERAGENT]);
+        $this->assertEquals(TRUE,$options[CURLOPT_HEADER]);
+        $this->assertEquals(CURL_HTTP_VERSION_1_0,$options[CURLOPT_HTTP_VERSION]);
+        $this->assertEquals(FALSE,$options[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertEquals(FALSE,$options[CURLOPT_FOLLOWLOCATION]);
 
         return $Stub;
     }
@@ -119,19 +121,22 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
         $Stub = new RequestStub($this->url);
         $Stub->setType('Post');
         $this->assertEquals("POST",$Stub->getType());
-        $this->assertEquals(true,$Stub->getOptions()[CURLOPT_POST]);
+        $options = $Stub->getOptions();
+        $this->assertEquals(true,$options[CURLOPT_POST]);
         unset($Stub);
 
         $Stub = new RequestStub($this->url);
         $Stub->setType('PUt');
         $this->assertEquals("PUT",$Stub->getType());
-        $this->assertEquals("PUT",$Stub->getOptions()[CURLOPT_CUSTOMREQUEST]);
+        $options = $Stub->getOptions();
+        $this->assertEquals("PUT",$options[CURLOPT_CUSTOMREQUEST]);
         unset($Stub);
 
         $Stub = new RequestStub($this->url);
         $Stub->setType('DeLeTE');
         $this->assertEquals("DELETE",$Stub->getType());
-        $this->assertEquals("DELETE",$Stub->getOptions()[CURLOPT_CUSTOMREQUEST]);
+        $options = $Stub->getOptions();
+        $this->assertEquals("DELETE",$options[CURLOPT_CUSTOMREQUEST]);
         return $Stub;
     }
 
@@ -146,7 +151,8 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
     public function testSetBody($Stub){
         $Stub->setBody($this->body);
         $this->assertEquals($this->body,$Stub->getBody());
-        $this->assertEquals($this->body,$Stub->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Stub->getOptions();
+        $this->assertEquals($this->body,$options[CURLOPT_POSTFIELDS]);
         return $Stub;
     }
 
@@ -169,13 +175,15 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
             'Content-Type: application/json'
         ));
         $this->assertEquals($headers,$Stub->getHeaders());
-        $this->assertEquals($headers,$Stub->getOptions()[CURLOPT_HTTPHEADER]);
+        $options = $Stub->getOptions();
+        $this->assertEquals($headers,$options[CURLOPT_HTTPHEADER]);
 
         $headers[] = 'Foo: Bar';
         $Stub->addHeader('Foo','Bar');
         $Stub->setHeaders();
         $this->assertEquals($headers,$Stub->getHeaders());
-        $this->assertEquals($headers,$Stub->getOptions()[CURLOPT_HTTPHEADER]);
+        $options = $Stub->getOptions();
+        $this->assertEquals($headers,$options[CURLOPT_HTTPHEADER]);
         return $Stub;
     }
 

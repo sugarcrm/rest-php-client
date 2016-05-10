@@ -156,7 +156,6 @@ abstract class AbstractClient implements ClientInterface {
      */
     public function logout(){
         unset($this->token);
-        static::removeStoredToken($this->credentials['client_id']);
         return TRUE;
     }
 

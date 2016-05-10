@@ -43,18 +43,23 @@ class POSTFileTest extends \PHPUnit_Framework_TestCase {
         $Request = new POSTFile();
         $Request->setBody(array());
         $this->assertEquals(array(),$Request->getBody());
-        $this->assertEquals(array(),$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals(array(),$options[CURLOPT_POSTFIELDS]);
         $Request->setBody(array('test'));
         $this->assertEquals(array('test'),$Request->getBody());
-        $this->assertEquals(array('test'),$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals(array('test'),$options[CURLOPT_POSTFIELDS]);
         $Request->setBody('test');
         $this->assertEquals('test',$Request->getBody());
-        $this->assertEquals('test',$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals('test',$options[CURLOPT_POSTFIELDS]);
         $Request->setBody(1234);
         $this->assertEquals(1234,$Request->getBody());
-        $this->assertEquals(1234,$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals(1234,$options[CURLOPT_POSTFIELDS]);
         $Request->setBody($this->body);
         $this->assertEquals($this->body,$Request->getBody());
-        $this->assertEquals($this->body,$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals($this->body,$options[CURLOPT_POSTFIELDS]);
     }
 }

@@ -43,18 +43,23 @@ class PUTTest extends \PHPUnit_Framework_TestCase {
         $Request = new PUT();
         $Request->setBody(array());
         $this->assertEquals('[]',$Request->getBody());
-        $this->assertEquals('[]',$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals('[]',$options[CURLOPT_POSTFIELDS]);
         $Request->setBody(array('test'));
         $this->assertEquals('["test"]',$Request->getBody());
-        $this->assertEquals('["test"]',$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals('["test"]',$options[CURLOPT_POSTFIELDS]);
         $Request->setBody('test');
         $this->assertEquals('"test"',$Request->getBody());
-        $this->assertEquals('"test"',$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals('"test"',$options[CURLOPT_POSTFIELDS]);
         $Request->setBody(1234);
         $this->assertEquals(1234,$Request->getBody());
-        $this->assertEquals(1234,$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals(1234,$options[CURLOPT_POSTFIELDS]);
         $Request->setBody($this->body);
         $this->assertEquals(json_encode($this->body),$Request->getBody());
-        $this->assertEquals(json_encode($this->body),$Request->getOptions()[CURLOPT_POSTFIELDS]);
+        $options = $Request->getOptions();
+        $this->assertEquals(json_encode($this->body),$options[CURLOPT_POSTFIELDS]);
     }
 }
