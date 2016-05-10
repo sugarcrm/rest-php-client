@@ -155,7 +155,7 @@ abstract class AbstractClient implements ClientInterface {
      * @inheritdoc
      */
     public function logout(){
-        unset($this->token);
+        $this->token = NULL;
         return TRUE;
     }
 
