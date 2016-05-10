@@ -196,7 +196,10 @@ abstract class AbstractSugarClient extends AbstractClient {
         if ($this->authenticated()){
             $response = $this->oauth2Logout()->execute()->getResponse();
             if ($response->getStatus()=='200'){
-                parent::logout();
+                if (isset($this->credentials['client_id'])) {
+                    static::removeStoredToken($this->credentials['client_id']);
+                }
+                return parent::logout();
             }else{
                 $error = $response->getBody();
                 throw new AuthenticationException("Logout Response [".$error['error']."] ".$error['message']);
