@@ -39,7 +39,11 @@ class GET extends AbstractRequest {
     public function send(){
         $body = '';
         if (!empty($this->body)){
-            $body = "?".$this->body;
+            if (strpos($this->url,"?")===FALSE){
+                $body = "?".$this->body;
+            }else{
+                $body = "&".$this->body;
+            }
         }
         $this->setURL($this->url.$body);
         return parent::send();

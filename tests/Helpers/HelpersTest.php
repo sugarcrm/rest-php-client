@@ -52,16 +52,6 @@ class HelpersTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @test
-     * @covers ::getSDKVersion
-     * @group default
-     */
-    public function testGetSDKVersion()
-    {
-        $this->assertEquals('1.0',Helpers::getSDKVersion());
-    }
-
-    /**
-     * @test
      * @covers ::getSDKEndpointRegistry
      * @group default
      */
