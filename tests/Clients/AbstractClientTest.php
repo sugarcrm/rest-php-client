@@ -4,7 +4,6 @@
  */
 
 namespace SugarAPI\SDK\Tests\Clients;
-
 use SugarAPI\SDK\Tests\Stubs\Client\ClientStub;
 
 /**
@@ -19,14 +18,9 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
-        $token = new \stdClass();
-        $token->access_token = '1234';
-        $token->expires_in = 3600;
-        $token->refresh_token = '5678';
-        $token->token_type = 'bearer';
-        $token->refresh_expires_in = 1209600;
-        $token->download_token = '101010';
-        $token->scope = null;
+        $token = array(
+            'token' => 12345
+        );
 
         static::$token = $token;
     }
@@ -39,7 +33,7 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
     protected $credentials = array(
         'username' => 'admin',
         'password' => 'password',
-        'client_id' => 'sdk_test',
+        'client_id' => 'abstract_test',
         'client_secret' => 'sdk_test_secret',
         'platform' => 'api'
     );
@@ -55,63 +49,26 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return ClientStub $Stub
-     * @covers ::__construct
-     * @covers ::registerSDKEndpoints
-     * @group abstractClient
-     */
-    public function testConstructor(){
-        $Stub = new ClientStub();
-        $this->assertEquals('',$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
-        $this->assertEquals('http:/rest/v10/',$Stub->getAPIUrl());
-        $this->assertEmpty($Stub->getToken());
-        $this->assertEquals(false,$Stub->authenticated());
-        $this->assertAttributeNotEmpty('entryPoints',$Stub);
-        unset($Stub);
-
-        $Stub = new ClientStub($this->server);
-        $this->assertEquals($this->server,$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
-        $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
-        $this->assertEmpty($Stub->getToken());
-        $this->assertEquals(false,$Stub->authenticated());
-        $this->assertAttributeNotEmpty('entryPoints',$Stub);
-        unset($Stub);
-
-        $Stub = new ClientStub($this->server,$this->credentials);
-        $this->assertEquals($this->server,$Stub->getServer());
-        $this->assertEquals($this->credentials,$Stub->getCredentials());
-        $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
-        $this->assertEmpty($Stub->getToken());
-        $this->assertEquals(false,$Stub->authenticated());
-        $this->assertAttributeNotEmpty('entryPoints',$Stub);
-
-        return $Stub;
-    }
-
-    /**
-     * @param ClientStub $Stub
-     * @depends testConstructor
      * @covers ::setServer
      * @covers ::getServer
      * @covers ::getAPIUrl
      * @group abstractClient
      * @return ClientStub
      */
-    public function testSetServer($Stub){
+    public function testSetServer(){
+        $Stub = new ClientStub();
         $Stub->setServer('http://localhost');
         $this->assertEquals("http://localhost",$Stub->getServer());
-        $this->assertEquals("http://localhost/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals("http://localhost",$Stub->getAPIUrl());
         $Stub->setServer('192.168.1.20');
         $this->assertEquals('192.168.1.20',$Stub->getServer());
-        $this->assertEquals("http://192.168.1.20/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals("192.168.1.20",$Stub->getAPIUrl());
         $Stub->setServer('https://tester.test.com');
         $this->assertEquals('https://tester.test.com',$Stub->getServer());
-        $this->assertEquals("https://tester.test.com/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals("https://tester.test.com",$Stub->getAPIUrl());
         $Stub->setServer($this->server);
         $this->assertEquals($this->server,$Stub->getServer());
-        $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals($this->server,$Stub->getAPIUrl());
 
         return $Stub;
     }
@@ -144,16 +101,33 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSetToken($Stub){
 
-        static::$token->expires_in = 0;
-        $Stub->setToken(static::$token);
-        $this->assertEquals(static::$token,$Stub->getToken());
-        $this->assertEquals(false,$Stub->authenticated());
+        $Stub->setToken(array());
+        $this->assertEquals(array(),$Stub->getToken());
+        $this->assertEquals(FALSE,$Stub->authenticated());
 
-        static::$token->expires_in = 3600;
+        $Stub->setToken('');
+        $this->assertEquals('',$Stub->getToken());
+        $this->assertEquals(FALSE,$Stub->authenticated());
 
-        $Stub->setToken(static::$token);
-        $this->assertEquals(static::$token,$Stub->getToken());
-        $this->assertEquals(true,$Stub->authenticated());
+        $Stub->setToken(null);
+        $this->assertEquals(null,$Stub->getToken());
+        $this->assertEquals(FALSE,$Stub->authenticated());
+
+        $Stub->setToken(0);
+        $this->assertEquals(0,$Stub->getToken());
+        $this->assertEquals(FALSE,$Stub->authenticated());
+
+        $Stub->setToken('test');
+        $this->assertEquals('test',$Stub->getToken());
+        $this->assertEquals(TRUE,$Stub->authenticated());
+
+        $Stub->setToken(new \stdClass());
+        $this->assertEquals(new \stdClass(),$Stub->getToken());
+        $this->assertEquals(TRUE,$Stub->authenticated());
+
+        $Stub->setToken(array('test'));
+        $this->assertEquals(array('test'),$Stub->getToken());
+        $this->assertEquals(TRUE,$Stub->authenticated());
 
         return $Stub;
     }
@@ -169,18 +143,13 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
      */
     public function testTokenStorage($Stub){
         $Stub->storeToken(static::$token,$this->credentials['client_id']);
-        $Stub->storeToken(static::$token,'custom_client');
+        $Stub->storeToken(static::$token,'test_client');
 
         unset($Stub);
 
-        $Stub = new ClientStub($this->server,$this->credentials);
-        $this->assertEquals(static::$token,$Stub->getToken());
+        $Stub = new ClientStub();
         $this->assertEquals(static::$token,$Stub->getStoredToken($this->credentials['client_id']));
-        $this->assertEquals(static::$token,$Stub->getStoredToken('custom_client'));
-
-        $this->credentials['client_id'] = 'custom_client';
-        $Stub->setCredentials($this->credentials);
-        $this->assertEquals(static::$token,$Stub->getToken());
+        $this->assertEquals(static::$token,$Stub->getStoredToken('test_client'));
     }
 
     /**
@@ -189,8 +158,8 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
      * @group abstractClients
      */
     public function testRemoveStoredToken(){
-        ClientStub::removeStoredToken('custom_client');
-        $this->assertEmpty(ClientStub::getStoredToken('custom_client'));
+        ClientStub::removeStoredToken('test_client');
+        $this->assertEmpty(ClientStub::getStoredToken('test_client'));
 
         ClientStub::removeStoredToken($this->credentials['client_id']);
         $this->assertEmpty(ClientStub::getStoredToken($this->credentials['client_id']));
@@ -242,52 +211,45 @@ class AbstractClientTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers ::login
-     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
-     * @expectedExceptionMessageRegExp /Login Response/
      * @group abstractClients
      * @return ClientStub
      */
-    public function testLoginException(){
-        $Stub = new ClientStub($this->server);
-        $this->assertEquals(FALSE,$Stub->login());
-        unset($Stub);
-
-        $Stub = new ClientStub($this->server,$this->credentials);
-        $Stub->login();
+    public function testLogin(){
+        $Stub = new ClientStub();
+        $this->assertEquals(TRUE,$Stub->login());
+        $this->assertEquals(array('token'=>'1234'),$Stub->getToken());
         return $Stub;
     }
 
     /**
-     * @depends testLoginException
+     * @depends testLogin
+     * @param ClientStub $Stub
      * @covers ::refreshToken
-     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
-     * @expectedExceptionMessageRegExp /Refresh Response/
      * @group abstractClients
      * @return ClientStub
      */
-    public function testRefreshException(){
-        $Stub = new ClientStub($this->server,$this->credentials);
-        $this->assertEquals(FALSE,$Stub->refreshToken());
+    public function testRefreshToken($Stub){
+        $this->assertEquals(TRUE,$Stub->refreshToken());
+        $this->assertEquals(array('token'=>'5678'),$Stub->getToken());
         $Stub->setToken(static::$token);
-        $Stub->refreshToken();
+        $this->assertEquals(TRUE,$Stub->refreshToken());
+        $this->assertEquals(array('token'=>'5678'),$Stub->getToken());
         return $Stub;
     }
 
     /**
-     * @depends testRefreshException
+     * @depends testRefreshToken
+     * @param ClientStub $Stub
      * @covers ::logout
-     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
-     * @expectedExceptionMessageRegExp /Logout Response/
      * @group abstractClients
      * @return ClientStub
      */
-    public function testLogoutException(){
-        $Stub = new ClientStub($this->server,$this->credentials);
-        $this->assertEquals(FALSE,$Stub->logout());
+    public function testLogout($Stub){
+        $this->assertEquals(TRUE,$Stub->logout());
+        $this->assertEmpty($Stub->getToken());
         $Stub->setToken(static::$token);
         $Stub->logout();
-        return $Stub;
+        $this->assertEquals(TRUE,$Stub->logout());
+        $this->assertEmpty($Stub->getToken());
     }
-
-
 }

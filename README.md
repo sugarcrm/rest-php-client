@@ -1,4 +1,5 @@
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3-8892BF.svg)](https://php.net/)
+[![Build Status](https://travis-ci.org/sugarcrm/rest-php-client.svg?branch=master)](https://travis-ci.org/sugarcrm/rest-php-client)
 #SugarCRM REST PHP Client#
 
 ##Overview##

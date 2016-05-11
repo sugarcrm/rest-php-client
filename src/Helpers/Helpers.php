@@ -9,8 +9,6 @@ class Helpers {
 
     const API_URL = '/rest/v10/';
 
-    const SDK_VERSION = '1.0';
-
     /**
      * Given a sugarcrm server/instance generate the Rest/v10 API Url
      * @param $instance
@@ -24,14 +22,6 @@ class Helpers {
             $instance = str_replace("rest/v10", "", $instance);
         }
         return rtrim($instance, "/").self::API_URL;
-    }
-
-    /**
-     * Return the current SDK Version
-     * @return string
-     */
-    public static function getSDKVersion(){
-        return self::SDK_VERSION;
     }
 
     /**

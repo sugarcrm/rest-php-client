@@ -10,7 +10,7 @@ use SugarAPI\SDK\Exception\Authentication\AuthenticationException;
 interface ClientInterface {
 
     /**
-     * Set the server on the SDK Client
+     * Set the server on the Client, and configure the API Url if necessary
      * @param $server
      * @return $this
      */
@@ -59,8 +59,8 @@ interface ClientInterface {
 
     /**
      * Store the SDK Clients authentication token
-     * @param $token
-     * @param $client_id
+     * @param mixed $token
+     * @param string $client_id
      * @return boolean
      */
     public static function storeToken($token,$client_id);
@@ -100,9 +100,9 @@ interface ClientInterface {
 
     /**
      * Set the current AuthToken and Auth Expiration properties
-     * @param \stdClass $token
+     * @param mixed $token
      */
-    public function setToken(\stdClass $token);
+    public function setToken($token);
 
     /**
      * Check if SDK Client is authentication
