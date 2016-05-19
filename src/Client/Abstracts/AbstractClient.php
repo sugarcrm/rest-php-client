@@ -143,7 +143,11 @@ abstract class AbstractClient implements ClientInterface {
     public function __call($name, $params){
         if (array_key_exists($name, $this->entryPoints)){
             $Class = $this->entryPoints[$name];
-            $Endpoint = new $Class($this->apiURL, $params);
+            if (empty($params)){
+                $Endpoint = new $Class($this->apiURL);
+            }else {
+                $Endpoint = new $Class($this->apiURL, $params);
+            }
 
             return $Endpoint;
         }else{

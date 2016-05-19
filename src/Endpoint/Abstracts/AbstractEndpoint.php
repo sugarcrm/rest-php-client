@@ -72,10 +72,11 @@ abstract class AbstractEndpoint implements EPInterface {
     protected $Options = array();
 
     /**
-     * The data being passed to the API Endpoint
+     * The data being passed to the API Endpoint.
+     * Defaults to Array, but can be mixed based on how you want to use Endpoint. Defaults only work for Array type
      * @var mixed - array||stdClass
      */
-    protected $Data;
+    protected $Data = array();
 
     /**
      * The Request Object, used by the Endpoint to submit the data
@@ -342,7 +343,7 @@ abstract class AbstractEndpoint implements EPInterface {
     protected function verifyRequiredData(){
         $errors = array();
         foreach($this->_REQUIRED_DATA as $property => $defaultValue){
-            if (!isset($this->Data[$property])){
+            if ((!isset($this->Data[$property]))&&empty($defaultValue)){
                 $errors[] = $property;
             }
         }
