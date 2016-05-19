@@ -40,6 +40,18 @@ use SugarAPI\SDK\Helpers\Helpers;
 abstract class AbstractSugarClient extends AbstractClient {
 
     /**
+     * @inheritdoc
+     * @var array
+     */
+    protected $credentials = array(
+        'username' => '',
+        'password' => '',
+        'client_id' => '',
+        'client_secret' => '',
+        'platform' => ''
+    );
+
+    /**
      * Token expiration time
      * @var
      */
@@ -65,10 +77,16 @@ abstract class AbstractSugarClient extends AbstractClient {
 
     /**
      * @inheritdoc
+     * Overrides only the credentials properties passed in, instead of entire credentials array
      * Retrieves stored token based on passed in Credentials
      */
     public function setCredentials(array $credentials){
-        parent::setCredentials($credentials);
+        foreach ($this->credentials as $key => $value){
+            if (isset($credentials[$key])){
+                $this->credentials[$key] = $credentials[$key];
+            }
+        }
+        parent::setCredentials($this->credentials);
         if (isset($this->credentials['client_id'])) {
             $token = static::getStoredToken($this->credentials['client_id']);
             if (!empty($token)) {
@@ -89,27 +107,6 @@ abstract class AbstractSugarClient extends AbstractClient {
         }else{
             throw new SDKException('Sugar API Client requires Token to be of type \stdClass');
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getToken(){
-        return $this->token;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCredentials(){
-        return $this->credentials;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getServer() {
-        return $this->server;
     }
 
     /**
@@ -148,7 +145,10 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @throws AuthenticationException - When Login request fails
      */
     public function login() {
-        if (!empty($this->credentials)) {
+        if (!(empty($this->credentials['username'])||
+            empty($this->credentials['password'])||
+            empty($this->credentials['client_id'])||
+            empty($this->credentials['client_secret']))) {
             $response = $this->oauth2Token()->execute($this->credentials)->getResponse();
             if ($response->getStatus() == '200') {
                 $this->setToken($response->getBody(FALSE));

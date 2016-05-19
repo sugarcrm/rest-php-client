@@ -63,7 +63,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     public function testConstructor(){
         $Stub = new SugarClientStub();
         $this->assertEquals('',$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
+        $this->assertEquals(array(
+            'username' => '',
+            'password' => '',
+            'client_id' => '',
+            'client_secret' => '',
+            'platform' => ''
+        ),$Stub->getCredentials());
         $this->assertEquals('http:/rest/v10/',$Stub->getAPIUrl());
         $this->assertEmpty($Stub->getToken());
         $this->assertEquals(false,$Stub->authenticated());
@@ -72,7 +78,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
 
         $Stub = new SugarClientStub($this->server);
         $this->assertEquals($this->server,$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
+        $this->assertEquals(array(
+            'username' => '',
+            'password' => '',
+            'client_id' => '',
+            'client_secret' => '',
+            'platform' => ''
+        ),$Stub->getCredentials());
         $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
         $this->assertEmpty($Stub->getToken());
         $this->assertEquals(false,$Stub->authenticated());
@@ -125,10 +137,21 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @return SugarClientStub
      */
     public function testSetCredentials($Stub){
+        $Stub->setCredentials(array('username' => 'admin'));
+        $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $Stub->setCredentials(array('password' => 'asdf'));
+        $newCreds = $this->credentials;
+        $newCreds['password'] = 'asdf';
+        $this->assertEquals($newCreds,$Stub->getCredentials());
         $Stub->setCredentials(array());
-        $this->assertEquals(array(),$Stub->getCredentials());
+        $this->assertEquals($newCreds,$Stub->getCredentials());
         $Stub->setCredentials($this->credentials);
         $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $Stub->setCredentials(array('foo' => 'bar' ));
+        $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $newCreds['username'] = 'test';
+        $Stub->setCredentials($newCreds);
+        $this->assertEquals($newCreds,$Stub->getCredentials());
 
         return $Stub;
     }
