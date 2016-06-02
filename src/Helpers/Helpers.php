@@ -7,21 +7,26 @@ namespace SugarAPI\SDK\Helpers;
 
 class Helpers {
 
-    const API_URL = '/rest/v10/';
+    const API_VERSION = 10;
+
+    const API_URL = '/rest/v%d/';
 
     /**
      * Given a sugarcrm server/instance generate the Rest/v10 API Url
      * @param $instance
+     * @param int $version
      * @return string
      */
-    public static function configureAPIURL($instance){
-        if (strpos($instance,"http")===FALSE){
+    public static function configureAPIURL($instance,$version = NULL){
+        $url = 0;
+        $instance = strtolower(rtrim($instance, "/"));
+        $version = ($version===NULL?self::API_VERSION:intval($version));
+        if (preg_match('/^(http|https):\/\//i',$instance)===0){
             $instance = "http://".$instance;
         }
-        if (strpos($instance,"rest/v10")!==FALSE){
-            $instance = str_replace("rest/v10", "", $instance);
-        }
-        return rtrim($instance, "/").self::API_URL;
+        $instance = preg_replace('/\/rest\/v\d+/','',$instance);
+        $url = $instance.sprintf(self::API_URL,$version);
+        return $url;
     }
 
     /**

@@ -63,8 +63,14 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     public function testConstructor(){
         $Stub = new SugarClientStub();
         $this->assertEquals('',$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
-        $this->assertEquals('http:/rest/v10/',$Stub->getAPIUrl());
+        $this->assertEquals(array(
+            'username' => '',
+            'password' => '',
+            'client_id' => '',
+            'client_secret' => '',
+            'platform' => ''
+        ),$Stub->getCredentials());
+        $this->assertEquals('http:///rest/v10/',$Stub->getAPIUrl());
         $this->assertEmpty($Stub->getToken());
         $this->assertEquals(false,$Stub->authenticated());
         $this->assertAttributeNotEmpty('entryPoints',$Stub);
@@ -72,7 +78,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
 
         $Stub = new SugarClientStub($this->server);
         $this->assertEquals($this->server,$Stub->getServer());
-        $this->assertEquals(array(),$Stub->getCredentials());
+        $this->assertEquals(array(
+            'username' => '',
+            'password' => '',
+            'client_id' => '',
+            'client_secret' => '',
+            'platform' => ''
+        ),$Stub->getCredentials());
         $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
         $this->assertEmpty($Stub->getToken());
         $this->assertEquals(false,$Stub->authenticated());
@@ -95,6 +107,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @depends testConstructor
      * @covers ::setServer
      * @covers ::getServer
+     * @covers ::setAPIUrl
      * @covers ::getAPIUrl
      * @group abstractClient
      * @return SugarClientStub
@@ -118,6 +131,28 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @param SugarClientStub $Stub
+     * @depends testConstructor
+     * @covers ::setVersion
+     * @covers ::getVersion
+     * @covers ::getAPIUrl
+     * @group abstractClient
+     * @return SugarClientStub
+     */
+    public function testSetVersion($Stub){
+        $Stub->setVersion('10');
+        $this->assertEquals("http://localhost/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals(10,$Stub->getVersion());
+        $Stub->setVersion(10);
+        $this->assertEquals("http://localhost/rest/v10/",$Stub->getAPIUrl());
+        $this->assertEquals(10,$Stub->getVersion());
+        $Stub->setVersion(11);
+        $this->assertEquals("http://localhost/rest/v11/",$Stub->getAPIUrl());
+        $this->assertEquals(11,$Stub->getVersion());
+        return $Stub;
+    }
+
+    /**
+     * @param SugarClientStub $Stub
      * @depends testSetServer
      * @covers ::setCredentials
      * @covers ::getCredentials
@@ -125,10 +160,21 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @return SugarClientStub
      */
     public function testSetCredentials($Stub){
+        $Stub->setCredentials(array('username' => 'admin'));
+        $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $Stub->setCredentials(array('password' => 'asdf'));
+        $newCreds = $this->credentials;
+        $newCreds['password'] = 'asdf';
+        $this->assertEquals($newCreds,$Stub->getCredentials());
         $Stub->setCredentials(array());
-        $this->assertEquals(array(),$Stub->getCredentials());
+        $this->assertEquals($newCreds,$Stub->getCredentials());
         $Stub->setCredentials($this->credentials);
         $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $Stub->setCredentials(array('foo' => 'bar' ));
+        $this->assertEquals($this->credentials,$Stub->getCredentials());
+        $newCreds['username'] = 'test';
+        $Stub->setCredentials($newCreds);
+        $this->assertEquals($newCreds,$Stub->getCredentials());
 
         return $Stub;
     }
