@@ -57,6 +57,13 @@ abstract class AbstractSugarClient extends AbstractClient {
      */
     protected $expiration;
 
+    /**
+     * The API Version to be used.
+     * Defaults to 10 (for v10), but can be any number above 10, since customizing API allows for additional versioning to allow for duplicate entrypoints
+     * @var
+     */
+    protected $apiVersion = 10;
+
     public function __construct($server = '',array $credentials = array()){
         $server = (empty($server)?$this->server:$server);
         $this->setServer($server);
@@ -67,12 +74,23 @@ abstract class AbstractSugarClient extends AbstractClient {
 
     /**
      * @inheritdoc
-     * @param string $server
      */
-    public function setServer($server) {
-        $this->server = $server;
-        $this->apiURL = Helpers::configureAPIURL($this->server);
+    protected function setAPIUrl() {
+        $this->apiURL = Helpers::configureAPIURL($this->server,$this->apiVersion);
+    }
+
+    /**
+     * @param $version
+     * @return $this
+     */
+    public function setVersion($version){
+        $this->apiVersion = intval($version);
+        $this->setAPIUrl();
         return $this;
+    }
+
+    public function getVersion(){
+        return $this->apiVersion;
     }
 
     /**

@@ -48,6 +48,33 @@ class HelpersTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10'));
         $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10/'));
         $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/rest/v10/rest/v10/rest/v10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('localhost',11));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost','10'));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost',10));
+        $this->assertEquals('https://localhost/rest/v11/',Helpers::configureAPIURL('https://localhost',11));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost/rest/v10','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost/rest/v10',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('localhost/rest/v10',11));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost/rest/v10/','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('localhost/rest/v10/',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('localhost/rest/v10/',11));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/rest/v10/','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/rest/v10/',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('http://localhost/rest/v10/',11));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('http://localhost/',11));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10','10'));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10',10));
+        $this->assertEquals('https://localhost/rest/v11/',Helpers::configureAPIURL('https://localhost/rest/v10',11));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10/','10'));
+        $this->assertEquals('https://localhost/rest/v10/',Helpers::configureAPIURL('https://localhost/rest/v10/',10));
+        $this->assertEquals('https://localhost/rest/v11/',Helpers::configureAPIURL('https://localhost/rest/v10/',11));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/rest/v10/rest/v10/rest/v10','10'));
+        $this->assertEquals('http://localhost/rest/v10/',Helpers::configureAPIURL('http://localhost/rest/v10/rest/v10/rest/v10',10));
+        $this->assertEquals('http://localhost/rest/v11/',Helpers::configureAPIURL('http://localhost/rest/v10/rest/v10/rest/v10',11));
     }
 
     /**

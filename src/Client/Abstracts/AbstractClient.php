@@ -62,8 +62,15 @@ abstract class AbstractClient implements ClientInterface {
      */
     public function setServer($server) {
         $this->server = $server;
-        $this->apiURL = $server;
+        $this->setAPIUrl();
         return $this;
+    }
+
+    /**
+     * Configure the APIUrl Based on the current Server Property
+     */
+    protected function setAPIUrl(){
+        $this->apiURL = $this->server;
     }
 
     /**
