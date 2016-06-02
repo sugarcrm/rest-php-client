@@ -166,7 +166,7 @@ abstract class AbstractSugarClient extends AbstractClient {
         if (!(empty($this->credentials['username'])||
             empty($this->credentials['password'])||
             empty($this->credentials['client_id'])||
-            empty($this->credentials['client_secret']))) {
+            !isset($this->credentials['client_secret']))) {
             $response = $this->oauth2Token()->execute($this->credentials)->getResponse();
             if ($response->getStatus() == '200') {
                 $this->setToken($response->getBody(FALSE));
