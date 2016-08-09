@@ -52,12 +52,6 @@ abstract class AbstractSugarClient extends AbstractClient {
     );
 
     /**
-     * Token expiration time
-     * @var
-     */
-    protected $expiration;
-
-    /**
      * The API Version to be used.
      * Defaults to 10 (for v10), but can be any number above 10, since customizing API allows for additional versioning to allow for duplicate entrypoints
      * @var
@@ -89,6 +83,10 @@ abstract class AbstractSugarClient extends AbstractClient {
         return $this;
     }
 
+    /**
+     * Get the Version of API being used by the Client
+     * @return int
+     */
     public function getVersion(){
         return $this->apiVersion;
     }
@@ -119,8 +117,13 @@ abstract class AbstractSugarClient extends AbstractClient {
      */
     public function setToken($token){
         if ($token instanceof \stdClass) {
+            if (!isset($token->expiration)){
+                $token->expiration = time() + $token->expires_in;
+            }
+            if (!isset($token->refresh_expiration)){
+                $token->refresh_expiration = time() + $token->refresh_expires_in;
+            }
             parent::setToken($token);
-            $this->expiration = time() + $token->expires_in;
             return $this;
         }else{
             throw new SDKException('Sugar API Client requires Token to be of type \stdClass');
@@ -131,7 +134,20 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @inheritdoc
      */
     public function authenticated(){
-        return time() < $this->expiration;
+        if (parent::authenticated()){
+            if (!$this->expiredToken()){
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * Check if token is expired based on Access Token Expiration
+     * @return bool
+     */
+    protected function expiredToken(){
+        return time() >= $this->token->expiration;
     }
 
     /**
@@ -152,7 +168,7 @@ abstract class AbstractSugarClient extends AbstractClient {
     public function __call($name, $params){
         $Endpoint = parent::__call($name,$params);
 
-        if ($Endpoint->authRequired() && $this->authenticated()){
+        if ($Endpoint->authRequired()){
             $Endpoint->setAuth($this->token->access_token);
         }
         return $Endpoint;
@@ -173,8 +189,13 @@ abstract class AbstractSugarClient extends AbstractClient {
                 static::storeToken($this->token, $this->credentials['client_id']);
                 return TRUE;
             } else {
-                $error = $response->getBody();
-                throw new AuthenticationException("Login Response [" . $error['error'] . "] " . $error['error_message']);
+                if ($response->getError() === FALSE) {
+                    $error = $response->getBody();
+                    $error = $error['error'] . " - " . $error['error_message'];
+                }else{
+                    $error = $response->getError();
+                }
+                throw new AuthenticationException("Login Response [" .$response->getStatus() ."] - " .$error);
             }
         }
         return FALSE;
@@ -188,19 +209,26 @@ abstract class AbstractSugarClient extends AbstractClient {
         if (isset($this->credentials['client_id'])&&
             isset($this->credentials['client_secret'])&&
             isset($this->token)) {
-            $refreshOptions = array(
-                'client_id' => $this->credentials['client_id'],
-                'client_secret' => $this->credentials['client_secret'],
-                'refresh_token' => $this->token->refresh_token
-            );
-            $response = $this->oauth2Refresh()->execute($refreshOptions)->getResponse();
-            if ($response->getStatus() == '200') {
-                $this->setToken($response->getBody(FALSE));
-                static::storeToken($this->token, $this->credentials['client_id']);
-                return TRUE;
-            } else {
-                $error = $response->getBody();
-                throw new AuthenticationException("Refresh Response [" . $error['error'] . "] " . $error['error_message']);
+            if (time() < $this->token->refresh_expiration) {
+                $refreshOptions = array(
+                    'client_id' => $this->credentials['client_id'],
+                    'client_secret' => $this->credentials['client_secret'],
+                    'refresh_token' => $this->token->refresh_token
+                );
+                $response = $this->oauth2Refresh()->execute($refreshOptions)->getResponse();
+                if ($response->getStatus() == '200') {
+                    $this->setToken($response->getBody(FALSE));
+                    static::storeToken($this->token, $this->credentials['client_id']);
+                    return TRUE;
+                } else {
+                    if ($response->getError() === FALSE) {
+                        $error = $response->getBody();
+                        $error = $error['error'] . " - " . $error['error_message'];
+                    }else{
+                        $error = $response->getError();
+                    }
+                    throw new AuthenticationException("Refresh Response [" .$response->getStatus() ."] - " .$error);
+                }
             }
         }
         return FALSE;
@@ -219,8 +247,13 @@ abstract class AbstractSugarClient extends AbstractClient {
                 }
                 return parent::logout();
             }else{
-                $error = $response->getBody();
-                throw new AuthenticationException("Logout Response [".$error['error']."] ".$error['message']);
+                if ($response->getError() === FALSE) {
+                    $error = $response->getBody();
+                    $error = $error['error'] . " - " . $error['error_message'];
+                }else{
+                    $error = $response->getError();
+                }
+                throw new AuthenticationException("Logout Response [" .$response->getStatus() ."] - " .$error);
             }
         }
         return FALSE;

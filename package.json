@@ -1,8 +1,8 @@
 {
-  "private": true,
+  "private": false,
   "name": "rest-php-client",
-  "description": "An SDK for interacting with Sugar's REST v10 API.",
-  "version": "1.1",
+  "version": "1.2",
+  "description": "An object oriented framework for interacting with Sugar 7's REST API.",
   "directories": {
     "test": "tests"
   },

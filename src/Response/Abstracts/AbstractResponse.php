@@ -54,7 +54,7 @@ abstract class AbstractResponse implements ResponseInterface {
 
     public function setCurlResponse($curlResponse) {
         $this->extractInfo();
-        if (!$this->error){
+        if ($this->error === FALSE){
             $this->extractResponse($curlResponse);
         }
     }
