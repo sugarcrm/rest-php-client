@@ -185,17 +185,19 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @covers ::setToken
      * @covers ::getToken
      * @covers ::authenticated
+     * @covers ::expiredToken
      * @group abstractClient
      * @return SugarClientStub
      */
     public function testSetToken($Stub){
-
         static::$token->expires_in = 0;
+
         $Stub->setToken(static::$token);
         $this->assertEquals(static::$token,$Stub->getToken());
         $this->assertEquals(false,$Stub->authenticated());
 
         static::$token->expires_in = 3600;
+        unset(static::$token->expiration);
 
         $Stub->setToken(static::$token);
         $this->assertEquals(static::$token,$Stub->getToken());
@@ -278,6 +280,20 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @param SugarClientStub $Stub
+     * @depends testLogin
+     * @covers ::login
+     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
+     * @expectedExceptionMessageRegExp /Login Response/
+     * @group abstractClients
+     */
+    public function testLoginExceptionCurlError($Stub){
+        $Stub->setCredentials($this->credentials);
+        $Stub->setServer('test.foo.bar');
+        $Stub->login();
+    }
+
+    /**
      * @covers ::refreshToken
      * @group abstractClients
      * @return SugarClientStub
@@ -303,6 +319,21 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @param SugarClientStub $Stub
+     * @depends testRefreshToken
+     * @covers ::refreshToken
+     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
+     * @expectedExceptionMessageRegExp /Refresh Response/
+     * @group abstractClients
+     */
+    public function testRefreshExceptionCurlError($Stub){
+        $Stub->setCredentials($this->credentials);
+        $Stub->setToken(static::$token);
+        $Stub->setServer('test.foo.bar');
+        $Stub->refreshToken();
+    }
+
+    /**
      * @covers ::logout
      * @group abstractClients
      * @return SugarClientStub
@@ -323,6 +354,20 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      */
     public function testLogoutException($Stub){
         $Stub->setToken(static::$token);
+        $Stub->logout();
+    }
+
+    /**
+     * @param SugarClientStub $Stub
+     * @depends testLogout
+     * @covers ::logout
+     * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
+     * @expectedExceptionMessageRegExp /Logout Response/
+     * @group abstractClients
+     */
+    public function testLogoutExceptionCurlError($Stub){
+        $Stub->setToken(static::$token);
+        $Stub->setServer('test.foo.bar');
         $Stub->logout();
     }
 

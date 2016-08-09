@@ -28,8 +28,7 @@ abstract class AbstractRequest implements RequestInterface {
         CURLOPT_HEADER => TRUE,
         CURLOPT_SSL_VERIFYPEER => FALSE,
         CURLOPT_RETURNTRANSFER => TRUE,
-        CURLOPT_FOLLOWLOCATION => FALSE,
-        CURLOPT_USERAGENT => 'SugarAPI-SDK-PHP'
+        CURLOPT_USERAGENT => 'Sugar-REST-PHP-Client'
     );
 
     /**
