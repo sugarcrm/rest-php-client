@@ -23,7 +23,7 @@ abstract class AbstractGetFileEndpoint extends AbstractEndpoint {
         parent::__construct($url, $options);
     }
 
-    public function configureResponse(){
+    protected function configureResponse(){
         $this->Response->setDestinationPath($this->downloadDir);
         parent::configureResponse();
     }
