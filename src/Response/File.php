@@ -62,7 +62,7 @@ class File extends AbstractResponse {
         foreach (explode("\r\n", $this->headers) as $header)
         {
             if (strpos($header, 'filename')!==FALSE){
-                $fileName = substr($header, (strpos($header, "=")+1), -1);
+                $fileName = substr($header, (strpos($header, "=")+1));
                 $this->setFileName($fileName);
             }
         }
