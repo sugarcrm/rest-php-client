@@ -222,7 +222,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @depends testSetToken
      * @covers ::getToken
      * @covers ::storeToken
-     * @coves ::removeStoredToken
+     * @covers ::removeStoredToken
      * @covers ::getStoredToken
      * @covers ::setCredentials
      * @group abstractClient
