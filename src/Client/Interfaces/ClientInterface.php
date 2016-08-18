@@ -60,24 +60,24 @@ interface ClientInterface {
     /**
      * Store the SDK Clients authentication token
      * @param mixed $token
-     * @param string $client_id
+     * @param mixed $identifier
      * @return boolean
      */
-    public static function storeToken($token,$client_id);
+    public static function storeToken($token,$identifier);
 
     /**
      * Get an SDK Clients authentication Token from Storage
-     * @param $client_id
+     * @param mixed $identifier
      * @return mixed
      */
-    public static function getStoredToken($client_id);
+    public static function getStoredToken($identifier);
 
     /**
      * Remove the stored SDK Clients authentication token
-     * @param $client_id
+     * @param mixed $identifier
      * @return boolean
      */
-    public static function removeStoredToken($client_id);
+    public static function removeStoredToken($identifier);
 
     /**
      * Get the Token on the SDK Client

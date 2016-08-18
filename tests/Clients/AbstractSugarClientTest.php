@@ -219,24 +219,69 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
      * @depends testSetToken
      * @covers ::getToken
      * @covers ::storeToken
+     * @coves ::removeStoredToken
+     * @covers ::getStoredToken
      * @covers ::setCredentials
      * @group abstractClient
      */
-    public function testTokenStorage($Stub){
-        $Stub->storeToken(static::$token,$this->credentials['client_id']);
+    public function testTokenStorage(){
+        $Stub = new SugarClientStub($this->server,$this->credentials);
+        $this->assertEmpty($Stub->getToken());
+        $Stub->storeToken(static::$token,$Stub->getCredentials());
+        $this->assertEmpty($Stub->getToken());
 
         unset($Stub);
 
         $Stub = new SugarClientStub($this->server,$this->credentials);
-        $this->assertEquals(static::$token,$Stub->getToken());
+        $this->assertEquals($Stub->getToken(),static::$token);
 
-        $this->credentials['client_id'] = 'custom_client';
-        $Stub->setCredentials($this->credentials);
-        $this->assertEquals(static::$token,$Stub->getToken());
+        $creds = $this->credentials;
+        $creds['platform'] = 'base';
+
+        $Stub2 = new SugarClientStub($this->server,$creds);
+        $this->assertEmpty($Stub2->getToken());
+        $Stub2->storeToken(static::$token,$Stub2->getCredentials());
+        $this->assertEmpty($Stub2->getToken());
+
+        $creds['username'] = 'tokenStorage';
+        $Stub3 = new SugarClientStub($this->server,$creds);
+        $this->assertEmpty($Stub3->getToken());
+        $Stub3->storeToken(static::$token,$Stub3->getCredentials());
+        $this->assertEmpty($Stub3->getToken());
+
+        unset($Stub2);
+
+        $Stub2 = new SugarClientStub($this->server,$creds);
+        $this->assertEquals(static::$token,$Stub2->getToken());
+
+        unset($Stub3);
+
+        $creds['username'] = 'admin';
+        $Stub3 = new SugarClientStub($this->server,$creds);
+        $this->assertEquals(static::$token,$Stub3->getToken());
+
+        unset($Stub2);
+        unset($Stub);
+        unset($Stub3);
+
+        $token = SugarClientStub::getStoredToken($this->credentials);
+        $this->assertEquals($token,static::$token);
+
+        SugarClientStub::removeStoredToken($this->credentials);
+        $token = SugarClientStub::getStoredToken($creds);
+        $this->assertEquals($token,static::$token);
+
+        $creds['username'] = 'tokenStorage';
+        SugarClientStub::removeStoredToken($creds);
+        $token = SugarClientStub::getStoredToken($creds);
+        $this->assertEmpty($token);
+
+        SugarClientStub::removeStoredToken(array('client_id' => 'sugar_abstract_test'));
+        $token = SugarClientStub::getStoredToken($this->credentials);
+        $this->assertEmpty($token);
     }
 
     /**
