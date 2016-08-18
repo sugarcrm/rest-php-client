@@ -261,16 +261,22 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @inheritdoc
      */
     public static function storeToken($token, $credentials) {
-        $client_id = $credentials['client_id'];
-        $platform = $credentials['platform'];
-        $username = $credentials['username'];
-        if (!isset(static::$_STORED_TOKENS[$client_id])){
-            static::$_STORED_TOKENS[$client_id] = array();
-            if (!isset(static::$_STORED_TOKENS[$client_id][$platform])){
-                static::$_STORED_TOKENS[$client_id][$platform] = array();
+        if (is_array($credentials)) {
+            if (isset($credentials['client_id'])&&isset($credentials['platform'])&&isset($credentials['username'])) {
+                $client_id = $credentials['client_id'];
+                $platform = $credentials['platform'];
+                $username = $credentials['username'];
+                if (!isset(static::$_STORED_TOKENS[$client_id])) {
+                    static::$_STORED_TOKENS[$client_id] = array();
+                    if (!isset(static::$_STORED_TOKENS[$client_id][$platform])) {
+                        static::$_STORED_TOKENS[$client_id][$platform] = array();
+                    }
+                }
+                static::$_STORED_TOKENS[$client_id][$platform][$username] = $token;
+                return TRUE;
             }
         }
-        static::$_STORED_TOKENS[$client_id][$platform][$username] = $token;
+        return FALSE;
     }
 
     /**
@@ -296,9 +302,12 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @inheritdoc
      */
     public static function removeStoredToken($credentials) {
+        if (!is_array($credentials)||!isset($credentials['client_id'])){
+            return FALSE;
+        }
         $client_id = $credentials['client_id'];
-        $platform = $credentials['platform'];
-        $username = $credentials['username'];
+        $platform = isset($credentials['platform'])?$credentials['platform']:NULL;
+        $username = isset($credentials['username'])?$credentials['username']:NULL;
         if (empty($platform) && empty($username)) {
             return parent::removeStoredToken($client_id);
         }else{

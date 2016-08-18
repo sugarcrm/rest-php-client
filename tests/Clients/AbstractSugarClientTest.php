@@ -282,6 +282,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
         SugarClientStub::removeStoredToken(array('client_id' => 'sugar_abstract_test'));
         $token = SugarClientStub::getStoredToken($this->credentials);
         $this->assertEmpty($token);
+
+        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,'test'));
+        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test')));
+        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test','platform' => 'test')));
+        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test','username' => 'test')));
+        $this->assertEquals(FALSE,SugarClientStub::removeStoredToken('test'));
+        $this->assertEquals(FALSE,SugarClientStub::removeStoredToken(array('platform' => 'test')));
     }
 
     /**
