@@ -103,11 +103,9 @@ abstract class AbstractSugarClient extends AbstractClient {
             }
         }
         parent::setCredentials($this->credentials);
-        if (isset($this->credentials['client_id'])) {
-            $token = static::getStoredToken($this->credentials['client_id']);
-            if (!empty($token)) {
-                $this->setToken($token);
-            }
+        $token = static::getStoredToken($this->credentials);
+        if (!empty($token)) {
+            $this->setToken($token);
         }
         return $this;
     }
@@ -186,7 +184,7 @@ abstract class AbstractSugarClient extends AbstractClient {
             $response = $this->oauth2Token()->execute($this->credentials)->getResponse();
             if ($response->getStatus() == '200') {
                 $this->setToken($response->getBody(FALSE));
-                static::storeToken($this->token, $this->credentials['client_id']);
+                static::storeToken($this->token, $this->credentials);
                 return TRUE;
             } else {
                 if ($response->getError() === FALSE) {
@@ -242,9 +240,7 @@ abstract class AbstractSugarClient extends AbstractClient {
         if ($this->authenticated()){
             $response = $this->oauth2Logout()->execute()->getResponse();
             if ($response->getStatus()=='200'){
-                if (isset($this->credentials['client_id'])) {
-                    static::removeStoredToken($this->credentials['client_id']);
-                }
+                static::removeStoredToken($this->credentials);
                 return parent::logout();
             }else{
                 if ($response->getError() === FALSE) {
@@ -257,6 +253,71 @@ abstract class AbstractSugarClient extends AbstractClient {
             }
         }
         return FALSE;
+    }
+
+    /**
+     * @param \stdClass $token
+     * @param array $credentials
+     * @inheritdoc
+     */
+    public static function storeToken($token, $credentials) {
+        if (is_array($credentials)) {
+            if (isset($credentials['client_id'])&&isset($credentials['platform'])&&isset($credentials['username'])) {
+                $client_id = $credentials['client_id'];
+                $platform = $credentials['platform'];
+                $username = $credentials['username'];
+                if (!isset(static::$_STORED_TOKENS[$client_id])) {
+                    static::$_STORED_TOKENS[$client_id] = array();
+                    if (!isset(static::$_STORED_TOKENS[$client_id][$platform])) {
+                        static::$_STORED_TOKENS[$client_id][$platform] = array();
+                    }
+                }
+                static::$_STORED_TOKENS[$client_id][$platform][$username] = $token;
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * @param array $credentials
+     * @inheritdoc
+     */
+    public static function getStoredToken($credentials) {
+        $storeData = parent::getStoredToken($credentials['client_id']);
+        if (!empty($storeData)){
+            $platform = $credentials['platform'];
+            if (isset($storeData[$platform])){
+                $username = $credentials['username'];
+                if (isset($storeData[$platform][$username])){
+                    return $storeData[$platform][$username];
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * @param array $credentials
+     * @inheritdoc
+     */
+    public static function removeStoredToken($credentials) {
+        if (!is_array($credentials)||!isset($credentials['client_id'])){
+            return FALSE;
+        }
+        $client_id = $credentials['client_id'];
+        $platform = isset($credentials['platform'])?$credentials['platform']:NULL;
+        $username = isset($credentials['username'])?$credentials['username']:NULL;
+        if (empty($platform) && empty($username)) {
+            return parent::removeStoredToken($client_id);
+        }else{
+            if (empty($username)){
+                unset(static::$_STORED_TOKENS[$client_id][$platform]);
+            }else{
+                unset(static::$_STORED_TOKENS[$client_id][$platform][$username]);
+            }
+        }
+        return TRUE;
     }
 
 }

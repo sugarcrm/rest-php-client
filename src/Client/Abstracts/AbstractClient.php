@@ -172,25 +172,26 @@ abstract class AbstractClient implements ClientInterface {
 
     /**
      * @inheritdoc
-     * @param \stdClass $token
+     * @param mixed $token
+     * @param string $identifier
      */
-    public static function storeToken($token, $client_id) {
-        static::$_STORED_TOKENS[$client_id] = $token;
+    public static function storeToken($token,$identifier) {
+        static::$_STORED_TOKENS[$identifier] = $token;
         return TRUE;
     }
 
     /**
      * @inheritdoc
      */
-    public static function getStoredToken($client_id) {
-        return (isset(static::$_STORED_TOKENS[$client_id])?static::$_STORED_TOKENS[$client_id]:NULL);
+    public static function getStoredToken($identifier) {
+        return (isset(static::$_STORED_TOKENS[$identifier])?static::$_STORED_TOKENS[$identifier]:NULL);
     }
 
     /**
      * @inheritdoc
      */
-    public static function removeStoredToken($client_id) {
-        unset(static::$_STORED_TOKENS[$client_id]);
+    public static function removeStoredToken($identifier) {
+        unset(static::$_STORED_TOKENS[$identifier]);
         return TRUE;
     }
 

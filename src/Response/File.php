@@ -62,7 +62,8 @@ class File extends AbstractResponse {
         foreach (explode("\r\n", $this->headers) as $header)
         {
             if (strpos($header, 'filename')!==FALSE){
-                $this->setFileName(substr($header, (strpos($header, "\"")+1), -1));
+                $fileName = substr($header, (strpos($header, "=")+1));
+                $this->setFileName($fileName);
             }
         }
     }
@@ -73,6 +74,8 @@ class File extends AbstractResponse {
      * @return self
      */
     public function setFileName($fileName){
+        $fileName = preg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $fileName);
+        $fileName = preg_replace("([\.]{2,})", '', $fileName);
         $this->fileName = $fileName;
         return $this;
     }
