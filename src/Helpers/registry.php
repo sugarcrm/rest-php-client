@@ -14,6 +14,7 @@ $entryPoints = array(
     'getRelated' => 'GET\\ModuleRecordLinkRecord',
     'me' => 'GET\\Me',
     'search' => 'GET\\Search',
+    'preferences' => 'GET\\MePreferences',
 
     //POST API Endpoints
     'oauth2Token' => 'POST\\OAuth2Token',
@@ -29,6 +30,8 @@ $entryPoints = array(
     //PUT API Endpoints
     'updateRecord' => 'PUT\\ModuleRecord',
     'favorite' => 'PUT\\ModuleRecordFavorite',
+    'updateMe' => 'PUT\\Me',
+    'updatePreferences' => 'PUT\\MePreferences',
 
     //DELETE API Endpoints
     'deleteRecord' => 'DELETE\\ModuleRecord',
