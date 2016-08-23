@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\POST;
 
 use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostEndpoint;
 
-class ModuleFilter extends AbstractPostEndpoint {
-
+class ModuleFilter extends AbstractPostEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/filter';
-
 }

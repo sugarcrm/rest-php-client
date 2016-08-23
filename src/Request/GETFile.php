@@ -5,11 +5,10 @@
 
 namespace SugarAPI\SDK\Request;
 
-class GETFile extends GET {
-
+class GETFile extends GET
+{
     /**
      * @inheritdoc
      */
-    protected static $_DEFAULT_HEADERS = array();
-
+    protected static $DEFAULT_HEADERS = array();
 }

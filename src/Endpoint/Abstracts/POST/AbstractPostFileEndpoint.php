@@ -9,12 +9,12 @@ use SugarAPI\SDK\Endpoint\Abstracts\AbstractEndpoint;
 use SugarAPI\SDK\Request\POSTFile;
 use SugarAPI\SDK\Response\JSON;
 
-abstract class AbstractPostFileEndpoint extends AbstractEndpoint {
-
-    public function __construct($url, array $options = array()){
+abstract class AbstractPostFileEndpoint extends AbstractEndpoint
+{
+    public function __construct($url, array $options = array())
+    {
         $this->setRequest(new POSTFile());
         $this->setResponse(new JSON($this->Request->getCurlObject()));
         parent::__construct($url, $options);
     }
-
 }

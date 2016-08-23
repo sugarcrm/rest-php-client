@@ -8,8 +8,8 @@ namespace SugarAPI\SDK\Endpoint\POST;
 use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostFileEndpoint;
 use SugarAPI\SDK\Exception\Endpoint\RequiredOptionsException;
 
-class ModuleRecordFileField extends AbstractPostFileEndpoint {
-
+class ModuleRecordFileField extends AbstractPostFileEndpoint
+{
     /**
      * @inheritdoc
      */
@@ -25,7 +25,7 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint {
      */
     protected $_REQUIRED_DATA = array(
         'format' => 'sugar-html-json',
-        'delete_if_fails' => FALSE
+        'delete_if_fails' => false
     );
 
     /**
@@ -34,7 +34,8 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint {
      * @param $data
      * @throws RequiredOptionsException
      */
-    protected function configureData($data){
+    protected function configureData($data)
+    {
         if (is_string($data)) {
             if (!empty($this->Options)) {
                 $fileField = end($this->Options);
@@ -45,9 +46,9 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint {
                 throw new RequiredOptionsException(get_called_class(), "Options are required, when passing String for data.");
             }
         }
-        if (is_array($data)){
-            foreach ($data as $key => $value){
-                if (!array_key_exists($key,$this->_REQUIRED_DATA)){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (!array_key_exists($key, $this->_REQUIRED_DATA)) {
                     $data[$key] = $this->setFileFieldValue($value);
                 }
             }
@@ -60,11 +61,11 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint {
      * @param string $value
      * @return string
      */
-    protected function setFileFieldValue($value){
-        if (strpos($value, '@')===FALSE){
+    protected function setFileFieldValue($value)
+    {
+        if (strpos($value, '@') === false) {
             $value = '@'.$value;
         }
         return $value;
     }
-
 }

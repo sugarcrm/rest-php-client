@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\GET;
 
 use SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetEndpoint;
 
-class ModuleRecordLinkRecord extends AbstractGetEndpoint {
-
+class ModuleRecordLinkRecord extends AbstractGetEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/link/$relationship/$record';
-
 }

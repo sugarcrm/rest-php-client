@@ -8,8 +8,8 @@ namespace SugarAPI\SDK\Endpoint\Interfaces;
 use SugarAPI\SDK\Request\Interfaces\RequestInterface;
 use SugarAPI\SDK\Response\Interfaces\ResponseInterface;
 
-interface EPInterface {
-
+interface EPInterface
+{
     /**
      * Set any options on the Endpoint, needed to manage the url, data, requests, response any logic really
      * @param array $options
@@ -94,5 +94,4 @@ interface EPInterface {
      * @return RequestInterface
      */
     public function getRequest();
-
 }

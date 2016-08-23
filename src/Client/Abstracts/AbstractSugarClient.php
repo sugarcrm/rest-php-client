@@ -9,7 +9,6 @@ use SugarAPI\SDK\Exception\Authentication\AuthenticationException;
 use SugarAPI\SDK\Exception\SDKException;
 use SugarAPI\SDK\Helpers\Helpers;
 
-
 /**
  * The Abstract Client implementation for Sugar
  * @package SugarAPI\SDK\Client\Abstracts\AbstractClient
@@ -18,7 +17,10 @@ use SugarAPI\SDK\Helpers\Helpers;
  * @method EPInterface getAttachment(string $module = '',string $record_id = '')
  * @method EPInterface getChangeLog(string $module = '',string $record_id = '')
  * @method EPInterface filterRelated(string $module = '')
- * @method EPInterface getRelated(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
+ * @method EPInterface getRelated(string $module = '',
+ *           string $record_id = '',
+ *           string $relationship = '',
+ *           string $related_id = '')
  * @method EPInterface me()
  * @method EPInterface search()
  * @method EPInterface oauth2Token()
@@ -37,8 +39,8 @@ use SugarAPI\SDK\Helpers\Helpers;
  * @method EPInterface deleteFile()
  * @method EPInterface unlinkRecords()
  */
-abstract class AbstractSugarClient extends AbstractClient {
-
+abstract class AbstractSugarClient extends AbstractClient
+{
     /**
      * @inheritdoc
      * @var array
@@ -53,15 +55,17 @@ abstract class AbstractSugarClient extends AbstractClient {
 
     /**
      * The API Version to be used.
-     * Defaults to 10 (for v10), but can be any number above 10, since customizing API allows for additional versioning to allow for duplicate entrypoints
+     * Defaults to 10 (for v10), but can be any number above 10,
+     * since customizing API allows for additional versioning to allow for duplicate entrypoints
      * @var
      */
     protected $apiVersion = 10;
 
-    public function __construct($server = '',array $credentials = array()){
-        $server = (empty($server)?$this->server:$server);
+    public function __construct($server = '', array $credentials = array())
+    {
+        $server = (empty($server) ? $this->server : $server);
         $this->setServer($server);
-        $credentials = (empty($credentials)?$this->credentials:$credentials);
+        $credentials = (empty($credentials) ? $this->credentials : $credentials);
         $this->setCredentials($credentials);
         $this->registerSDKEndpoints();
     }
@@ -69,15 +73,17 @@ abstract class AbstractSugarClient extends AbstractClient {
     /**
      * @inheritdoc
      */
-    protected function setAPIUrl() {
-        $this->apiURL = Helpers::configureAPIURL($this->server,$this->apiVersion);
+    protected function setAPIUrl()
+    {
+        $this->apiURL = Helpers::configureAPIURL($this->server, $this->apiVersion);
     }
 
     /**
      * @param $version
      * @return $this
      */
-    public function setVersion($version){
+    public function setVersion($version)
+    {
         $this->apiVersion = intval($version);
         $this->setAPIUrl();
         return $this;
@@ -87,7 +93,8 @@ abstract class AbstractSugarClient extends AbstractClient {
      * Get the Version of API being used by the Client
      * @return int
      */
-    public function getVersion(){
+    public function getVersion()
+    {
         return $this->apiVersion;
     }
 
@@ -96,9 +103,10 @@ abstract class AbstractSugarClient extends AbstractClient {
      * Overrides only the credentials properties passed in, instead of entire credentials array
      * Retrieves stored token based on passed in Credentials
      */
-    public function setCredentials(array $credentials){
-        foreach ($this->credentials as $key => $value){
-            if (isset($credentials[$key])){
+    public function setCredentials(array $credentials)
+    {
+        foreach ($this->credentials as $key => $value) {
+            if (isset($credentials[$key])) {
                 $this->credentials[$key] = $credentials[$key];
             }
         }
@@ -113,17 +121,18 @@ abstract class AbstractSugarClient extends AbstractClient {
     /**
      * @inheritdoc
      */
-    public function setToken($token){
+    public function setToken($token)
+    {
         if ($token instanceof \stdClass) {
-            if (!isset($token->expiration)){
+            if (!isset($token->expiration)) {
                 $token->expiration = time() + $token->expires_in;
             }
-            if (!isset($token->refresh_expiration)){
+            if (!isset($token->refresh_expiration)) {
                 $token->refresh_expiration = time() + $token->refresh_expires_in;
             }
             parent::setToken($token);
             return $this;
-        }else{
+        } else {
             throw new SDKException('Sugar API Client requires Token to be of type \stdClass');
         }
     }
@@ -131,20 +140,22 @@ abstract class AbstractSugarClient extends AbstractClient {
     /**
      * @inheritdoc
      */
-    public function authenticated(){
-        if (parent::authenticated()){
-            if (!$this->expiredToken()){
-                return TRUE;
+    public function authenticated()
+    {
+        if (parent::authenticated()) {
+            if (!$this->expiredToken()) {
+                return true;
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * Check if token is expired based on Access Token Expiration
      * @return bool
      */
-    protected function expiredToken(){
+    protected function expiredToken()
+    {
         return time() >= $this->token->expiration;
     }
 
@@ -152,9 +163,10 @@ abstract class AbstractSugarClient extends AbstractClient {
      * Register the defined Endpoints in SDK, located in src/Endpoint/registry.php file
      * @throws EndpointException
      */
-    protected function registerSDKEndpoints(){
+    protected function registerSDKEndpoints()
+    {
         $entryPoints = Helpers::getSDKEndpointRegistry();
-        foreach ($entryPoints as $funcName => $className){
+        foreach ($entryPoints as $funcName => $className) {
             $this->registerEndpoint($funcName, $className);
         }
     }
@@ -163,10 +175,11 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @inheritdoc
      * Adds Auth token to EntryPoint if Auth is required
      */
-    public function __call($name, $params){
-        $Endpoint = parent::__call($name,$params);
+    public function __call($name, $params)
+    {
+        $Endpoint = parent::__call($name, $params);
 
-        if ($Endpoint->authRequired()){
+        if ($Endpoint->authRequired()) {
             $Endpoint->setAuth($this->token->access_token);
         }
         return $Endpoint;
@@ -176,36 +189,38 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @inheritdoc
      * @throws AuthenticationException - When Login request fails
      */
-    public function login() {
-        if (!(empty($this->credentials['username'])||
-            empty($this->credentials['password'])||
-            empty($this->credentials['client_id'])||
+    public function login()
+    {
+        if (!(empty($this->credentials['username']) ||
+            empty($this->credentials['password']) ||
+            empty($this->credentials['client_id']) ||
             !isset($this->credentials['client_secret']))) {
             $response = $this->oauth2Token()->execute($this->credentials)->getResponse();
             if ($response->getStatus() == '200') {
-                $this->setToken($response->getBody(FALSE));
+                $this->setToken($response->getBody(false));
                 static::storeToken($this->token, $this->credentials);
-                return TRUE;
+                return true;
             } else {
-                if ($response->getError() === FALSE) {
+                if ($response->getError() === false) {
                     $error = $response->getBody();
                     $error = $error['error'] . " - " . $error['error_message'];
-                }else{
+                } else {
                     $error = $response->getError();
                 }
                 throw new AuthenticationException("Login Response [" .$response->getStatus() ."] - " .$error);
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * @inheritdoc
      * @throws AuthenticationException - When Refresh Request fails
      */
-    public function refreshToken(){
-        if (isset($this->credentials['client_id'])&&
-            isset($this->credentials['client_secret'])&&
+    public function refreshToken()
+    {
+        if (isset($this->credentials['client_id']) &&
+            isset($this->credentials['client_secret']) &&
             isset($this->token)) {
             if (time() < $this->token->refresh_expiration) {
                 $refreshOptions = array(
@@ -215,44 +230,45 @@ abstract class AbstractSugarClient extends AbstractClient {
                 );
                 $response = $this->oauth2Refresh()->execute($refreshOptions)->getResponse();
                 if ($response->getStatus() == '200') {
-                    $this->setToken($response->getBody(FALSE));
+                    $this->setToken($response->getBody(false));
                     static::storeToken($this->token, $this->credentials['client_id']);
-                    return TRUE;
+                    return true;
                 } else {
-                    if ($response->getError() === FALSE) {
+                    if ($response->getError() === false) {
                         $error = $response->getBody();
                         $error = $error['error'] . " - " . $error['error_message'];
-                    }else{
+                    } else {
                         $error = $response->getError();
                     }
                     throw new AuthenticationException("Refresh Response [" .$response->getStatus() ."] - " .$error);
                 }
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * @inheritdoc
      * @throws AuthenticationException - When logout request fails
      */
-    public function logout(){
-        if ($this->authenticated()){
+    public function logout()
+    {
+        if ($this->authenticated()) {
             $response = $this->oauth2Logout()->execute()->getResponse();
-            if ($response->getStatus()=='200'){
+            if ($response->getStatus()=='200') {
                 static::removeStoredToken($this->credentials);
                 return parent::logout();
-            }else{
-                if ($response->getError() === FALSE) {
+            } else {
+                if ($response->getError() === false) {
                     $error = $response->getBody();
                     $error = $error['error'] . " - " . $error['error_message'];
-                }else{
+                } else {
                     $error = $response->getError();
                 }
                 throw new AuthenticationException("Logout Response [" .$response->getStatus() ."] - " .$error);
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -260,7 +276,8 @@ abstract class AbstractSugarClient extends AbstractClient {
      * @param array $credentials
      * @inheritdoc
      */
-    public static function storeToken($token, $credentials) {
+    public static function storeToken($token, $credentials)
+    {
         if (is_array($credentials)) {
             if (isset($credentials['client_id'])&&isset($credentials['platform'])&&isset($credentials['username'])) {
                 $client_id = $credentials['client_id'];
@@ -273,51 +290,52 @@ abstract class AbstractSugarClient extends AbstractClient {
                     }
                 }
                 static::$_STORED_TOKENS[$client_id][$platform][$username] = $token;
-                return TRUE;
+                return true;
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * @param array $credentials
      * @inheritdoc
      */
-    public static function getStoredToken($credentials) {
+    public static function getStoredToken($credentials)
+    {
         $storeData = parent::getStoredToken($credentials['client_id']);
-        if (!empty($storeData)){
+        if (!empty($storeData)) {
             $platform = $credentials['platform'];
-            if (isset($storeData[$platform])){
+            if (isset($storeData[$platform])) {
                 $username = $credentials['username'];
-                if (isset($storeData[$platform][$username])){
+                if (isset($storeData[$platform][$username])) {
                     return $storeData[$platform][$username];
                 }
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * @param array $credentials
      * @inheritdoc
      */
-    public static function removeStoredToken($credentials) {
-        if (!is_array($credentials)||!isset($credentials['client_id'])){
-            return FALSE;
+    public static function removeStoredToken($credentials)
+    {
+        if (!is_array($credentials)||!isset($credentials['client_id'])) {
+            return false;
         }
         $client_id = $credentials['client_id'];
-        $platform = isset($credentials['platform'])?$credentials['platform']:NULL;
-        $username = isset($credentials['username'])?$credentials['username']:NULL;
+        $platform = isset($credentials['platform']) ? $credentials['platform'] : null;
+        $username = isset($credentials['username']) ? $credentials['username'] : null;
         if (empty($platform) && empty($username)) {
             return parent::removeStoredToken($client_id);
-        }else{
-            if (empty($username)){
+        } else {
+            if (empty($username)) {
                 unset(static::$_STORED_TOKENS[$client_id][$platform]);
-            }else{
+            } else {
                 unset(static::$_STORED_TOKENS[$client_id][$platform][$username]);
             }
         }
-        return TRUE;
+        return true;
     }
-
 }

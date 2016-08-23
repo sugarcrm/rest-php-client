@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\GET;
 
 use SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetEndpoint;
 
-class Me extends AbstractGetEndpoint {
-
+class Me extends AbstractGetEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = 'me';
-
 }

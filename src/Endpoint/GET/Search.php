@@ -7,8 +7,7 @@ namespace SugarAPI\SDK\Endpoint\GET;
 
 use SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetEndpoint;
 
-class Search extends AbstractGetEndpoint {
-
+class Search extends AbstractGetEndpoint
+{
     protected $_URL = 'search';
-
 }
