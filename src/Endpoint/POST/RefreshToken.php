@@ -5,16 +5,15 @@
 
 namespace SugarAPI\SDK\Endpoint\POST;
 
-class RefreshToken extends Oauth2Token {
-
+class RefreshToken extends Oauth2Token
+{
     /**
      * @inheritdoc
      */
     protected $_REQUIRED_DATA = array(
         'grant_type' => 'refresh_token',
-        'refresh_token' => NULL,
-        'client_id' => NULL,
-        'client_secret' => NULL
+        'refresh_token' => null,
+        'client_id' => null,
+        'client_secret' => null
     );
-
 }

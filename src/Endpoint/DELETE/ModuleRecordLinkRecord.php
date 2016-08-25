@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\DELETE;
 
 use SugarAPI\SDK\Endpoint\Abstracts\DELETE\AbstractDeleteEndpoint;
 
-class ModuleRecordLinkRecord extends AbstractDeleteEndpoint {
-
+class ModuleRecordLinkRecord extends AbstractDeleteEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/link/$relationship/$record';
-
 }

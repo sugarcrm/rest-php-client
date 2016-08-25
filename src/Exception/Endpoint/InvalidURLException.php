@@ -5,6 +5,6 @@
 
 namespace SugarAPI\SDK\Exception\Endpoint;
 
-class InvalidURLException extends EndpointException {
-
+class InvalidURLException extends EndpointException
+{
 }

@@ -5,8 +5,8 @@
 
 namespace SugarAPI\SDK\Request\Interfaces;
 
-interface RequestInterface {
-
+interface RequestInterface
+{
     /**
      * Set the HTTP Method the Request object will use
      * @param string $type
@@ -122,5 +122,4 @@ interface RequestInterface {
      * @return string - Initialized, Sent or Closed
      */
     public function getCurlStatus();
-
 }

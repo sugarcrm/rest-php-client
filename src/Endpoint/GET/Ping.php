@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\GET;
 
 use SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetEndpoint;
 
-class Ping extends AbstractGetEndpoint {
-
+class Ping extends AbstractGetEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = 'ping';
-
 }

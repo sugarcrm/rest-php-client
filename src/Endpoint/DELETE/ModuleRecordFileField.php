@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\DELETE;
 
 use SugarAPI\SDK\Endpoint\Abstracts\DELETE\AbstractDeleteEndpoint;
 
-class ModuleRecordFileField extends AbstractDeleteEndpoint {
-
+class ModuleRecordFileField extends AbstractDeleteEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/file/$field';
-
 }

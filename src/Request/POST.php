@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Request;
 
 use SugarAPI\SDK\Request\Abstracts\AbstractRequest;
 
-class POST extends AbstractRequest {
-
+class POST extends AbstractRequest
+{
     /**
      * @inheritdoc
      */
@@ -25,7 +25,8 @@ class POST extends AbstractRequest {
      * JSON Encode Body
      * @inheritdoc
      */
-    public function setBody($body){
+    public function setBody($body)
+    {
         return parent::setBody(json_encode($body));
     }
 }

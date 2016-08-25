@@ -12,8 +12,8 @@ use SugarAPI\SDK\Exception\Endpoint\EndpointException;
  * A Generic Abstract Client
  * @package SugarAPI\SDK\Client\Abstracts\AbstractClient
  */
-abstract class AbstractClient implements ClientInterface {
-
+abstract class AbstractClient implements ClientInterface
+{
     /**
      * Array of Statically Bound Tokens for SDK Clients
      * - Allows for reinstating objects in multiple areas, without needing to Sign-in
@@ -60,7 +60,8 @@ abstract class AbstractClient implements ClientInterface {
      * @inheritdoc
      * @param string $server
      */
-    public function setServer($server) {
+    public function setServer($server)
+    {
         $this->server = $server;
         $this->setAPIUrl();
         return $this;
@@ -69,21 +70,24 @@ abstract class AbstractClient implements ClientInterface {
     /**
      * Configure the APIUrl Based on the current Server Property
      */
-    protected function setAPIUrl(){
+    protected function setAPIUrl()
+    {
         $this->apiURL = $this->server;
     }
 
     /**
      * @inheritdoc
      */
-    public function getAPIUrl() {
+    public function getAPIUrl()
+    {
         return $this->apiURL;
     }
 
     /**
      * @inheritdoc
      */
-    public function setCredentials(array $credentials){
+    public function setCredentials(array $credentials)
+    {
         $this->credentials = $credentials;
         return $this;
     }
@@ -91,7 +95,8 @@ abstract class AbstractClient implements ClientInterface {
     /**
      * @inheritdoc
      */
-    public function setToken($token){
+    public function setToken($token)
+    {
         $this->token = $token;
         return $this;
     }
@@ -99,28 +104,32 @@ abstract class AbstractClient implements ClientInterface {
     /**
      * @inheritdoc
      */
-    public function getToken(){
+    public function getToken()
+    {
         return $this->token;
     }
 
     /**
      * @inheritdoc
      */
-    public function getCredentials(){
+    public function getCredentials()
+    {
         return $this->credentials;
     }
 
     /**
      * @inheritdoc
      */
-    public function getServer() {
+    public function getServer()
+    {
         return $this->server;
     }
 
     /**
      * @inheritdoc
      */
-    public function authenticated(){
+    public function authenticated()
+    {
         return !empty($this->token);
     }
 
@@ -130,12 +139,13 @@ abstract class AbstractClient implements ClientInterface {
      * @return self
      * @throws EndpointException
      */
-    public function registerEndpoint($funcName, $className){
+    public function registerEndpoint($funcName, $className)
+    {
         $implements = class_implements($className);
-        if (is_array($implements) && in_array('SugarAPI\SDK\Endpoint\Interfaces\EPInterface',$implements)){
+        if (is_array($implements) && in_array('SugarAPI\SDK\Endpoint\Interfaces\EPInterface', $implements)) {
             $this->entryPoints[$funcName] = $className;
-        }else{
-            throw new EndpointException($className,'Class must extend SugarAPI\SDK\Endpoint\Interfaces\EPInterface');
+        } else {
+            throw new EndpointException($className, 'Class must extend SugarAPI\SDK\Endpoint\Interfaces\EPInterface');
         }
         return $this;
     }
@@ -147,27 +157,28 @@ abstract class AbstractClient implements ClientInterface {
      * @return mixed
      * @throws EndpointException
      */
-    public function __call($name, $params){
-        if (array_key_exists($name, $this->entryPoints)){
+    public function __call($name, $params)
+    {
+        if (array_key_exists($name, $this->entryPoints)) {
             $Class = $this->entryPoints[$name];
-            if (empty($params)){
+            if (empty($params)) {
                 $Endpoint = new $Class($this->apiURL);
-            }else {
+            } else {
                 $Endpoint = new $Class($this->apiURL, $params);
             }
-
             return $Endpoint;
-        }else{
-            throw new EndpointException($name,'Unregistered Endpoint');
+        } else {
+            throw new EndpointException($name, 'Unregistered Endpoint');
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function logout(){
-        $this->token = NULL;
-        return TRUE;
+    public function logout()
+    {
+        $this->token = null;
+        return true;
     }
 
     /**
@@ -175,24 +186,26 @@ abstract class AbstractClient implements ClientInterface {
      * @param mixed $token
      * @param string $identifier
      */
-    public static function storeToken($token,$identifier) {
+    public static function storeToken($token, $identifier)
+    {
         static::$_STORED_TOKENS[$identifier] = $token;
-        return TRUE;
+        return true;
     }
 
     /**
      * @inheritdoc
      */
-    public static function getStoredToken($identifier) {
-        return (isset(static::$_STORED_TOKENS[$identifier])?static::$_STORED_TOKENS[$identifier]:NULL);
+    public static function getStoredToken($identifier)
+    {
+        return (isset(static::$_STORED_TOKENS[$identifier])?static::$_STORED_TOKENS[$identifier]:null);
     }
 
     /**
      * @inheritdoc
      */
-    public static function removeStoredToken($identifier) {
+    public static function removeStoredToken($identifier)
+    {
         unset(static::$_STORED_TOKENS[$identifier]);
-        return TRUE;
+        return true;
     }
-
 }

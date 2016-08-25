@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Request\Abstracts;
 
 use SugarAPI\SDK\Request\Interfaces\RequestInterface;
 
-abstract class AbstractRequest implements RequestInterface {
-
+abstract class AbstractRequest implements RequestInterface
+{
     const STATUS_INIT = 'initialized';
     const STATUS_SENT = 'sent';
     const STATUS_CLOSED = 'closed';
@@ -25,9 +25,9 @@ abstract class AbstractRequest implements RequestInterface {
      */
     protected static $_DEFAULT_OPTIONS = array(
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_0,
-        CURLOPT_HEADER => TRUE,
-        CURLOPT_SSL_VERIFYPEER => FALSE,
-        CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_HEADER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_RETURNTRANSFER => true,
         CURLOPT_USERAGENT => 'Sugar-REST-PHP-Client'
     );
 
@@ -84,24 +84,25 @@ abstract class AbstractRequest implements RequestInterface {
      */
     protected $options = array();
 
-    public function __construct($url = NULL){
+    public function __construct($url = null)
+    {
         $this->start();
-        if (!empty($url)){
+        if (!empty($url)) {
             $this->setURL($url);
         }
         $this->setType(static::$_TYPE);
         $this->setHeaders(static::$_DEFAULT_HEADERS);
-        foreach (static::$_DEFAULT_OPTIONS as $option => $value){
+        foreach (static::$_DEFAULT_OPTIONS as $option => $value) {
             $this->setOption($option, $value);
         }
-
     }
 
     /**
      * Always make sure to destroy Curl Resource
      */
-    public function __destruct() {
-        if ($this->status!==self::STATUS_CLOSED){
+    public function __destruct()
+    {
+        if ($this->status !== self::STATUS_CLOSED) {
             curl_close($this->CurlRequest);
         }
     }
@@ -109,7 +110,8 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function setURL($url){
+    public function setURL($url)
+    {
         $this->url = $url;
         $this->setOption(CURLOPT_URL, $this->url);
         return $this;
@@ -118,14 +120,16 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getURL(){
+    public function getURL()
+    {
         return $this->url;
     }
 
     /**
      * @inheritdoc
      */
-    public function addHeader($name, $value){
+    public function addHeader($name, $value)
+    {
         $token = $name.": ".$value;
         $this->headers[] = $token;
         return $this;
@@ -134,12 +138,13 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function setHeaders(array $array = array()){
-        if (count($array)>0){
-            foreach ($array as $key => $value){
-                if (is_numeric($key)){
+    public function setHeaders(array $array = array())
+    {
+        if (count($array) > 0) {
+            foreach ($array as $key => $value) {
+                if (is_numeric($key)) {
                     $this->headers[] = $value;
-                }else {
+                } else {
                     $this->addHeader($key, $value);
                 }
             }
@@ -151,14 +156,16 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getHeaders(){
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
      * @inheritdoc
      */
-    public function setBody($body){
+    public function setBody($body)
+    {
         $this->body = $body;
         $this->setOption(CURLOPT_POSTFIELDS, $this->body);
         return $this;
@@ -167,21 +174,24 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getBody(){
+    public function getBody()
+    {
         return $this->body;
     }
 
     /**
      * @inheritdoc
      */
-    public function getCurlObject(){
+    public function getCurlObject()
+    {
         return $this->CurlRequest;
     }
 
     /**
      * @inheritdoc
      */
-    public function setOption($option, $value){
+    public function setOption($option, $value)
+    {
         curl_setopt($this->CurlRequest, $option, $value);
         $this->options[$option] = $value;
         return $this;
@@ -190,14 +200,16 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 
     /**
      * @inheritdoc
      */
-    public function send(){
+    public function send()
+    {
         $this->setHeaders();
         $this->CurlResponse = curl_exec($this->CurlRequest);
         $this->status = self::STATUS_SENT;
@@ -207,14 +219,16 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getCurlResponse(){
+    public function getCurlResponse()
+    {
         return $this->CurlResponse;
     }
 
     /**
      * @inheritdoc
      */
-    public function setType($type){
+    public function setType($type)
+    {
         $this->type = strtoupper($type);
         $this->configureType();
         return $this;
@@ -223,30 +237,33 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * Configure the Curl Options based on Request Type
      */
-    protected function configureType(){
+    protected function configureType()
+    {
         switch ($this->type) {
-               case 'POST':
-                    $this->setOption(CURLOPT_POST, TRUE);
-                    break;
-               case 'DELETE':
-               case 'PUT':
-                    $this->setOption(CURLOPT_CUSTOMREQUEST, $this->type);
-                    break;
+            case 'POST':
+                $this->setOption(CURLOPT_POST, true);
+                break;
+            case 'DELETE':
+            case 'PUT':
+                $this->setOption(CURLOPT_CUSTOMREQUEST, $this->type);
+                break;
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function getType(){
+    public function getType()
+    {
         return $this->type;
     }
 
     /**
      * @inheritdoc
      */
-    public function reset(){
-        if (gettype($this->CurlRequest)=='resource'){
+    public function reset()
+    {
+        if (gettype($this->CurlRequest) == 'resource') {
             $this->close();
         }
         $this->start();
@@ -256,7 +273,8 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function start(){
+    public function start()
+    {
         $this->CurlRequest = curl_init();
         $this->status = self::STATUS_INIT;
         return $this;
@@ -265,7 +283,8 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function close(){
+    public function close()
+    {
         curl_close($this->CurlRequest);
         unset($this->CurlRequest);
         $this->status = self::STATUS_CLOSED;
@@ -275,7 +294,8 @@ abstract class AbstractRequest implements RequestInterface {
     /**
      * @inheritdoc
      */
-    public function getCurlStatus(){
+    public function getCurlStatus()
+    {
         return $this->status;
     }
 }

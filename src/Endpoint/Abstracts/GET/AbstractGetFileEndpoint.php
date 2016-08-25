@@ -9,21 +9,23 @@ use SugarAPI\SDK\Endpoint\Abstracts\AbstractEndpoint;
 use SugarAPI\SDK\Request\GETFile;
 use SugarAPI\SDK\Response\File as FileResponse;
 
-abstract class AbstractGetFileEndpoint extends AbstractEndpoint {
-
+abstract class AbstractGetFileEndpoint extends AbstractEndpoint
+{
     /**
      * The directory in which to download the File
      * @var string
      */
     protected $downloadDir = null;
 
-    public function __construct($url, array $options = array()){
+    public function __construct($url, array $options = array())
+    {
         $this->setRequest(new GETFile());
         $this->setResponse(new FileResponse($this->Request->getCurlObject()));
         parent::__construct($url, $options);
     }
 
-    protected function configureResponse(){
+    protected function configureResponse()
+    {
         $this->Response->setDestinationPath($this->downloadDir);
         parent::configureResponse();
     }
@@ -33,7 +35,8 @@ abstract class AbstractGetFileEndpoint extends AbstractEndpoint {
      * @param $path
      * @return $this
      */
-    public function downloadTo($path){
+    public function downloadTo($path)
+    {
         $this->downloadDir = $path;
         return $this;
     }
@@ -42,8 +45,8 @@ abstract class AbstractGetFileEndpoint extends AbstractEndpoint {
      * Get the download directory for the File the Endpoint is retrieving
      * @return string
      */
-    public function getDownloadDir(){
+    public function getDownloadDir()
+    {
         return $this->downloadDir;
     }
-
 }

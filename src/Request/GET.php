@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Request;
 
 use SugarAPI\SDK\Request\Abstracts\AbstractRequest;
 
-class GET extends AbstractRequest {
-
+class GET extends AbstractRequest
+{
     /**
      * @inheritdoc
      */
@@ -26,7 +26,8 @@ class GET extends AbstractRequest {
      *
      * Convert Body to Query String
      */
-    public function setBody($body){
+    public function setBody($body)
+    {
         $this->body = http_build_query($body);
         return $this;
     }
@@ -36,17 +37,17 @@ class GET extends AbstractRequest {
      *
      * Configure the URL with Body since Payload is sent via Query String
      */
-    public function send(){
+    public function send()
+    {
         $body = '';
-        if (!empty($this->body)){
-            if (strpos($this->url,"?")===FALSE){
+        if (!empty($this->body)) {
+            if (strpos($this->url, "?") === false) {
                 $body = "?".$this->body;
-            }else{
+            } else {
                 $body = "&".$this->body;
             }
         }
         $this->setURL($this->url.$body);
         return parent::send();
     }
-
 }

@@ -5,8 +5,8 @@
 
 namespace SugarAPI\SDK\Response\Interfaces;
 
-interface ResponseInterface {
-
+interface ResponseInterface
+{
     /**
      * Provide the Raw Curl Response resource from curl_exec
      * @param mixed $curlResponse
@@ -43,6 +43,4 @@ interface ResponseInterface {
      * @return string|boolean
      */
     public function getError();
-
-
 }
