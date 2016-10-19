@@ -61,9 +61,10 @@ class File extends AbstractResponse {
     protected function extractFileName(){
         foreach (explode("\r\n", $this->headers) as $header)
         {
-            if (strpos($header, 'filename')!==FALSE){
+            if (strpos($header, 'filename') !== false && strpos($header, 'Content-Disposition') !== false) {
                 $fileName = substr($header, (strpos($header, "=")+1));
                 $this->setFileName($fileName);
+                break;
             }
         }
     }
