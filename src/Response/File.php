@@ -61,12 +61,14 @@ class File extends AbstractResponse
     /**
      * Extract the filename from the Headers, and store it in filename property
      */
-    protected function extractFileName()
-    {
-        foreach (explode("\r\n", $this->headers) as $header) {
-            if (strpos($header, 'filename') !== false) {
+    protected function extractFileName(){
+        foreach (explode("\r\n", $this->headers) as $header)
+        {
+            if (strpos($header, 'filename') !== false && strpos($header, 'Content-Disposition') !== false)
+            {
                 $fileName = substr($header, (strpos($header, "=")+1));
                 $this->setFileName($fileName);
+                break;
             }
         }
     }

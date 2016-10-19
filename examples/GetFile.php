@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$recordID = 'ac096703-67fd-8dd2-980a-57097932f07a';
+$recordID = 'e5ad5803-8669-d415-27dc-57e93bdc782d';
 
 try{
-    $SugarAPI = new \SugarAPI\SDK\SugarAPI('instances.this/Ent/7700/',array('username' => 'admin','password'=>'asdf'));
+    $SugarAPI = new \SugarAPI\SDK\SugarAPI('instances.this/Ent/7621/',array('username' => 'admin','password'=>'asdf'));
     $SugarAPI->login();
     $EP = $SugarAPI->getAttachment('Notes',$recordID,'filename')->downloadTo(__DIR__)->execute();
     $response = $EP->getResponse();
