@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Response;
 
 use SugarAPI\SDK\Response\Abstracts\AbstractResponse;
 
-class File extends AbstractResponse {
-
+class File extends AbstractResponse
+{
     /**
      * The name of the File from Response
      * @var string
@@ -21,8 +21,9 @@ class File extends AbstractResponse {
      */
     protected $destinationPath;
 
-    public function __construct($curlRequest, $curlResponse = NULL, $destination = NULL){
-        parent::__construct($curlRequest,$curlResponse);
+    public function __construct($curlRequest, $curlResponse = null, $destination = null)
+    {
+        parent::__construct($curlRequest, $curlResponse);
         $this->setDestinationPath($destination);
     }
 
@@ -31,7 +32,8 @@ class File extends AbstractResponse {
      * Extract Filename from Headers
      * @param mixed $curlResponse
      */
-    public function setCurlResponse($curlResponse) {
+    public function setCurlResponse($curlResponse)
+    {
         parent::setCurlResponse($curlResponse);
         if (!$this->error) {
             if (empty($this->fileName)) {
@@ -47,8 +49,9 @@ class File extends AbstractResponse {
      * @param null $destination
      * @return self
      */
-    public function setDestinationPath($destination = NULL){
-        if (empty($destination)){
+    public function setDestinationPath($destination = null)
+    {
+        if (empty($destination)) {
             $destination = sys_get_temp_dir().'/SugarAPI';
         }
         $this->destinationPath = $destination;
@@ -61,7 +64,8 @@ class File extends AbstractResponse {
     protected function extractFileName(){
         foreach (explode("\r\n", $this->headers) as $header)
         {
-            if (strpos($header, 'filename') !== false && strpos($header, 'Content-Disposition') !== false) {
+            if (strpos($header, 'filename') !== false && strpos($header, 'Content-Disposition') !== false)
+            {
                 $fileName = substr($header, (strpos($header, "=")+1));
                 $this->setFileName($fileName);
                 break;
@@ -74,7 +78,8 @@ class File extends AbstractResponse {
      * @param $fileName
      * @return self
      */
-    public function setFileName($fileName){
+    public function setFileName($fileName)
+    {
         $fileName = preg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $fileName);
         $fileName = preg_replace("([\.]{2,})", '', $fileName);
         $this->fileName = $fileName;
@@ -85,7 +90,8 @@ class File extends AbstractResponse {
      * Return the filename found in response
      * @return mixed
      */
-    public function getFileName(){
+    public function getFileName()
+    {
         return $this->fileName;
     }
 
@@ -93,18 +99,19 @@ class File extends AbstractResponse {
      * Write the downloaded file
      * @return string|boolean - False if not written
      */
-    public function writeFile(){
-        if (!empty($this->fileName)){
-            if (!file_exists($this->destinationPath)){
+    public function writeFile()
+    {
+        if (!empty($this->fileName)) {
+            if (!file_exists($this->destinationPath)) {
                 mkdir($this->destinationPath, 0777);
             }
             $file = $this->file();
-            $fileHandle = fopen($file,'w+');
-            fwrite($fileHandle,$this->body);
+            $fileHandle = fopen($file, 'w+');
+            fwrite($fileHandle, $this->body);
             fclose($fileHandle);
             return $file;
-        }else{
-            return FALSE;
+        } else {
+            return false;
         }
     }
 
@@ -112,8 +119,8 @@ class File extends AbstractResponse {
      * Return the full File path, where Response was stored
      * @return string
      */
-    public function file(){
+    public function file()
+    {
         return rtrim($this->destinationPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$this->fileName;
     }
-
 }

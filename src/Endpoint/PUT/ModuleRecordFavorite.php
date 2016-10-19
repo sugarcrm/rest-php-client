@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\PUT;
 
 use SugarAPI\SDK\Endpoint\Abstracts\PUT\AbstractPutEndpoint;
 
-class ModuleRecordFavorite extends AbstractPutEndpoint {
-
+class ModuleRecordFavorite extends AbstractPutEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/favorite';
-
 }

@@ -5,6 +5,6 @@
 
 namespace SugarAPI\SDK\Exception\Endpoint;
 
-class RequiredOptionsException extends EndpointException {
-
+class RequiredOptionsException extends EndpointException
+{
 }

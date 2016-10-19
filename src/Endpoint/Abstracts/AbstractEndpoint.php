@@ -5,7 +5,6 @@
 
 namespace SugarAPI\SDK\Endpoint\Abstracts;
 
-
 use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
 use SugarAPI\SDK\Exception\Endpoint\InvalidRequestException;
 use SugarAPI\SDK\Exception\Endpoint\InvalidURLException;
@@ -18,8 +17,8 @@ use SugarAPI\SDK\Request\Interfaces\RequestInterface;
  * Class AbstractEndpoint
  * @package SugarAPI\SDK\Endpoint\Abstracts
  */
-abstract class AbstractEndpoint implements EPInterface {
-
+abstract class AbstractEndpoint implements EPInterface
+{
     /**
      * Whether or not Authentication is Required
      * @var bool
@@ -66,7 +65,7 @@ abstract class AbstractEndpoint implements EPInterface {
 
     /**
      * The passed in Options for the Endpoint
-     * - If $module variable is used in $_URL static property, then 1st option will be used as Module
+     * - If $module variable is used in $URL static property, then 1st option will be used as Module
      * @var array
      */
     protected $Options = array();
@@ -97,7 +96,8 @@ abstract class AbstractEndpoint implements EPInterface {
     protected $accessToken;
 
 
-    public function __construct($baseUrl,array $options = array()){
+    public function __construct($baseUrl, array $options = array())
+    {
         $this->baseUrl = $baseUrl;
 
         if (!empty($options)) {
@@ -109,7 +109,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function setOptions(array $options){
+    public function setOptions(array $options)
+    {
         $this->Options = $options;
         $this->configureURL();
         return $this;
@@ -119,7 +120,8 @@ abstract class AbstractEndpoint implements EPInterface {
      * @inheritdoc
      * @throws RequiredDataException - When passed in data contains issues
      */
-    public function setData($data){
+    public function setData($data)
+    {
         $this->Data = $data;
         return $this;
     }
@@ -128,7 +130,8 @@ abstract class AbstractEndpoint implements EPInterface {
      * @inheritdoc
      * @param string
      */
-    public function setAuth($accessToken) {
+    public function setAuth($accessToken)
+    {
         $this->accessToken = $accessToken;
         return $this;
     }
@@ -136,7 +139,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         $this->Url = $url;
         return $this;
     }
@@ -144,7 +148,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function setRequest(RequestInterface $Request) {
+    public function setRequest(RequestInterface $Request)
+    {
         $this->Request = $Request;
         return $this;
     }
@@ -152,7 +157,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function setResponse(ResponseInterface $Response) {
+    public function setResponse(ResponseInterface $Response)
+    {
         $this->Response = $Response;
         return $this;
     }
@@ -160,35 +166,40 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function getOptions(){
+    public function getOptions()
+    {
         return $this->Options;
     }
 
     /**
      * @inheritdoc
      */
-    public function getData(){
+    public function getData()
+    {
         return $this->Data;
     }
 
     /**
      * @inheritdoc
      */
-    public function getUrl(){
+    public function getUrl()
+    {
         return $this->Url;
     }
 
     /**
      * @inheritdoc
      */
-    public function getResponse(){
+    public function getResponse()
+    {
         return $this->Response;
     }
 
     /**
      * @inheritdoc
      */
-    public function getRequest(){
+    public function getRequest()
+    {
         return $this->Request;
     }
 
@@ -199,15 +210,16 @@ abstract class AbstractEndpoint implements EPInterface {
      * @throws InvalidRequestException
      * @throws InvalidURLException
      */
-    public function execute($data = NULL){
-        $data =  ($data === NULL?$this->Data:$data);
+    public function execute($data = null)
+    {
+        $data =  ($data === null ? $this->Data : $data);
         $this->configureData($data);
         if (is_object($this->Request)) {
             $this->configureRequest();
             $this->Request->send();
             $this->configureResponse();
-        }else{
-            throw new InvalidRequestException(get_called_class(),"Request property not configured");
+        } else {
+            throw new InvalidRequestException(get_called_class(), "Request property not configured");
         }
         return $this;
     }
@@ -215,7 +227,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * @inheritdoc
      */
-    public function authRequired() {
+    public function authRequired()
+    {
         return $this->_AUTH_REQUIRED;
     }
 
@@ -224,7 +237,8 @@ abstract class AbstractEndpoint implements EPInterface {
      * @throws InvalidURLException
      * @throws RequiredDataException
      */
-    protected function configureRequest(){
+    protected function configureRequest()
+    {
         if ($this->verifyUrl()) {
             $this->Request->setURL($this->Url);
         }
@@ -239,8 +253,9 @@ abstract class AbstractEndpoint implements EPInterface {
      * @throws InvalidURLException
      * @throws RequiredDataException
      */
-    protected function configureResponse(){
-        if (is_object($this->Response)){
+    protected function configureResponse()
+    {
+        if (is_object($this->Response)) {
             $this->Response->setCurlResponse($this->Request->getCurlResponse());
         }
     }
@@ -248,7 +263,8 @@ abstract class AbstractEndpoint implements EPInterface {
     /**
      * Configures the authentication header on the Request object
      */
-    protected function configureAuth(){
+    protected function configureAuth()
+    {
         if ($this->authRequired()) {
             $this->Request->addHeader('OAuth-Token', $this->accessToken);
         }
@@ -258,8 +274,9 @@ abstract class AbstractEndpoint implements EPInterface {
      * Configures Data for the Endpoint. Used mainly as an override function on implemented Endpoints.
      * @var $data
      */
-    protected function configureData($data){
-        if (!empty($this->_REQUIRED_DATA)&&is_array($data)){
+    protected function configureData($data)
+    {
+        if (!empty($this->_REQUIRED_DATA)&&is_array($data)) {
             $data = $this->configureDefaultData($data);
         }
         $this->setData($data);
@@ -270,9 +287,10 @@ abstract class AbstractEndpoint implements EPInterface {
      * @param array $data
      * @return array
      */
-    protected function configureDefaultData(array $data){
-        foreach($this->_REQUIRED_DATA as $property => $value){
-            if (!isset($data[$property]) && $value!==NULL){
+    protected function configureDefaultData(array $data)
+    {
+        foreach ($this->_REQUIRED_DATA as $property => $value) {
+            if (!isset($data[$property]) && $value !== null) {
                 $data[$property] = $value;
             }
         }
@@ -284,11 +302,12 @@ abstract class AbstractEndpoint implements EPInterface {
      * - Replaces $module with $this->Module
      * - Replaces all other variables starting with $, with options in the order they were given
      */
-    protected function configureURL(){
+    protected function configureURL()
+    {
         $url = $this->_URL;
         if ($this->requiresOptions()) {
-            foreach($this->Options as $key => $option){
-                $url = preg_replace('/(\$.*?[^\/]*)/',$option,$url,1);
+            foreach ($this->Options as $key => $option) {
+                $url = preg_replace('/(\$.*?[^\/]*)/', $option, $url, 1);
             }
         }
         $url = $this->baseUrl.$url;
@@ -300,10 +319,11 @@ abstract class AbstractEndpoint implements EPInterface {
      * @return bool
      * @throws InvalidURLException
      */
-    protected function verifyUrl(){
-        $UrlArray = explode("?",$this->Url);
-        if (strpos($UrlArray[0],"$") !== FALSE){
-            throw new InvalidURLException(get_called_class(),"Configured URL is ".$this->Url);
+    protected function verifyUrl()
+    {
+        $UrlArray = explode("?", $this->Url);
+        if (strpos($UrlArray[0], "$") !== false) {
+            throw new InvalidURLException(get_called_class(), "Configured URL is ".$this->Url);
         }
         return true;
     }
@@ -313,11 +333,12 @@ abstract class AbstractEndpoint implements EPInterface {
      * @return bool
      * @throws RequiredDataException
      */
-    protected function verifyData(){
-        if (isset($this->_DATA_TYPE)||!empty($this->_DATA_TYPE)) {
+    protected function verifyData()
+    {
+        if (isset($this->_DATA_TYPE) || !empty($this->_DATA_TYPE)) {
             $this->verifyDataType();
         }
-        if (!empty($this->_REQUIRED_DATA)){
+        if (!empty($this->_REQUIRED_DATA)) {
             $this->verifyRequiredData();
         }
         return true;
@@ -328,9 +349,10 @@ abstract class AbstractEndpoint implements EPInterface {
      * @return bool
      * @throws RequiredDataException
      */
-    protected function verifyDataType(){
+    protected function verifyDataType()
+    {
         if (gettype($this->Data) !== $this->_DATA_TYPE) {
-            throw new RequiredDataException(get_called_class(),"Valid DataType is {$this->_DATA_TYPE}");
+            throw new RequiredDataException(get_called_class(), "Valid DataType is {$this->_DATA_TYPE}");
         }
         return true;
     }
@@ -340,15 +362,16 @@ abstract class AbstractEndpoint implements EPInterface {
      * @return bool
      * @throws RequiredDataException
      */
-    protected function verifyRequiredData(){
+    protected function verifyRequiredData()
+    {
         $errors = array();
-        foreach($this->_REQUIRED_DATA as $property => $defaultValue){
-            if ((!isset($this->Data[$property]))&&empty($defaultValue)){
+        foreach ($this->_REQUIRED_DATA as $property => $defaultValue) {
+            if ((!isset($this->Data[$property])) && empty($defaultValue)) {
                 $errors[] = $property;
             }
         }
-        if (count($errors)>0){
-            throw new RequiredDataException(get_called_class(),"Missing data for ".implode(",",$errors));
+        if (count($errors) > 0) {
+            throw new RequiredDataException(get_called_class(), "Missing data for ".implode(",", $errors));
         }
         return true;
     }
@@ -357,8 +380,8 @@ abstract class AbstractEndpoint implements EPInterface {
      * Checks if Endpoint URL contains requires Options
      * @return bool
      */
-    protected function requiresOptions(){
-        return strpos($this->_URL,"$") === FALSE?FALSE:TRUE;
+    protected function requiresOptions()
+    {
+        return strpos($this->_URL, "$") === false ? false : true;
     }
-
 }

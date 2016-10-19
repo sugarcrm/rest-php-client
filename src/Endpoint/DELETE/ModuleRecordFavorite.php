@@ -7,8 +7,7 @@ namespace SugarAPI\SDK\Endpoint\DELETE;
 
 use SugarAPI\SDK\Endpoint\Abstracts\DELETE\AbstractDeleteEndpoint;
 
-class ModuleRecordFavorite extends AbstractDeleteEndpoint {
-
+class ModuleRecordFavorite extends AbstractDeleteEndpoint
+{
     protected $_URL = '$module/$record/favorite';
-
 }

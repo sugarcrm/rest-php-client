@@ -7,12 +7,10 @@ namespace SugarAPI\SDK\Endpoint\GET;
 
 use SugarAPI\SDK\Endpoint\Abstracts\GET\AbstractGetFileEndpoint;
 
-class ModuleRecordFileField extends AbstractGetFileEndpoint {
-
+class ModuleRecordFileField extends AbstractGetFileEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/file/$field';
-
-
 }

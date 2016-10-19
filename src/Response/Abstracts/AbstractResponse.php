@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Response\Abstracts;
 
 use SugarAPI\SDK\Response\Interfaces\ResponseInterface;
 
-abstract class AbstractResponse implements ResponseInterface {
-
+abstract class AbstractResponse implements ResponseInterface
+{
     /**
      * The Curl Request Resource that was used when curl_exec was called
      * @var cURL resource handle
@@ -45,16 +45,18 @@ abstract class AbstractResponse implements ResponseInterface {
      */
     protected $info;
 
-    public function __construct($curlRequest,$curlResponse = NULL){
+    public function __construct($curlRequest, $curlResponse = null)
+    {
         $this->CurlRequest = $curlRequest;
-        if ($curlResponse!==NULL){
+        if ($curlResponse !== null) {
             $this->setCurlResponse($curlResponse);
         }
     }
 
-    public function setCurlResponse($curlResponse) {
+    public function setCurlResponse($curlResponse)
+    {
         $this->extractInfo();
-        if ($this->error === FALSE){
+        if ($this->error === false) {
             $this->extractResponse($curlResponse);
         }
     }
@@ -63,13 +65,14 @@ abstract class AbstractResponse implements ResponseInterface {
      * Extract the information from the Curl Request via curl_getinfo
      * Setup the Status property to be equal to the http_code
      */
-    protected function extractInfo(){
+    protected function extractInfo()
+    {
         $this->info = curl_getinfo($this->CurlRequest);
         $this->status = $this->info['http_code'];
-        if (curl_errno($this->CurlRequest)!== CURLE_OK){
+        if (curl_errno($this->CurlRequest)!== CURLE_OK) {
             $this->error = curl_error($this->CurlRequest);
-        }else {
-            $this->error = FALSE;
+        } else {
+            $this->error = false;
         }
     }
 
@@ -77,7 +80,8 @@ abstract class AbstractResponse implements ResponseInterface {
      * Seperate the Headers and Body from the CurlResponse, and set the object properties
      * @param string $curlResponse
      */
-    protected function extractResponse($curlResponse){
+    protected function extractResponse($curlResponse)
+    {
         $this->headers = substr($curlResponse, 0, $this->info['header_size']);
         $this->body = substr($curlResponse, $this->info['header_size']);
     }
@@ -85,36 +89,40 @@ abstract class AbstractResponse implements ResponseInterface {
     /**
      * @inheritdoc
      */
-    public function getStatus(){
+    public function getStatus()
+    {
         return $this->status;
     }
 
     /**
      * @inheritdoc
      */
-    public function getBody(){
+    public function getBody()
+    {
         return $this->body;
     }
 
     /**
      * @inheritdoc
      */
-    public function getHeaders(){
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
      * @inheritdoc
      */
-    public function getError(){
+    public function getError()
+    {
         return $this->error;
     }
 
     /**
      * @inheritdoc
      */
-    public function getInfo(){
+    public function getInfo()
+    {
         return $this->info;
     }
-
 }

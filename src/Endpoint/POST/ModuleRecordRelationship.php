@@ -5,14 +5,12 @@
 
 namespace SugarAPI\SDK\Endpoint\POST;
 
-
 use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostEndpoint;
 
-class ModuleRecordRelationship extends AbstractPostEndpoint {
-
+class ModuleRecordRelationship extends AbstractPostEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record/link/$relationship';
-
 }

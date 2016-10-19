@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Endpoint\POST;
 
 use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostEndpoint;
 
-class Bulk extends AbstractPostEndpoint {
-
+class Bulk extends AbstractPostEndpoint
+{
     /**
      * @inheritdoc
      */
@@ -23,7 +23,7 @@ class Bulk extends AbstractPostEndpoint {
      * @inheritdoc
      */
     protected $_REQUIRED_DATA = array(
-        'requests' => NULL
+        'requests' => null
     );
 
     private $bulkRequest = array(
@@ -38,7 +38,8 @@ class Bulk extends AbstractPostEndpoint {
      * @param $data
      * If array of Endpoint Interfaces are passed in, it will cover that to the proper Data array for the Bulk API
      */
-    protected function configureData($data) {
+    protected function configureData($data)
+    {
         if (!isset($data['requests'])) {
             $requestData = array(
                 'requests' => array()

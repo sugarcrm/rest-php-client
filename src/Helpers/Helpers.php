@@ -5,10 +5,9 @@
 
 namespace SugarAPI\SDK\Helpers;
 
-class Helpers {
-
+class Helpers
+{
     const API_VERSION = 10;
-
     const API_URL = '/rest/v%d/';
 
     /**
@@ -17,15 +16,16 @@ class Helpers {
      * @param int $version
      * @return string
      */
-    public static function configureAPIURL($instance,$version = NULL){
+    public static function configureAPIURL($instance, $version = null)
+    {
         $url = 0;
         $instance = strtolower(rtrim($instance, "/"));
-        $version = ($version===NULL?self::API_VERSION:intval($version));
-        if (preg_match('/^(http|https):\/\//i',$instance)===0){
+        $version = ($version === null ? self::API_VERSION : intval($version));
+        if (preg_match('/^(http|https):\/\//i', $instance) === 0) {
             $instance = "http://".$instance;
         }
-        $instance = preg_replace('/\/rest\/v\d+/','',$instance);
-        $url = $instance.sprintf(self::API_URL,$version);
+        $instance = preg_replace('/\/rest\/v\d+/', '', $instance);
+        $url = $instance.sprintf(self::API_URL, $version);
         return $url;
     }
 
@@ -33,7 +33,8 @@ class Helpers {
      * Return the list of Endpoints that come with the SDK
      * @return array
      */
-    public static function getSDKEndpointRegistry(){
+    public static function getSDKEndpointRegistry()
+    {
         $entryPoints = array();
         require __DIR__.DIRECTORY_SEPARATOR.'registry.php';
         foreach ($entryPoints as $funcName => $className) {
@@ -42,5 +43,4 @@ class Helpers {
         }
         return $entryPoints;
     }
-
 }

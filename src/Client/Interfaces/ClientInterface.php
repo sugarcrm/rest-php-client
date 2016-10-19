@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Client\Interfaces;
 
 use SugarAPI\SDK\Exception\Authentication\AuthenticationException;
 
-interface ClientInterface {
-
+interface ClientInterface
+{
     /**
      * Set the server on the Client, and configure the API Url if necessary
      * @param $server
@@ -34,7 +34,7 @@ interface ClientInterface {
      * @param $Endpoint - EPInterface Class Name
      * @return $this
      */
-    public function registerEndpoint($function,$Endpoint);
+    public function registerEndpoint($function, $Endpoint);
 
     /**
      * Login to the configured SugarCRM server
@@ -63,7 +63,7 @@ interface ClientInterface {
      * @param mixed $identifier
      * @return boolean
      */
-    public static function storeToken($token,$identifier);
+    public static function storeToken($token, $identifier);
 
     /**
      * Get an SDK Clients authentication Token from Storage
@@ -109,5 +109,4 @@ interface ClientInterface {
      * @return boolean
      */
     public function authenticated();
-
 }

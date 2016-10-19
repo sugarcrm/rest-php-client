@@ -14,8 +14,8 @@ use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
  * @package SugarAPI\SDK
  * @inheritdoc
  */
-class SugarAPI extends AbstractSugarClient {
-
+class SugarAPI extends AbstractSugarClient
+{
     /**
      * The configured Authentication options
      * @var array
@@ -27,5 +27,4 @@ class SugarAPI extends AbstractSugarClient {
         'client_secret' => '',
         'platform' => 'api'
     );
-
 }

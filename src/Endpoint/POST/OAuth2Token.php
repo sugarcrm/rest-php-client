@@ -7,8 +7,8 @@ namespace SugarAPI\SDK\Endpoint\POST;
 
 use SugarAPI\SDK\Endpoint\Abstracts\POST\AbstractPostEndpoint;
 
-class OAuth2Token extends AbstractPostEndpoint {
-
+class OAuth2Token extends AbstractPostEndpoint
+{
     protected $_AUTH_REQUIRED = false;
     protected $_URL = 'oauth2/token';
     protected $_REQUIRED_DATA = array(
@@ -20,5 +20,4 @@ class OAuth2Token extends AbstractPostEndpoint {
         'platform' => null
     );
     protected $_DATA_TYPE = 'array';
-
 }

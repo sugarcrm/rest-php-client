@@ -7,11 +7,10 @@ namespace SugarAPI\SDK\Endpoint\PUT;
 
 use SugarAPI\SDK\Endpoint\Abstracts\PUT\AbstractPutEndpoint;
 
-class ModuleRecord extends AbstractPutEndpoint {
-
+class ModuleRecord extends AbstractPutEndpoint
+{
     /**
      * @inheritdoc
      */
     protected $_URL = '$module/$record';
-
 }

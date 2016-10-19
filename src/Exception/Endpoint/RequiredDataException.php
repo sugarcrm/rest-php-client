@@ -5,6 +5,6 @@
 
 namespace SugarAPI\SDK\Exception\Endpoint;
 
-class RequiredDataException extends EndpointException {
-
+class RequiredDataException extends EndpointException
+{
 }
