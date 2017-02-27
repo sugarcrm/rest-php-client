@@ -8,6 +8,7 @@ namespace SugarAPI\SDK\Client\Abstracts;
 use SugarAPI\SDK\Exception\Authentication\AuthenticationException;
 use SugarAPI\SDK\Exception\SDKException;
 use SugarAPI\SDK\Helpers\Helpers;
+use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
 
 /**
  * The Abstract Client implementation for Sugar
@@ -17,27 +18,27 @@ use SugarAPI\SDK\Helpers\Helpers;
  * @method EPInterface getAttachment(string $module = '',string $record_id = '')
  * @method EPInterface getChangeLog(string $module = '',string $record_id = '')
  * @method EPInterface filterRelated(string $module = '')
- * @method EPInterface getRelated(string $module = '',
- *           string $record_id = '',
- *           string $relationship = '',
- *           string $related_id = '')
+ * @method EPInterface getRelated(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
  * @method EPInterface me()
  * @method EPInterface search()
  * @method EPInterface oauth2Token()
  * @method EPInterface oauth2Refresh()
- * @method EPInterface createRecord()
- * @method EPInterface filterRecords()
- * @method EPInterface attachFile()
+ * @method EPInterface createRecord(string $module = '')
+ * @method EPInterface filterRecords(string $module = '')
+ * @method EPInterface attachFile(string $module = '',string $record_id = '')
  * @method EPInterface oauth2Logout()
- * @method EPInterface createRelated()
- * @method EPInterface linkRecords()
+ * @method EPInterface createRelated(string $module = '',string $record_id = '',string $relationship = '')
+ * @method @deprecated EPInterface linkRecords(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
+ * @method EPInterface relateRecord(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
+ * @method EPInterface massRelate(string $module = '',string $record_id = '')
  * @method EPInterface bulk()
- * @method EPInterface updateRecord()
- * @method EPInterface favorite()
- * @method EPInterface deleteRecord()
- * @method EPInterface unfavorite()
- * @method EPInterface deleteFile()
- * @method EPInterface unlinkRecords()
+ * @method EPInterface updateRecord(string $module = '',string $record_id = '')
+ * @method EPInterface updateRelated(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
+ * @method EPInterface favorite(string $module = '',string $record_id = '')
+ * @method EPInterface deleteRecord(string $module = '',string $record_id = '')
+ * @method EPInterface unfavorite(string $module = '',string $record_id = '')
+ * @method EPInterface deleteFile(string $module = '',string $record_id = '')
+ * @method EPInterface unlinkRecords(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
  */
 abstract class AbstractSugarClient extends AbstractClient
 {
