@@ -3,7 +3,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 try{
-    $SugarAPI = new \SugarAPI\SDK\SugarAPI('instances.this/Ent/7700/', array('username' => 'admin', 'password'=>'asdf'));
+    $SugarAPI = new \SugarAPI\SDK\SugarAPI('instances.this/Ent/7800/', array('username' => 'admin', 'password'=>'asdf'));
     $SugarAPI->login();
     $EP = $SugarAPI->createRecord('Notes')->execute(array('name' => 'Test Note'));
     $response = $EP->getResponse();
