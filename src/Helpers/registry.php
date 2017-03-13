@@ -25,6 +25,8 @@ $entryPoints = array(
     'oauth2Logout' => 'POST\\OAuth2Logout',
     'createRelated' => 'POST\\ModuleRecordRelationship',
     'linkRecords' => 'POST\\ModuleRecordLinkRecord',
+    'relateRecord' => 'POST\\ModuleRecordLinkRecord',
+    'massRelate' => 'POST\\ModuleRecordLink',
     'bulk' => 'POST\\Bulk',
 
     //PUT API Endpoints
@@ -32,6 +34,7 @@ $entryPoints = array(
     'favorite' => 'PUT\\ModuleRecordFavorite',
     'updateMe' => 'PUT\\Me',
     'updatePreferences' => 'PUT\\MePreferences',
+    'updateRelated' => 'PUT\\ModuleRecordLinkRecord',
 
     //DELETE API Endpoints
     'deleteRecord' => 'DELETE\\ModuleRecord',
