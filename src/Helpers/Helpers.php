@@ -3,7 +3,7 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Helpers;
+namespace Sugarcrm\REST\Helpers;
 
 class Helpers
 {
@@ -29,18 +29,4 @@ class Helpers
         return $url;
     }
 
-    /**
-     * Return the list of Endpoints that come with the SDK
-     * @return array
-     */
-    public static function getSDKEndpointRegistry()
-    {
-        $entryPoints = array();
-        require __DIR__.DIRECTORY_SEPARATOR.'registry.php';
-        foreach ($entryPoints as $funcName => $className) {
-            $className = "SugarAPI\\SDK\\Endpoint\\" . $className;
-            $entryPoints[$funcName] = $className;
-        }
-        return $entryPoints;
-    }
 }

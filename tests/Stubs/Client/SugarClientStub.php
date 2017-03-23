@@ -5,8 +5,8 @@
 
 namespace SugarAPI\SDK\Tests\Stubs\Client;
 
-use SugarAPI\SDK\Client\Abstracts\AbstractSugarClient;
+use SugarAPI\SDK\Client\Abstracts\Sugar7API;
 
-class SugarClientStub extends AbstractSugarClient {
+class Sugar7APIStub extends Sugar7API {
 
 }

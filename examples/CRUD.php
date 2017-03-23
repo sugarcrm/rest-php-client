@@ -1,68 +1,29 @@
 <?php
 
+require_once 'include.php';
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
+$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
 try{
-    $SugarAPI = new \SugarAPI\SDK\SugarAPI('instances.this/Ent/7700/',array('username' => 'admin','password'=>'asdf'));
     $SugarAPI->login();
-    $EP = $SugarAPI->filterRecords('Accounts');
-    $response = $EP->execute()->getResponse();
-    print_r($EP->getRequest());
-    if ($response->getStatus()=='200'){
-        $recordList = $response->getBody(false);
-        $max=count($recordList->records);
-        echo "found $max records from Filter Records request. <br>";
-        $number = rand(0,$max);
-        $randomRecord = $recordList->records[$number];
-        echo "Choose random record #$number, with ID: ".$randomRecord->id." <br>";
-
-        $getRecord = $SugarAPI->getRecord('Accounts',$randomRecord->id)->execute(array(
-            'fields' => 'name'
-        ));
-        $response = $getRecord->getResponse();
-        if ($response->getStatus()=='200'){
-            echo "Retrieved Record <br>";
-            $randomRecord = $getRecord->getResponse()->getBody(false);
-            $randomRecord->name = 'Updated Record Name';
-            $updateRecord = $SugarAPI->updateRecord('Accounts', $randomRecord->id)->execute($randomRecord);
-            $response = $updateRecord->getResponse();
-            if ($response->getStatus()=='200'){
-                $randomRecord = $updateRecord->getResponse()->getBody(false);
-                echo "Updated Record <br>";
-                print_r($randomRecord);
-
-                $deleteRecord = $SugarAPI->deleteRecord('Accounts', $randomRecord->id)->execute();
-                $response = $deleteRecord->getResponse();
-                if ($response->getStatus()=='200'){
-                    $response = $deleteRecord->getResponse()->getBody();
-                    echo "Deleted Record <br>";
-                    print_r($response);
-                }else{
-                    echo "Failed to Delete record<br>";
-                    echo "Response: ".$response->getStatus()."<br>";
-                    print_r($response->getBody());
-                }
-            }else{
-                print_r($updateRecord->getRequest());
-                echo "Failed to Update record<br>";
-                echo "Response: ".$response->getStatus()."<br>";
-                print_r($response->getBody());
-            }
-        }else{
-            echo "Failed to retrieve record<br>";
-            echo "Response: ".$response->getStatus()."<br>";
-            print_r($response->getBody());
-        }
-    }else{
-        echo "Response: ".$response->getStatus();
-        print_r($response->getBody());
-    }
-}catch (\SugarAPI\SDK\Exception\AuthenticationException $ex){
-    echo "Credentails:<pre>";
-    print_r($SugarAPI->getCredentials());
-    echo "</pre> Error Message: ";
+    echo "<pre>";
+    //print_r($SugarAPI->getAuth());
+    echo "</pre>";
+    $Account = $SugarAPI->module('Accounts')->set("name","Test")->set("phone_office","555-555-5555");
+    echo "<pre> Account:".print_r($Account->asArray(),true)."</pre><br>";
+    $Account->save();
+    echo "<pre> Saved Account ID: {$Account['id']}</pre><br>";
+    $Account->set('employees','100');
+    $Account['shipping_address_city'] = 'Indianapolis';
+    $Account->save();
+    echo "<pre> Account Updated: <br>".print_r($Account->asArray(),true)."</pre>";
+    $Account2 = $SugarAPI->module('Accounts',$Account['id']);
+    $Account2->retrieve();
+    echo "<pre> Account2:".print_r($Account2->asArray(),true)."</pre><br>";
+    $Account2->delete();
+    echo "Account Deleted.".print_r($Account2->getResponse(),true);
+}catch (Exception $ex){
+    echo "<pre>";
+    //print_r($SugarAPI);
+    echo "</pre>";
     print $ex->getMessage();
-}catch (\SugarAPI\SDK\Exception\SDKException $ex){
-    echo $ex->__toString();
 }

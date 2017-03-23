@@ -5,7 +5,7 @@
 
 namespace SugarAPI\SDK\Tests\Clients;
 
-use SugarAPI\SDK\Tests\Stubs\Client\SugarClientStub;
+use SugarAPI\SDK\Tests\Stubs\Client\Sugar7APIStub;
 
 /**
  * Class AbstractSugarClientTest
@@ -55,13 +55,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @return SugarClientStub $Stub
+     * @return Sugar7APIStub $Stub
      * @covers ::__construct
      * @covers ::registerSDKEndpoints
      * @group abstractClient
      */
     public function testConstructor(){
-        $Stub = new SugarClientStub();
+        $Stub = new Sugar7APIStub();
         $this->assertEquals('',$Stub->getServer());
         $this->assertEquals(array(
             'username' => '',
@@ -76,7 +76,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
         $this->assertAttributeNotEmpty('entryPoints',$Stub);
         unset($Stub);
 
-        $Stub = new SugarClientStub($this->server);
+        $Stub = new Sugar7APIStub($this->server);
         $this->assertEquals($this->server,$Stub->getServer());
         $this->assertEquals(array(
             'username' => '',
@@ -91,7 +91,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
         $this->assertAttributeNotEmpty('entryPoints',$Stub);
         unset($Stub);
 
-        $Stub = new SugarClientStub($this->server,$this->credentials);
+        $Stub = new Sugar7APIStub($this->server,$this->credentials);
         $this->assertEquals($this->server,$Stub->getServer());
         $this->assertEquals($this->credentials,$Stub->getCredentials());
         $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
@@ -103,14 +103,14 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testConstructor
      * @covers ::setServer
      * @covers ::getServer
      * @covers ::setAPIUrl
      * @covers ::getAPIUrl
      * @group abstractClient
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testSetServer($Stub){
         $Stub->setServer('http://localhost');
@@ -130,13 +130,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testConstructor
      * @covers ::setVersion
      * @covers ::getVersion
      * @covers ::getAPIUrl
      * @group abstractClient
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testSetVersion($Stub){
         $Stub->setVersion('10');
@@ -152,12 +152,12 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testSetServer
      * @covers ::setCredentials
      * @covers ::getCredentials
      * @group abstractClient
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testSetCredentials($Stub){
         $Stub->setCredentials(array('username' => 'admin'));
@@ -180,14 +180,14 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testSetCredentials
      * @covers ::setToken
      * @covers ::getToken
      * @covers ::authenticated
      * @covers ::expiredToken
      * @group abstractClient
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testSetToken($Stub){
         static::$token->expires_in = 0;
@@ -207,7 +207,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testSetToken
      * @expectedException SugarAPI\SDK\Exception\SDKException
      * @expectedExceptionMessageRegExp /Sugar API Client requires Token to be of type \\stdClass/
@@ -228,67 +228,67 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @group abstractClient
      */
     public function testTokenStorage(){
-        $Stub = new SugarClientStub($this->server,$this->credentials);
+        $Stub = new Sugar7APIStub($this->server,$this->credentials);
         $this->assertEmpty($Stub->getToken());
         $Stub->storeToken(static::$token,$Stub->getCredentials());
         $this->assertEmpty($Stub->getToken());
 
         unset($Stub);
 
-        $Stub = new SugarClientStub($this->server,$this->credentials);
+        $Stub = new Sugar7APIStub($this->server,$this->credentials);
         $this->assertEquals($Stub->getToken(),static::$token);
 
         $creds = $this->credentials;
         $creds['platform'] = 'base';
 
-        $Stub2 = new SugarClientStub($this->server,$creds);
+        $Stub2 = new Sugar7APIStub($this->server,$creds);
         $this->assertEmpty($Stub2->getToken());
         $Stub2->storeToken(static::$token,$Stub2->getCredentials());
         $this->assertEmpty($Stub2->getToken());
 
         $creds['username'] = 'tokenStorage';
-        $Stub3 = new SugarClientStub($this->server,$creds);
+        $Stub3 = new Sugar7APIStub($this->server,$creds);
         $this->assertEmpty($Stub3->getToken());
         $Stub3->storeToken(static::$token,$Stub3->getCredentials());
         $this->assertEmpty($Stub3->getToken());
 
         unset($Stub2);
 
-        $Stub2 = new SugarClientStub($this->server,$creds);
+        $Stub2 = new Sugar7APIStub($this->server,$creds);
         $this->assertEquals(static::$token,$Stub2->getToken());
 
         unset($Stub3);
 
         $creds['username'] = 'admin';
-        $Stub3 = new SugarClientStub($this->server,$creds);
+        $Stub3 = new Sugar7APIStub($this->server,$creds);
         $this->assertEquals(static::$token,$Stub3->getToken());
 
         unset($Stub2);
         unset($Stub);
         unset($Stub3);
 
-        $token = SugarClientStub::getStoredToken($this->credentials);
+        $token = Sugar7APIStub::getStoredToken($this->credentials);
         $this->assertEquals($token,static::$token);
 
-        SugarClientStub::removeStoredToken($this->credentials);
-        $token = SugarClientStub::getStoredToken($creds);
+        Sugar7APIStub::removeStoredToken($this->credentials);
+        $token = Sugar7APIStub::getStoredToken($creds);
         $this->assertEquals($token,static::$token);
 
         $creds['username'] = 'tokenStorage';
-        SugarClientStub::removeStoredToken($creds);
-        $token = SugarClientStub::getStoredToken($creds);
+        Sugar7APIStub::removeStoredToken($creds);
+        $token = Sugar7APIStub::getStoredToken($creds);
         $this->assertEmpty($token);
 
-        SugarClientStub::removeStoredToken(array('client_id' => 'sugar_abstract_test'));
-        $token = SugarClientStub::getStoredToken($this->credentials);
+        Sugar7APIStub::removeStoredToken(array('client_id' => 'sugar_abstract_test'));
+        $token = Sugar7APIStub::getStoredToken($this->credentials);
         $this->assertEmpty($token);
 
-        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,'test'));
-        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test')));
-        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test','platform' => 'test')));
-        $this->assertEquals(FALSE,SugarClientStub::storeToken(static::$token,array('client_id' => 'test','username' => 'test')));
-        $this->assertEquals(FALSE,SugarClientStub::removeStoredToken('test'));
-        $this->assertEquals(FALSE,SugarClientStub::removeStoredToken(array('platform' => 'test')));
+        $this->assertEquals(FALSE,Sugar7APIStub::storeToken(static::$token,'test'));
+        $this->assertEquals(FALSE,Sugar7APIStub::storeToken(static::$token,array('client_id' => 'test')));
+        $this->assertEquals(FALSE,Sugar7APIStub::storeToken(static::$token,array('client_id' => 'test', 'platform' => 'test')));
+        $this->assertEquals(FALSE,Sugar7APIStub::storeToken(static::$token,array('client_id' => 'test', 'username' => 'test')));
+        $this->assertEquals(FALSE,Sugar7APIStub::removeStoredToken('test'));
+        $this->assertEquals(FALSE,Sugar7APIStub::removeStoredToken(array('platform' => 'test')));
     }
 
     /**
@@ -296,7 +296,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
      * @depends testSetToken
      * @covers ::__call
      * @group abstractClients
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testCall($Stub){
         $Stub->registerEndpoint('unitTest','SugarAPI\\SDK\\Tests\\Stubs\\Endpoint\\GetEndpointStub');
@@ -310,16 +310,16 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * @covers ::login
      * @group abstractClients
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testLogin(){
-        $Stub = new SugarClientStub($this->server);
+        $Stub = new Sugar7APIStub($this->server);
         $this->assertEquals(FALSE,$Stub->login());
         return $Stub;
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testLogin
      * @covers ::login
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
@@ -332,7 +332,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testLogin
      * @covers ::login
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
@@ -348,16 +348,16 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * @covers ::refreshToken
      * @group abstractClients
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testRefreshToken(){
-        $Stub = new SugarClientStub($this->server);
+        $Stub = new Sugar7APIStub($this->server);
         $this->assertEquals(FALSE,$Stub->refreshToken());
         return $Stub;
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testRefreshToken
      * @covers ::refreshToken
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
@@ -371,7 +371,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testRefreshToken
      * @covers ::refreshToken
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
@@ -388,16 +388,16 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     /**
      * @covers ::logout
      * @group abstractClients
-     * @return SugarClientStub
+     * @return Sugar7APIStub
      */
     public function testLogout(){
-        $Stub = new SugarClientStub($this->server);
+        $Stub = new Sugar7APIStub($this->server);
         $this->assertEquals(FALSE,$Stub->logout());
         return $Stub;
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testLogout
      * @covers ::logout
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException
@@ -410,7 +410,7 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param SugarClientStub $Stub
+     * @param Sugar7APIStub $Stub
      * @depends testLogout
      * @covers ::logout
      * @expectedException SugarAPI\SDK\Exception\Authentication\AuthenticationException

@@ -3,7 +3,7 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Exception;
+namespace Sugarcrm\REST\Exception;
 
 class SDKException extends \Exception
 {
