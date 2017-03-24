@@ -29,11 +29,11 @@ class ModuleRecordFileFieldTest extends \PHPUnit_Framework_TestCase {
         '1234abc',
         'filename'
     );
-    protected $data;
+    protected $data = '';
 
     public function setUp()
     {
-        $this->data = __FILE__;
+        $this->data = realpath(__FILE__);
         parent::setUp();
     }
 
@@ -51,11 +51,20 @@ class ModuleRecordFileFieldTest extends \PHPUnit_Framework_TestCase {
         $EP = new ModuleRecordFileField($this->url,$this->options);
         $EP->execute($this->data);
 
-        $configuredData = array(
-            'filename' => '@'.__FILE__,
-            'format' => 'sugar-html-json',
-            'delete_if_fails' => false
-        );
+        if (version_compare(PHP_VERSION, '5.5.0') >= 0){
+            $configuredData = array(
+                'filename' => new \CURLFile(__FILE__),
+                'format' => 'sugar-html-json',
+                'delete_if_fails' => false
+            );
+        } else {
+            $configuredData = array(
+                'filename' => '@'.__FILE__,
+                'format' => 'sugar-html-json',
+                'delete_if_fails' => false
+            );
+        }
+
         $this->assertEquals($configuredData,$EP->getData());
         unset($EP);
 
@@ -74,6 +83,7 @@ class ModuleRecordFileFieldTest extends \PHPUnit_Framework_TestCase {
         unset($EP);
 
         $EP = new ModuleRecordFileField($this->url,$this->options);
+
         $data = array(
             'filename' => '@'.$this->data,
             'delete_if_fails' => true

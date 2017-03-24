@@ -1,3 +1,5 @@
 *.iml
 .idea/
 vendor/
+
+composer.lock
