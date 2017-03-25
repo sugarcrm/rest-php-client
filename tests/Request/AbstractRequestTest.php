@@ -203,7 +203,9 @@ class AbstractRequestTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(RequestStub::STATUS_INIT,$Stub->getCurlStatus());
         $Stub->close();
         $this->assertEquals(RequestStub::STATUS_CLOSED,$Stub->getCurlStatus());
-        $this->assertNotEquals('curl',get_resource_type($CurlObject));
+        if (strpos(PHP_VERSION,'7.0') === FALSE) {
+            $this->assertNotEquals('curl', get_resource_type($CurlObject));
+        }
         $Stub->start();
         $this->assertEquals(RequestStub::STATUS_INIT,$Stub->getCurlStatus());
         $this->assertNotEquals($CurlObject,$Stub->getCurlObject());
