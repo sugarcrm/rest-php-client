@@ -64,7 +64,10 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint
     protected function setFileFieldValue($value)
     {
         if (version_compare(PHP_VERSION, '5.5.0') >= 0){
-            $value = new \CURLFile($value);
+            if (!($value instanceof \CURLFile)){
+                $value = str_replace("@",'',$value);
+                $value = new \CURLFile($value);
+            }
         } else {
             if (strpos($value, '@') === false) {
                 $value = '@'.$value;

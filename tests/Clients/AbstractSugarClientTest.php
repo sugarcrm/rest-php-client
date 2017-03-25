@@ -122,9 +122,13 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
         $Stub->setServer('https://tester.test.com');
         $this->assertEquals('https://tester.test.com',$Stub->getServer());
         $this->assertEquals("https://tester.test.com/rest/v10/",$Stub->getAPIUrl());
+        $Stub->setServer('https://tester.test.com/SugarTest');
+        $this->assertEquals('https://tester.test.com/SugarTest',$Stub->getServer());
+        $this->assertEquals("https://tester.test.com/SugarTest/rest/v10/",$Stub->getAPIUrl());
         $Stub->setServer($this->server);
         $this->assertEquals($this->server,$Stub->getServer());
         $this->assertEquals("http://".$this->server."/rest/v10/",$Stub->getAPIUrl());
+
 
         return $Stub;
     }

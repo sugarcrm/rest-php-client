@@ -19,13 +19,12 @@ class Helpers
     public static function configureAPIURL($instance, $version = null)
     {
         $url = 0;
-        $instance = strtolower(rtrim($instance, "/"));
         $version = ($version === null ? self::API_VERSION : intval($version));
-        if (preg_match('/^(http|https):\/\//i', $instance) === 0) {
-            $instance = "http://".$instance;
-        }
         $instance = preg_replace('/\/rest\/v\d+/', '', $instance);
-        $url = $instance.sprintf(self::API_URL, $version);
+        $url = rtrim($instance,"/").sprintf(self::API_URL, $version);
+        if (preg_match('/^(http|https):\/\//i', $url) === 0) {
+            $url = "http://".$url;
+        }
         return $url;
     }
 
