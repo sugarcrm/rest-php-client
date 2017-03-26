@@ -14,7 +14,7 @@ class SugarEndpointProvider extends AbstractEndpointProvider
             'class' => 'Sugarcrm\\REST\\Endpoint\\Module',
             'properties' => array()
         ),
-        'filter' => array(
+        'list' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\ModuleFilter',
             'properties' => array()
         ),

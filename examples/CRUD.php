@@ -6,7 +6,7 @@ $SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
 try{
     $SugarAPI->login();
     echo "<pre>";
-    //print_r($SugarAPI->getAuth());
+    print_r($SugarAPI->getAuth()->getToken()->access_token);
     echo "</pre>";
     $Account = $SugarAPI->module('Accounts')->set("name","Test")->set("phone_office","555-555-5555");
     echo "<pre> Account:".print_r($Account->asArray(),true)."</pre><br>";
@@ -20,7 +20,7 @@ try{
     $Account2->retrieve();
     echo "<pre> Account2:".print_r($Account2->asArray(),true)."</pre><br>";
     $Account2->delete();
-    echo "Account Deleted.".print_r($Account2->getResponse(),true);
+    echo "Account Deleted. <br><pre>".print_r($Account2->getResponse(),true)."</pre>";
 }catch (Exception $ex){
     echo "<pre>";
     //print_r($SugarAPI);

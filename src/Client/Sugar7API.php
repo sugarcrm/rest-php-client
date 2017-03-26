@@ -7,7 +7,7 @@ namespace Sugarcrm\REST\Client;
 
 use MRussell\REST\Client\AbstractClient;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
-use Sugarcrm\REST\Helpers\Helpers;
+use Sugarcrm\REST\Helpers\Helper;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\Provider\SugarEndpointProvider;
 use Sugarcrm\REST\Endpoint\Module;
@@ -15,13 +15,14 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
 use Sugarcrm\REST\Endpoint\Search;
 use Sugarcrm\REST\Endpoint\Metadata;
 use Sugarcrm\REST\Endpoint\User;
+use Sugarcrm\REST\Storage\SugarStaticStorage;
 
 /**
  * The Abstract Client implementation for Sugar
  * @package Sugarcrm\REST\Client\Abstracts\AbstractClient
  * @method EndpointInterface ping()
  * @method Module       module(string $module = '',string $record_id = '')
- * @method ModuleFilter filter(string $module = '')
+ * @method ModuleFilter list(string $module = '')
  * @method Search       search()
  * @method Metadata     metadata(string $module = '')
  * @method User         user(string $user_id)
@@ -61,6 +62,7 @@ class Sugar7API extends AbstractClient
         $this->Auth->setActionEndpoint('authenticate',$this->EndpointProvider->getEndpoint('oauth2Token'));
         $this->Auth->setActionEndpoint('refresh',$this->EndpointProvider->getEndpoint('oauth2Refresh'));
         $this->Auth->setActionEndpoint('logout',$this->EndpointProvider->getEndpoint('oauth2Logout'));
+        $this->Auth->setStorageController(new SugarStaticStorage());
     }
 
     /**
@@ -68,7 +70,7 @@ class Sugar7API extends AbstractClient
      */
     protected function setAPIUrl()
     {
-        $this->apiURL = Helpers::configureAPIURL($this->server, $this->version);
+        $this->apiURL = Helper::configureAPIURL($this->server, $this->version);
         foreach($this->Auth->getActions() as $action){
             $EP = $this->Auth->getActionEndpoint($action);
             $EP->setBaseUrl($this->apiURL);
@@ -87,6 +89,10 @@ class Sugar7API extends AbstractClient
             $this->Auth->updateCredentials($creds);
         }
         $this->Auth->authenticate();
+    }
+
+    public function refreshToken(){
+
     }
 
 }

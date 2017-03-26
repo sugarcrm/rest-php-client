@@ -54,7 +54,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
     protected $actions = array(
         self::BEAN_ACTION_FAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_UNFAVORITE => JSON::HTTP_PUT,
-        self::BEAN_ACTION_RELATE => JSON::HTTP_PUT,
+        self::BEAN_ACTION_RELATE => JSON::HTTP_POST,
         self::BEAN_ACTION_UNLINK => JSON::HTTP_DELETE,
         self::BEAN_ACTION_CREATE_RELATED => JSON::HTTP_POST,
         self::BEAN_ACTION_FOLLOW => JSON::HTTP_POST,
@@ -159,12 +159,21 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
 
     /**
      * @inheritdoc
-
-    protected function configureResponse(ResponseInterface $Response) {
-        $Response = parent::configureResponse($Response);
-        $this->setOptions(array('module' => $this->module));
-        return $Response;
-    }*/
+     */
+    protected function updateModel()
+    {
+        $body = $this->Response->getBody();
+        switch ($this->action){
+            case self::BEAN_ACTION_FAVORITE:
+            case self::BEAN_ACTION_UNFAVORITE:
+                if (is_array($body)){
+                    $this->update($body);
+                }
+                break;
+            default:
+                parent::updateModel();
+        }
+    }
 
     /**
      * Human friendly method name for Link, simply forwards to Link method

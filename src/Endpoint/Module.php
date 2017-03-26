@@ -9,5 +9,4 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 
 class Module extends AbstractSugarBeanEndpoint
 {
-
 }

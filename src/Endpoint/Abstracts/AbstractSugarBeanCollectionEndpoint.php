@@ -16,4 +16,5 @@ abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint
             'defaults' => array()
         )
     );
+
 }
