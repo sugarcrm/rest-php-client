@@ -13,4 +13,8 @@ class OrExpression extends AbstractExpression
             self::OPERATOR => parent::compile()
         );
     }
+
+    public function endOr(){
+        return $this->getParentExpression();
+    }
 }

@@ -107,14 +107,6 @@ abstract class AbstractExpression implements FilterInterface
         return $this->parentExpression;
     }
 
-    /**
-     * End Expression and return Parent Expression
-     * @return AbstractExpression
-     */
-    public function end(){
-        return $this->getParentExpression();
-    }
-
     public function compile()
     {
         $data = array();

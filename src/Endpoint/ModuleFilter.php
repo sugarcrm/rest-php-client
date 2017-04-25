@@ -58,7 +58,9 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         return $this->module;
     }
 
-
+    /**
+     * @inheritdoc
+     */
     public function fetch(){
         if (isset($this->options[self::FILTER_PARAM])){
             unset($this->options[self::FILTER_PARAM]);
@@ -66,6 +68,11 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         return parent::fetch();
     }
 
+    /**
+     * Configure the Filter Parameters for the Filter API
+     * @param bool $reset
+     * @return FilterData
+     */
     public function filter($reset = FALSE){
         $this->options[self::FILTER_PARAM] = self::FILTER_PARAM;
         $this->setProperty('httpMethod',JSON::HTTP_POST);
@@ -75,6 +82,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         }
         return $this->Filter;
     }
+
 
 
 }

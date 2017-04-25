@@ -13,9 +13,9 @@ try{
                             ->or()
                                 ->starts('name','s')
                                 ->contains('name','test')
-                            ->end()
+                            ->endOr()
                             ->equals('assigned_user_id','seed_max_id')
-                        ->end();
+                        ->endAnd();
     echo "<pre> Filter Accounts that are assigned to User Max, and that either start with an S or contain 'test' in the name: ".print_r($Accounts->filter()->compile(),true)."</pre><br>";
     $Accounts->filter()->execute();
     echo "<pre> Response:".print_r($Accounts->getResponse()->getBody(),true)."</pre><br>";

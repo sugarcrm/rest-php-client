@@ -12,4 +12,8 @@ class AndExpression extends AbstractExpression
             self::OPERATOR => parent::compile()
         );
     }
+
+    public function endAnd(){
+        return $this->getParentExpression();
+    }
 }
