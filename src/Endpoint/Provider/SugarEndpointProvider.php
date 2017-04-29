@@ -22,10 +22,6 @@ class SugarEndpointProvider extends AbstractEndpointProvider
             'class' => 'Sugarcrm\\REST\\Endpoint\\Search',
             'properties' => array()
         ),
-        'user' => array(
-            'class' => 'Sugarcrm\\REST\\Endpoint\\User',
-            'properties' => array()
-        ),
         'metadata' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Metadata',
             'properties' => array()
@@ -42,13 +38,14 @@ class SugarEndpointProvider extends AbstractEndpointProvider
             'class' => 'Sugarcrm\\REST\\Endpoint\\OAuth2Logout',
             'properties' => array()
         ),
-        /**
         'me' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Me',
-            'properties' => array(
-
-            )
-        ),**/
+            'properties' => array()
+        ),
+        'bulk' => array(
+            'class' => 'Sugarcrm\\REST\\Endpoint\\Bulk',
+            'properties' => array()
+        )
     );
 
 }

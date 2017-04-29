@@ -1,9 +1,16 @@
 <?php
+/**
+ * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 
 use Sugarcrm\REST\Endpoint\Data\Filters\FilterInterface;
 
+/**
+ * Class AbstractOperator
+ * @package Sugarcrm\REST\Endpoint\Data\Filters\Operator
+ */
 abstract class AbstractOperator implements FilterInterface
 {
     protected static $_OPERATOR = '';
@@ -26,11 +33,17 @@ abstract class AbstractOperator implements FilterInterface
         }
     }
 
+    /**
+     * @param $field
+     */
     public function setField($field)
     {
         $this->field = $field;
     }
 
+    /**
+     * @param $value
+     */
     public function setValue($value){
         $this->data[static::$_OPERATOR] = $value;
     }

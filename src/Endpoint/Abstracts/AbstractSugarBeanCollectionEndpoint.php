@@ -6,9 +6,17 @@
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\REST\Endpoint\JSON\CollectionEndpoint;
+use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
-abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint
+/**
+ * Class AbstractSugarBeanCollectionEndpoint
+ * @package Sugarcrm\REST\Endpoint\Abstracts
+ */
+abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
+    /**
+     * @inehritdoc
+     */
     protected static $_DEFAULT_PROPERTIES = array(
         'auth' => TRUE,
         'data' => array(
@@ -17,4 +25,10 @@ abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint
         )
     );
 
+    /**
+     * @inheritdoc
+     */
+    public function compileRequest(){
+        return $this->configureRequest($this->getRequest());
+    }
 }

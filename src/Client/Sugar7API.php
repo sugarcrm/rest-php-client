@@ -49,7 +49,7 @@ class Sugar7API extends AbstractClient
             $this->setServer($server);
         }
         if (!empty($credentials)){
-            $this->Auth->updateCredentials($credentials);
+            $this->getAuth()->updateCredentials($credentials);
         }
     }
 
@@ -59,10 +59,11 @@ class Sugar7API extends AbstractClient
     protected function init(){
         $this->setAuth(new SugarOAuthController());
         $this->setEndpointProvider(new SugarEndpointProvider());
-        $this->Auth->setActionEndpoint('authenticate',$this->EndpointProvider->getEndpoint('oauth2Token'));
-        $this->Auth->setActionEndpoint('refresh',$this->EndpointProvider->getEndpoint('oauth2Refresh'));
-        $this->Auth->setActionEndpoint('logout',$this->EndpointProvider->getEndpoint('oauth2Logout'));
-        $this->Auth->setStorageController(new SugarStaticStorage());
+        $Auth = $this->getAuth();
+        $Auth->setActionEndpoint('authenticate',$this->EndpointProvider->getEndpoint('oauth2Token'));
+        $Auth->setActionEndpoint('refresh',$this->EndpointProvider->getEndpoint('oauth2Refresh'));
+        $Auth->setActionEndpoint('logout',$this->EndpointProvider->getEndpoint('oauth2Logout'));
+        $Auth->setStorageController(new SugarStaticStorage());
     }
 
     /**
@@ -71,12 +72,19 @@ class Sugar7API extends AbstractClient
     protected function setAPIUrl()
     {
         $this->apiURL = Helper::configureAPIURL($this->server, $this->version);
-        foreach($this->Auth->getActions() as $action){
-            $EP = $this->Auth->getActionEndpoint($action);
+        $Auth = $this->getAuth();
+        foreach($Auth->getActions() as $action){
+            $EP = $Auth->getActionEndpoint($action);
             $EP->setBaseUrl($this->apiURL);
         }
     }
 
+    /**
+     * Helper Method to Login to Sugar Instance
+     * @param null $username
+     * @param null $password
+     * @return bool
+     */
     public function login($username = NULL,$password = NULL){
         $creds = array();
         if ($username !== NULL){
@@ -86,13 +94,31 @@ class Sugar7API extends AbstractClient
             $creds['password'] = $password;
         }
         if (!empty($creds)){
-            $this->Auth->updateCredentials($creds);
+            $this->getAuth()->updateCredentials($creds);
         }
-        $this->Auth->authenticate();
+        return $this->getAuth()->authenticate();
     }
 
+    /**
+     * Helper Method to Refresh Authentication Token
+     * @return bool
+     */
     public function refreshToken(){
-
+        $creds = $this->getAuth()->getCredentials();
+        if (isset($creds['client_id']) &&
+            isset($creds['client_secret'])){
+            return $this->getAuth()->refresh();
+        }
+        return FALSE;
     }
+
+    /**
+     * Helper method to Logout of API
+     * @return bool
+     */
+    public function logout(){
+        return $this->getAuth()->logout();
+    }
+
 
 }

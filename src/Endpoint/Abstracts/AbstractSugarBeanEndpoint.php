@@ -7,12 +7,15 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\Http\Request\JSON;
 use MRussell\REST\Endpoint\JSON\ModelEndpoint;
+use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
-abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
+abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface
 {
     const MODEL_ACTION_VAR = 'action';
 
     const BEAN_ACTION_RELATE = 'link';
+
+    const BEAN_ACTION_MASS_RELATE = 'massLink';
 
     const BEAN_ACTION_CREATE_RELATED = 'createLink';
 
@@ -22,7 +25,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
 
     const BEAN_ACTION_UNFAVORITE = 'unfavorite';
 
-    const BEAN_ACTION_FOLLOW = 'subscrube';
+    const BEAN_ACTION_FOLLOW = 'subscribe';
 
     const BEAN_ACTION_UNFOLLOW = 'unsubscribe';
 
@@ -34,6 +37,9 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
 
     const BEAN_ACTION_ATTACH_FILE = 'attachFile';
 
+    /**
+     * @inheritdoc
+     */
     protected static $_DEFAULT_PROPERTIES = array(
         'auth' => TRUE,
         'data' => array(
@@ -55,6 +61,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
         self::BEAN_ACTION_FAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_UNFAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_RELATE => JSON::HTTP_POST,
+        self::BEAN_ACTION_MASS_RELATE => JSON::HTTP_POST,
         self::BEAN_ACTION_UNLINK => JSON::HTTP_DELETE,
         self::BEAN_ACTION_CREATE_RELATED => JSON::HTTP_POST,
         self::BEAN_ACTION_FOLLOW => JSON::HTTP_POST,
@@ -65,8 +72,25 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
         self::BEAN_ACTION_ATTACH_FILE => JSON::HTTP_POST
     );
 
+    /**
+     * Current Module
+     * @var string
+     */
     protected $module;
 
+    /**
+     * @inheritdoc
+     */
+    public function compileRequest(){
+        $this->configureAction($this->getCurrentAction());
+        return $this->configureRequest($this->getRequest());
+    }
+
+    /**
+     * Passed in options get changed such that 1st Option (key 0) becomes Module
+     * 2nd Option (Key 1) becomes ID
+     * @inheritdoc
+     */
     public function setOptions(array $options) {
         if (isset($options[0])){
             $this->setModule($options[0]);
@@ -107,6 +131,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
         $action = $this->action;
         switch($this->action){
             case self::BEAN_ACTION_CREATE_RELATED:
+            case self::BEAN_ACTION_MASS_RELATE:
             case self::BEAN_ACTION_UNLINK:
                 $action = self::BEAN_ACTION_RELATE;
                 break;
@@ -148,7 +173,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
                     if (isset($arguments[1])){
                         $this->options['actionArg2'] = $arguments[1];
                     }
-                    if (isset($arguments[1])){
+                    if (isset($arguments[2])){
                         $this->options['actionArg3'] = $arguments[2];
                     }
             }
@@ -201,4 +226,19 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint
     public function getFile($field){
         return $this->downloadFile($field);
     }
+
+    /**
+     * Mass Related records to current Bean Model
+     * @param $linkName
+     * @param array $related_ids
+     */
+    public function massRelate($linkName,array $related_ids){
+        $this->setData(array(
+            'link_name' => $linkName,
+            'ids' => $related_ids
+        ));
+        return $this->massLink();
+    }
+
+
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ */
 
 namespace Sugarcrm\REST\Endpoint;
 
@@ -7,6 +10,10 @@ use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 
+/**
+ * Class ModuleFilter
+ * @package Sugarcrm\REST\Endpoint
+ */
 class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
 {
     const FILTER_PARAM = 'filter';

@@ -1,4 +1,7 @@
 <?php
+/**
+ * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ */
 
 namespace Sugarcrm\REST\Auth;
 
@@ -14,7 +17,6 @@ class SugarOAuthController extends AbstractOAuth2Controller
 
     /**
      * @inheritdoc
-     * @var array
      */
     protected $credentials = array(
         'username' => '',
@@ -25,12 +27,7 @@ class SugarOAuthController extends AbstractOAuth2Controller
     );
 
     public function updateCredentials(array $credentials){
-        $current = $this->getCredentials();
-        foreach($current as $key => $value){
-            if (isset($credentials[$key])){
-                $current[$key] = $credentials[$key];
-            }
-        }
+        $current = array_replace($this->getCredentials(),$credentials);
         return $this->setCredentials($current);
     }
 

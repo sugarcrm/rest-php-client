@@ -3,14 +3,14 @@
  * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-namespace SugarAPI\SDK\Tests\Helpers;
+namespace Sugarcrm\REST\Tests\Helpers;
 
 use Sugarcrm\REST\Helpers\Helper;
 
 /**
  * Class HelpersTest
- * @package SugarAPI\SDK\Tests\Helpers
- * @coversDefaultClass SugarAPI\SDK\Helpers\Helper
+ * @package Sugarcrm\REST\Tests\Helpers
+ * @coversDefaultClass Sugarcrm\REST\Helpers\Helper
  */
 class HelpersTest extends \PHPUnit_Framework_TestCase {
 
