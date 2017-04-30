@@ -83,9 +83,12 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     public function filter($reset = FALSE){
         $this->options[self::FILTER_PARAM] = self::FILTER_PARAM;
         $this->setProperty('httpMethod',JSON::HTTP_POST);
-        if (empty($this->Filter)||$reset){
+        if (empty($this->Filter)){
             $this->Filter = new FilterData();
             $this->Filter->setEndpoint($this);
+        }
+        if ($reset){
+            $this->Filter->reset();
         }
         return $this->Filter;
     }

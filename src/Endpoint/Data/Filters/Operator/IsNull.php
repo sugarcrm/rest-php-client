@@ -14,7 +14,15 @@ class IsNull extends AbstractOperator
 
     public function setValue($value)
     {
-        $this->data = array(static::$_OPERATOR);
+        $this->value = NULL;
+        return $this;
+    }
+
+    public function compile()
+    {
+        return array(
+            $this->getField() => array(static::$_OPERATOR)
+        );
     }
 
 }

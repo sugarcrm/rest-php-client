@@ -14,19 +14,22 @@ use Sugarcrm\REST\Endpoint\Data\Filters\FilterInterface;
 abstract class AbstractOperator implements FilterInterface
 {
     /**
+     * The Sugar Operator representation
      * @var string
      */
     protected static $_OPERATOR = '';
 
     /**
+     * The field the Operator applies to
      * @var string
      */
-    protected $field = '';
+    protected $field;
 
     /**
-     * @var array
+     * The value being the Operator compares to
+     * @var mixed
      */
-    protected $data = array();
+    protected $value;
 
 
     public function __construct(array $arguments = array())
@@ -44,18 +47,40 @@ abstract class AbstractOperator implements FilterInterface
     }
 
     /**
-     * @param $field
+     * Set the field on the Operator
+     * @param $field string
+     * @return $this
      */
     public function setField($field)
     {
-        $this->field = $field;
+        $this->field = (string) $field;
+        return $this;
     }
 
     /**
+     * Get the field configured on the Operator
+     * @return string
+     */
+    public function getField(){
+        return $this->field;
+    }
+
+    /**
+     * Set the Value on the Operator
      * @param $value
+     * @return $this
      */
     public function setValue($value){
-        $this->data[static::$_OPERATOR] = $value;
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * Get the value configure on the Operator
+     * @return mixed
+     */
+    public function getValue(){
+        return $this->value;
     }
 
     /**
@@ -63,7 +88,9 @@ abstract class AbstractOperator implements FilterInterface
      */
     public function compile(){
         return array(
-            $this->field => $this->data
+            $this->getField() => array(
+                static::$_OPERATOR => $this->getValue()
+            )
         );
     }
 }

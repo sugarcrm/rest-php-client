@@ -26,6 +26,7 @@ class AndExpression extends AbstractExpression
     /**
      * Human Friendly Expression End, allow you to traverse back up the Filter expression
      * @return AbstractExpression
+     * @codeCoverageIgnore
      */
     public function endAnd(){
         return $this->getParentExpression();
