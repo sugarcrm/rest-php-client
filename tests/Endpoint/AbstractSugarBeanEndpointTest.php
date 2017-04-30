@@ -1,12 +1,11 @@
 <?php
 /**
- * User: mrussell
- * Date: 4/28/17
- * Time: 2:03 PM
+ * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use MRussell\Http\Request\JSON;
 use Sugarcrm\REST\Endpoint\Module;
 
 
@@ -37,6 +36,20 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
+    }
+
+    /**
+     * @covers ::compileRequest
+     */
+    public function testCompileRequest(){
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setOptions(array('Foo','bar'));
+        $Request = $Bean->compileRequest();
+        $this->assertEquals($Bean->getRequest(),$Request);
+        $this->assertEquals(JSON::HTTP_GET,$Request->getMethod());
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar',$Request->getURL());
+        $this->assertEmpty($Request->getBody());
     }
 
     /**
@@ -262,6 +275,46 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
             'module' => 'Test',
             'id' => '1234'
         ),$Bean->getOptions());
+    }
+
+    /**
+     * @covers ::updateModel
+     */
+    public function testUpdateModel(){
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $ReflectedResponse = new \ReflectionClass('MRussell\Http\Response\JSON');
+        $body = $ReflectedResponse->getProperty('body');
+        $body->setAccessible(TRUE);
+        $body->setValue($Bean->getResponse(),json_encode(array('foo' => 'bar','baz' => 'foz')));
+
+        $ReflectedBean = new \ReflectionClass('Sugarcrm\REST\Endpoint\Module');
+        $updateModel = $ReflectedBean->getMethod('updateModel');
+        $updateModel->setAccessible(TRUE);
+
+        $Bean->setCurrentAction(Module::BEAN_ACTION_FAVORITE);
+        $updateModel->invoke($Bean);
+        $this->assertEquals(array(
+            'foo' => 'bar',
+            'baz' => 'foz'
+        ),$Bean->asArray());
+        $body->setValue($Bean->getResponse(),json_encode(array('foo' => 'foz','baz' => 'bar','favorite' => 0)));
+        $Bean->setCurrentAction(Module::BEAN_ACTION_UNFAVORITE);
+        $updateModel->invoke($Bean);
+        $this->assertEquals(array(
+            'foo' => 'foz',
+            'baz' => 'bar',
+            'favorite' => 0
+        ),$Bean->asArray());
+
+        $body->setValue($Bean->getResponse(),json_encode(array('foo' => 'bar','baz' => 'foz')));
+        $Bean->setCurrentAction(Module::BEAN_ACTION_AUDIT);
+        $updateModel->invoke($Bean);
+        $this->assertEquals(array(
+            'foo' => 'foz',
+            'baz' => 'bar',
+            'favorite' => 0
+        ),$Bean->asArray());
     }
 }
 

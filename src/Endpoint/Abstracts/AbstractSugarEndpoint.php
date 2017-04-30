@@ -12,6 +12,7 @@ abstract class AbstractSugarEndpoint extends Endpoint implements SugarEndpointIn
 {
     /**
      * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function compileRequest(){
         return $this->configureRequest($this->getRequest());

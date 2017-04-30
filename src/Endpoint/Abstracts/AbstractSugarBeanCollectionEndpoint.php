@@ -27,6 +27,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint im
 
     /**
      * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function compileRequest(){
         return $this->configureRequest($this->getRequest());

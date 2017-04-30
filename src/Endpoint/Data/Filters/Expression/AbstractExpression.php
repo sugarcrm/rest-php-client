@@ -11,8 +11,8 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
 /**
  * Class AbstractExpression
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
- * @method AbstractExpression       and()
- * @method AbstractExpression       or()
+ * @method AndExpression            and()
+ * @method OrExpression             or()
  * @method AbstractExpression       equals($field,$value)
  * @method AbstractExpression       not_equals($field,$value)
  * @method AbstractExpression       starts($field,$value)
@@ -32,7 +32,7 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
  * @method AbstractExpression       greaterThanOrEqualTo($field,$value)
  * @method AbstractExpression       greaterThanOrEquals($field,$value)
  */
-abstract class AbstractExpression implements FilterInterface
+abstract class AbstractExpression implements FilterInterface, ExpressionInterface
 {
     /**
      * @var array
@@ -59,14 +59,14 @@ abstract class AbstractExpression implements FilterInterface
         'notNull' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotNull',
         'lt' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
         'lessThan' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
-        'lte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEquals',
-        'lessThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
-        'lessThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
+        'lte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
+        'lessThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
+        'lessThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
         'gt' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
         'greaterThan' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
-        'gte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEquals',
-        'greaterThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
-        'greaterThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
+        'gte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
+        'greaterThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
+        'greaterThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
     );
 
     /**
@@ -101,15 +101,28 @@ abstract class AbstractExpression implements FilterInterface
         throw new UnknownFilterOperator(array($name));
     }
 
+    /**
+     * Sets Parent Expression to allow for nested tree structure
+     * @param AbstractExpression $Expression
+     * @return $this
+     */
     public function setParentExpression(AbstractExpression $Expression){
         $this->parentExpression = $Expression;
         return $this;
     }
 
+    /**
+     * Gets the Parent Expression of current Expression
+     * @return AbstractExpression
+     */
     public function getParentExpression(){
         return $this->parentExpression;
     }
 
+    /**
+     * Compiles the Expression based on the stored Filters array
+     * @return array
+     */
     public function compile()
     {
         $data = array();
@@ -117,6 +130,12 @@ abstract class AbstractExpression implements FilterInterface
             $data[] = $filter->compile();
         }
         return $data;
+    }
+
+    public function clear()
+    {
+        $this->filters = array();
+        return $this;
     }
 
 }

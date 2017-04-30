@@ -89,7 +89,7 @@ class FilterData extends AbstractExpression implements DataInterface
     //Data Interface
     /**
      * Return the entire Data array
-     * @param bool $verify - Whether or not to verify if Required Data is filled in
+     * @param bool $compile - Whether or not to verify if Required Data is filled in
      * @return array
      */
     public function asArray($compile = TRUE){
@@ -132,6 +132,7 @@ class FilterData extends AbstractExpression implements DataInterface
      */
     public function clear(){
         $this->data = array();
+        parent::clear();
         return $this;
     }
 
@@ -160,7 +161,7 @@ class FilterData extends AbstractExpression implements DataInterface
     public function execute(){
         if (isset($this->Endpoint)){
             $this->Endpoint->getData()->update($this->asArray());
-            $this->Endpoint->execute();
+            return $this->Endpoint->execute();
         }
     }
 

@@ -5,10 +5,17 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
+/**
+ * Class AndExpression
+ * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
+ */
 class AndExpression extends AbstractExpression
 {
     const OPERATOR = '$and';
 
+    /**
+     * @inheritdoc
+     */
     public function compile()
     {
         return array(
@@ -16,6 +23,10 @@ class AndExpression extends AbstractExpression
         );
     }
 
+    /**
+     * Human Friendly Expression End, allow you to traverse back up the Filter expression
+     * @return AbstractExpression
+     */
     public function endAnd(){
         return $this->getParentExpression();
     }

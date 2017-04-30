@@ -13,11 +13,21 @@ use Sugarcrm\REST\Endpoint\Data\Filters\FilterInterface;
  */
 abstract class AbstractOperator implements FilterInterface
 {
+    /**
+     * @var string
+     */
     protected static $_OPERATOR = '';
 
+    /**
+     * @var string
+     */
     protected $field = '';
 
+    /**
+     * @var array
+     */
     protected $data = array();
+
 
     public function __construct(array $arguments = array())
     {

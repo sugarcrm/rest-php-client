@@ -16,6 +16,7 @@ class AbstractSmartSugarEndpoint extends SmartEndpoint implements SugarEndpointI
 {
     /**
      * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function compileRequest(){
         return $this->configureRequest($this->getRequest());

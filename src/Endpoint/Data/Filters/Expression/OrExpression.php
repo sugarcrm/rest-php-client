@@ -5,10 +5,17 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
+/**
+ * Class OrExpression
+ * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
+ */
 class OrExpression extends AbstractExpression
 {
     const OPERATOR = '$or';
 
+    /**
+     * @inheritdoc
+     */
     public function compile()
     {
         return array(
@@ -16,6 +23,10 @@ class OrExpression extends AbstractExpression
         );
     }
 
+    /**
+     * Human Friendly Expression End, allow you to traverse back up the Filter expression
+     * @return AbstractExpression
+     */
     public function endOr(){
         return $this->getParentExpression();
     }
