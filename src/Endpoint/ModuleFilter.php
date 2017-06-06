@@ -93,6 +93,4 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         return $this->Filter;
     }
 
-
-
 }

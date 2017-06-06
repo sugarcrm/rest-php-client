@@ -1,8 +1,6 @@
 <?php
 /**
- * User: mrussell
- * Date: 4/30/17
- * Time: 3:14 PM
+ * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;

@@ -32,4 +32,23 @@ abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint im
     public function compileRequest(){
         return $this->configureRequest($this->getRequest());
     }
+
+    public function updateCollection()
+    {
+        $responseBody = $this->Response->getBody();
+        if (!empty($responseBody['records'])){
+            if (isset($this->model)){
+                $modelIdKey = $this->buildModel()->modelIdKey();
+                foreach($responseBody['records'] as $key => $model){
+                    if (isset($model[$modelIdKey])){
+                        $this->collection[$model[$modelIdKey]] = $model;
+                    } else {
+                        $this->collection[] = $model;
+                    }
+                }
+            } else {
+                $this->collection = $responseBody['records'];
+            }
+        }
+    }
 }

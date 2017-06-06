@@ -156,6 +156,7 @@ class FilterData extends AbstractExpression implements DataInterface
     }
 
     /**
+     * @return ModuleFilter|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function execute(){
@@ -163,6 +164,7 @@ class FilterData extends AbstractExpression implements DataInterface
             $this->Endpoint->getData()->update($this->asArray());
             return $this->Endpoint->execute();
         }
+        return false;
     }
 
 }

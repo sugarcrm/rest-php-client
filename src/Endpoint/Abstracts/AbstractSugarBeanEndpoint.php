@@ -15,6 +15,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     const BEAN_ACTION_RELATE = 'link';
 
+    const BEAN_ACTION_FILTER_RELATED = 'filterLink';
+
     const BEAN_ACTION_MASS_RELATE = 'massLink';
 
     const BEAN_ACTION_CREATE_RELATED = 'createLink';
@@ -60,6 +62,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     protected $actions = array(
         self::BEAN_ACTION_FAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_UNFAVORITE => JSON::HTTP_PUT,
+        self::BEAN_ACTION_FILTER_RELATED => JSON::HTTP_GET,
         self::BEAN_ACTION_RELATE => JSON::HTTP_POST,
         self::BEAN_ACTION_MASS_RELATE => JSON::HTTP_POST,
         self::BEAN_ACTION_UNLINK => JSON::HTTP_DELETE,
@@ -133,6 +136,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             case self::BEAN_ACTION_CREATE_RELATED:
             case self::BEAN_ACTION_MASS_RELATE:
             case self::BEAN_ACTION_UNLINK:
+            case self::BEAN_ACTION_FILTER_RELATED:
                 $action = self::BEAN_ACTION_RELATE;
                 break;
             case self::BEAN_ACTION_DOWNLOAD_FILE:
@@ -167,6 +171,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                 case self::BEAN_ACTION_DOWNLOAD_FILE:
                 case self::BEAN_ACTION_UNLINK:
                 case self::BEAN_ACTION_CREATE_RELATED:
+                case self::BEAN_ACTION_FILTER_RELATED:
                     if (isset($arguments[0])){
                         $this->options['actionArg1'] = $arguments[0];
                     }
@@ -192,6 +197,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             case self::BEAN_ACTION_FAVORITE:
             case self::BEAN_ACTION_UNFAVORITE:
                 if (is_array($body)){
+                    $this->reset();
                     $this->update($body);
                 }
                 break;
@@ -201,7 +207,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
-     * Human friendly method name for Link, simply forwards to Link method
+     * Human friendly method name for Link action
      * @param string $linkName - Relationship Link Name
      * @param string $related_id - ID to Relate
      * @return self
@@ -219,12 +225,21 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
-     * Human friendly overload for downloadFile method
+     * Human friendly overload for downloadFile action
      * @param $field - Name of File Field
      * @return self
      */
     public function getFile($field){
         return $this->downloadFile($field);
+    }
+
+    /**
+     * Human friendly overload for filterLink action
+     * @param $linkName - Name of Relationship Link
+     * @return self
+     */
+    public function getRelated($linkName){
+        return $this->filterLink($linkName);
     }
 
     /**

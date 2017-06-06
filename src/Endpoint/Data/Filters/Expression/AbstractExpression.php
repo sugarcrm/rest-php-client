@@ -11,26 +11,26 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
 /**
  * Class AbstractExpression
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
- * @method AndExpression            and()
- * @method OrExpression             or()
- * @method AbstractExpression       equals($field,$value)
- * @method AbstractExpression       not_equals($field,$value)
- * @method AbstractExpression       starts($field,$value)
- * @method AbstractExpression       ends($field,$value)
- * @method AbstractExpression       contains($field,$value)
- * @method AbstractExpression       in($field,array $value)
- * @method AbstractExpression       notIn($field,array $value)
- * @method AbstractExpression       isNull($field)
- * @method AbstractExpression       notNull($field)
- * @method AbstractExpression       lt($field,$value)
- * @method AbstractExpression       lessThan($field,$value)
- * @method AbstractExpression       lte($field,$value)
- * @method AbstractExpression       lessThanOrEqualTo($field,$value)
- * @method AbstractExpression       lessThanOrEquals($field,$value)
- * @method AbstractExpression       greaterThan($field,$value)
- * @method AbstractExpression       gte($field,$value)
- * @method AbstractExpression       greaterThanOrEqualTo($field,$value)
- * @method AbstractExpression       greaterThanOrEquals($field,$value)
+ * @method AndExpression        and()
+ * @method OrExpression         or()
+ * @method $this                equals($field,$value)
+ * @method $this                notEquals($field,$value)
+ * @method $this                starts($field,$value)
+ * @method $this                ends($field,$value)
+ * @method $this                contains($field,$value)
+ * @method $this                in($field,array $value)
+ * @method $this                notIn($field,array $value)
+ * @method $this                isNull($field)
+ * @method $this                notNull($field)
+ * @method $this                lt($field,$value)
+ * @method $this                lessThan($field,$value)
+ * @method $this                lte($field,$value)
+ * @method $this                lessThanOrEqualTo($field,$value)
+ * @method $this                lessThanOrEquals($field,$value)
+ * @method $this                greaterThan($field,$value)
+ * @method $this                gte($field,$value)
+ * @method $this                greaterThanOrEqualTo($field,$value)
+ * @method $this                greaterThanOrEquals($field,$value)
  */
 abstract class AbstractExpression implements FilterInterface, ExpressionInterface
 {
@@ -49,7 +49,7 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
      */
     protected $operators = array(
         'equals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Equals',
-        'not_equals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotEquals',
+        'notEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotEquals',
         'starts' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Starts',
         'ends' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Ends',
         'contains' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Contains',
