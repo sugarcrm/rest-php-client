@@ -5,34 +5,48 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\REST\Endpoint\JSON\CollectionEndpoint;
-use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
-
 /**
  * Class AbstractSugarBeanCollectionEndpoint
  * @package Sugarcrm\REST\Endpoint\Abstracts
  */
-abstract class AbstractSugarBeanCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
+abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollectionEndpoint
 {
     /**
-     * @inehritdoc
+     * The SugarCRM Module being used
+     * @var string
      */
-    protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => TRUE,
-        'data' => array(
-            'required' => array(),
-            'defaults' => array()
-        )
-    );
+    protected $module;
+
+    public function setOptions(array $options) {
+        $opts = array();
+        if (isset($options[0])){
+            $this->setModule($options[0]);
+            $opts['module'] = $this->module;
+        }
+        return parent::setOptions($opts);
+    }
+
+    /**
+     * Set the Sugar Module currently being used
+     * @param $module
+     * @return $this
+     */
+    public function setModule($module){
+        $this->module = $module;
+        return $this;
+    }
+
+    /**
+     * Get the Sugar Module currently configured
+     * @return mixed
+     */
+    public function getModule(){
+        return $this->module;
+    }
 
     /**
      * @inheritdoc
-     * @codeCoverageIgnore
      */
-    public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
-    }
-
     public function updateCollection()
     {
         $responseBody = $this->Response->getBody();

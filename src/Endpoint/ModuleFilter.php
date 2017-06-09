@@ -28,42 +28,9 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     protected $Filter;
 
     /**
-     * The SugarCRM Module being used
-     * @var string
-     */
-    protected $module;
-
-    /**
      * @var EndpointData
      */
     protected $data;
-
-    public function setOptions(array $options) {
-        $opts = array();
-        if (isset($options[0])){
-            $this->setModule($options[0]);
-            $opts['module'] = $this->module;
-        }
-        return parent::setOptions($opts);
-    }
-
-    /**
-     * Set the Sugar Module currently being used
-     * @param $module
-     * @return $this
-     */
-    public function setModule($module){
-        $this->module = $module;
-        return $this;
-    }
-
-    /**
-     * Get the Sugar Module currently configured
-     * @return mixed
-     */
-    public function getModule(){
-        return $this->module;
-    }
 
     /**
      * @inheritdoc
@@ -73,6 +40,14 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
             unset($this->options[self::FILTER_PARAM]);
         }
         return parent::fetch();
+    }
+
+    protected function configureData($data)
+    {
+        if (isset($this->options[self::FILTER_PARAM]) && is_object($this->Filter)){
+            $data->update($this->Filter->asArray());
+        }
+        return parent::configureData($data);
     }
 
     /**
