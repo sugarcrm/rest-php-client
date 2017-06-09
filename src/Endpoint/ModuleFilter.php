@@ -42,6 +42,10 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         return parent::fetch();
     }
 
+    /**
+     * If Filter Options is configured, use Filter Object to update Data
+     * @inheritdoc
+     */
     protected function configureData($data)
     {
         if (isset($this->options[self::FILTER_PARAM]) && is_object($this->Filter)){

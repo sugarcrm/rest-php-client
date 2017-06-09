@@ -10,9 +10,13 @@ use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
+    const SUGAR_OFFSET_PROPERTY = 'offset';
+
+    const SUGAR_LIMIT_PROPERTY = 'max_num';
+
     protected $offset = 0;
 
-    protected $max_num = 10;
+    protected $max_num = 20;
 
     /**
      * @inehritdoc
@@ -24,6 +28,13 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
             'defaults' => array()
         )
     );
+
+    protected function configureData($data)
+    {
+        $data[self::SUGAR_OFFSET_PROPERTY] = $this->getOffset();
+        $data[self::SUGAR_LIMIT_PROPERTY] = $this->getLimit();
+        return parent::configureData($data);
+    }
 
     /**
      * @inheritdoc

@@ -35,7 +35,7 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
             'headers' => array(
                 'Content-Type: application/json'
             ),
-            'data' => '{"filter":[{"foo":{"$equals":"bar"}}]}'
+            'data' => '{"filter":[{"foo":{"$equals":"bar"}}],"offset":0,"max_num":20}'
         ),
     );
 
