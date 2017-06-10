@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\Http\Request\JSON;
 use MRussell\REST\Endpoint\JSON\ModelEndpoint;
+use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface
@@ -240,6 +241,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      */
     public function getRelated($linkName){
         return $this->filterLink($linkName);
+    }
+
+    /**
+     * Filter generator for Related Links
+     * @param $linkName - Name of Relationship Link
+     * @return FilterData
+     */
+    public function filterRelated($linkName){
+        $Filter = new FilterData($this);
+        $this->setCurrentAction(self::BEAN_ACTION_FILTER_RELATED);
+        $this->configureAction($this->action,array($linkName));
+        return $Filter;
     }
 
     /**

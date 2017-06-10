@@ -90,6 +90,7 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
         $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint');
         $configureData = $Reflection->getMethod('configureData');
         $configureData->setAccessible(TRUE);
+        $Endpoint->setOrderBy('foo:DESC');
         $this->assertArrayHasKey('order_by',$configureData->invoke($Endpoint,new EndpointData()));
     }
 

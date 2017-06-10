@@ -43,6 +43,21 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     }
 
     /**
+     * @inheritdoc
+     * @return Module
+     */
+    public function get($id)
+    {
+        $Model = parent::get($id);
+        if (isset($this->module)){
+            $Model->setModule($this->module);
+        }else if (isset($Model['_module'])){
+            $Model->setModule($Model['_module']);
+        }
+        return $Model;
+    }
+
+    /**
      * If Filter Options is configured, use Filter Object to update Data
      * @inheritdoc
      */

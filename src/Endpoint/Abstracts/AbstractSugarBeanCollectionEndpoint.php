@@ -77,7 +77,9 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
      */
     protected function configureData($data)
     {
-        $data[self::SUGAR_ORDERBY_PROPERTY] = $this->orderBy;
+        if ($this->orderBy !== ''){
+            $data[self::SUGAR_ORDERBY_PROPERTY] = $this->orderBy;
+        }
         return parent::configureData($data);
     }
 
