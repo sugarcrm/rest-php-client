@@ -83,6 +83,15 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
         return parent::configureData($data);
     }
 
+    /**
+     * Add module to url options
+     * @inheritdoc
+     */
+    protected function configureURL(array $options)
+    {
+        $options['module'] = $this->module;
+        return parent::configureURL($options);
+    }
 
     /**
      * @inheritdoc
