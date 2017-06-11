@@ -5,6 +5,7 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 
 
@@ -38,28 +39,47 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::get
+     * @covers ::fetch
      */
-    public function testGet(){
+    public function testFetch(){
         $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
-        $ModuleFilter[12345] = array(
-            'id' => 12345,
-            'foo' => 'bar'
-        );
-        $Model = $ModuleFilter->get(12345);
+        $ModuleFilter->fetch();
+        $this->assertEquals('http://localhost/rest/v10/Accounts',$ModuleFilter->getRequest()->getURL());
+        $ModuleFilter->filter();
+        $this->assertArrayHasKey('filter',$ModuleFilter->getOptions());
+        $ModuleFilter->fetch();
+        $this->assertArrayNotHasKey('filter',$ModuleFilter->getOptions());
+        $this->assertEquals('http://localhost/rest/v10/Accounts',$ModuleFilter->getRequest()->getURL());
+    }
 
-        $this->assertEquals('Accounts',$Model->getModule());
+    /**
+     * @covers ::configureData
+     */
+    public function testConfigureData(){
+        $ModuleFilter = new ModuleFilter();
+        $Reflection = new \ReflectionClass(get_class($ModuleFilter));
+        $configureData = $Reflection->getMethod('configureData');
+        $configureData->setAccessible(TRUE);
+
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setModule('Accounts');
+        $ModuleFilter->setOptions(array(ModuleFilter::FILTER_PARAM => array()));
+        $data = $configureData->invoke($ModuleFilter,new EndpointData());
+        $this->assertArrayNotHasKey('filter',$data);
+
+        $ModuleFilter->filter();
+        $data = $configureData->invoke($ModuleFilter,new EndpointData());
+        $this->assertArrayHasKey('filter',$data);
 
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter[12345] = array(
-            'id' => 12345,
-            'foo' => 'bar',
-            '_module' => 'Accounts'
-        );
-        $Model = $ModuleFilter->get(12345);
-
-        $this->assertEquals('Accounts',$Model->getModule());
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setModule('Accounts');
+        $ModuleFilter->filter();
+        $data = $configureData->invoke($ModuleFilter,new EndpointData());
+        $this->assertArrayHasKey('filter',$data);
+        $this->assertArrayHasKey('filter',$ModuleFilter->getOptions());
     }
 
     /**

@@ -13,7 +13,21 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
 {
     const SUGAR_ORDERBY_PROPERTY = 'order_by';
 
+    const SUGAR_FIELDS_PROPERTY = 'fields';
+
+    protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
+
+    /**
+     * Order By statement
+     * @var string
+     */
     protected $orderBy = '';
+
+    /**
+     * Fields requested
+     * @var array
+     */
+    protected $fields = array();
 
     /**
      * The SugarCRM Module being used
@@ -72,13 +86,51 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     }
 
     /**
+     * Get the fields that are being requested via API
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Set the fields array property
+     * @param array $fields
+     * @return $this
+     */
+    public function setFields(array $fields)
+    {
+        $this->fields = $fields;
+        return $this;
+    }
+
+    /**
+     * Add a fields to the fields array
+     * @param $field
+     * @return $this
+     */
+    public function addField($field)
+    {
+        if (!in_array($field,$this->fields)){
+            $this->fields[] = $field;
+        }
+        return $this;
+    }
+
+    /**
      * Add orderBy based on Endpoint Property
+     * Add fields based on Endpoint property
      * @inheritdoc
      */
     protected function configureData($data)
     {
-        if ($this->orderBy !== ''){
-            $data[self::SUGAR_ORDERBY_PROPERTY] = $this->orderBy;
+        if ($this->getOrderBy() !== ''){
+            $data[self::SUGAR_ORDERBY_PROPERTY] = $this->getOrderBy();
+        }
+        $fields = $this->getFields();
+        if (!empty($fields)){
+            $data[self::SUGAR_FIELDS_PROPERTY] = implode(',',$this->getFields());
         }
         return parent::configureData($data);
     }
@@ -110,8 +162,25 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
                     }
                 }
             } else {
+                // @codeCoverageIgnoreStart
                 $this->collection = $responseBody['records'];
+                // @codeCoverageIgnoreEnd
             }
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function buildModel(array $data = array())
+    {
+        $Model = parent::buildModel($data);
+        $module = $this->getModule();
+        if (!empty($module) && $module !== '') {
+            $Model->setModule($this->module);
+        } else if (isset($Model['_module'])) {
+            $Model->setModule($Model['_module']);
+        }
+        return $Model;
     }
 }

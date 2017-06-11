@@ -83,6 +83,28 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
+     * @covers ::addField
+     * @covers ::getFields
+     * @covers ::setFields
+     */
+    public function testSetFields(){
+        $fields = array(
+            'foo',
+            'bar',
+            'name'
+        );
+        $Endpoint = new SugarBeanCollectionEndpoint();
+        $this->assertEquals($Endpoint,$Endpoint->addField('foo'));
+        $this->assertEquals(array('foo'),$Endpoint->getFields());
+        $this->assertEquals($Endpoint,$Endpoint->addField('foo'));
+        $this->assertEquals(array('foo'),$Endpoint->getFields());
+        $this->assertEquals($Endpoint,$Endpoint->addField('bar'));
+        $this->assertEquals(array('foo','bar'),$Endpoint->getFields());
+        $this->assertEquals($Endpoint,$Endpoint->setFields($fields));
+        $this->assertEquals($fields,$Endpoint->getFields());
+    }
+
+    /**
      * @covers ::configureData
      */
     public function testConfigureData(){
@@ -92,6 +114,27 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
         $configureData->setAccessible(TRUE);
         $Endpoint->setOrderBy('foo:DESC');
         $this->assertArrayHasKey('order_by',$configureData->invoke($Endpoint,new EndpointData()));
+
+        $Endpoint->addField('foo');
+        $this->assertArrayHasKey('fields',$configureData->invoke($Endpoint,new EndpointData()));
+        $Endpoint->addField('bar');
+        $data = $configureData->invoke($Endpoint,new EndpointData());
+        $this->assertEquals('foo,bar',$data['fields']);
+    }
+
+    /**
+     * @covers ::configureURL
+     */
+    public function testConfigureURL()
+    {
+        $Endpoint = new SugarBeanCollectionEndpoint();
+        $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint');
+        $configureURL = $Reflection->getMethod('configureURL');
+        $configureURL->setAccessible(true);
+        $Endpoint->setProperty('url', '$module/list');
+        $Endpoint->setModule('Accounts');
+        $this->assertEquals('Accounts/list', $configureURL->invoke($Endpoint, array()));
+        $this->assertEquals('Accounts/list', $configureURL->invoke($Endpoint, array('foo')));
     }
 
     /**
@@ -110,11 +153,11 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
             'next_offset' => -1,
             'records' => array(
                 array(
-                    'id' => 12345,
+                    'id' => '12345',
                     'foo' => 'bar'
                 ),
                 array(
-                    'id' => 5678,
+                    'id' => '5678',
                     'foo' => 'baz'
                 ),
                 array(
@@ -125,37 +168,40 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
         $Endpoint->setResponse($Response);
         $updateCollection->invoke($Endpoint);
         $this->assertEquals(array(
-            array(
-                'id' => 12345,
+            '12345' => array(
+                'id' => '12345',
                 'foo' => 'bar'
             ),
-            array(
-                'id' => 5678,
+            '5678' => array(
+                'id' => '5678',
                 'foo' => 'baz'
             ),
             array(
                 'foo' => 'foo'
             )
         ),$Endpoint->asArray());
+    }
 
-        $Endpoint = new ModuleFilter();
+    /**
+     * @covers ::buildModel
+     */
+    public function testBuildModel(){
+        $Endpoint = new SugarBeanCollectionEndpoint();
         $Reflection = new \ReflectionClass(get_class($Endpoint));
-        $updateCollection = $Reflection->getMethod('updateCollection');
-        $updateCollection->setAccessible(TRUE);
-        $Endpoint->setResponse($Response);
-        $updateCollection->invoke($Endpoint);
-        $this->assertEquals(array(
-            12345 => array(
-                'id' => 12345,
-                'foo' => 'bar'
-            ),
-            5678 => array(
-                'id' => 5678,
-                'foo' => 'baz'
-            ),
-            array(
-                'foo' => 'foo'
-            )
-        ),$Endpoint->asArray());
+        $buildModel = $Reflection->getMethod('buildModel');
+        $buildModel->setAccessible(TRUE);
+        $Endpoint->setModule('Accounts');
+
+        $Model = $buildModel->invoke($Endpoint);
+        $this->assertEquals('Accounts',$Model->getModule());
+
+        $Endpoint = new SugarBeanCollectionEndpoint();
+        $Model = $buildModel->invoke($Endpoint,array(
+            'id' => 12345,
+            'foo' => 'bar',
+            '_module' => 'Accounts'
+        ));
+
+        $this->assertEquals('Accounts',$Model->getModule());
     }
 }

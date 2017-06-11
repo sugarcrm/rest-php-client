@@ -18,8 +18,6 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
 {
     const FILTER_PARAM = 'filter';
 
-    protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
-
     protected static $_ENDPOINT_URL = '$module/$:filter';
 
     /**
@@ -39,22 +37,8 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         if (isset($this->options[self::FILTER_PARAM])){
             unset($this->options[self::FILTER_PARAM]);
         }
+        $this->setProperty('httpMethod',JSON::HTTP_GET);
         return parent::fetch();
-    }
-
-    /**
-     * @inheritdoc
-     * @return Module
-     */
-    public function get($id)
-    {
-        $Model = parent::get($id);
-        if (isset($this->module)){
-            $Model->setModule($this->module);
-        }else if (isset($Model['_module'])){
-            $Model->setModule($Model['_module']);
-        }
-        return $Model;
     }
 
     /**
