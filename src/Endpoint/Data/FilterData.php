@@ -1,10 +1,11 @@
 <?php
 /**
- * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data;
 
+use MRussell\REST\Endpoint\Abstracts\AbstractSmartEndpoint;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\Data\DataInterface;
 use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression;
@@ -17,7 +18,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
 class FilterData extends AbstractExpression implements DataInterface
 {
     /**
-     * @var ModuleFilter
+     * @var AbstractSmartEndpoint
      */
     private $Endpoint;
 
@@ -34,7 +35,7 @@ class FilterData extends AbstractExpression implements DataInterface
     protected $properties;
 
     //Overloads
-    public function __construct(ModuleFilter $Endpoint = NULL) {
+    public function __construct(AbstractSmartEndpoint $Endpoint = NULL) {
         if ($Endpoint !== NULL){
             $this->setEndpoint($Endpoint);
         }
@@ -147,16 +148,16 @@ class FilterData extends AbstractExpression implements DataInterface
     }
 
     /**
-     * @param ModuleFilter $Endpoint
+     * @param AbstractSmartEndpoint $Endpoint
      * @return self
      */
-    public function setEndpoint(ModuleFilter $Endpoint){
+    public function setEndpoint(AbstractSmartEndpoint $Endpoint){
         $this->Endpoint = $Endpoint;
         return $this;
     }
 
     /**
-     * @return ModuleFilter|false
+     * @return AbstractSmartEndpoint|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function execute(){

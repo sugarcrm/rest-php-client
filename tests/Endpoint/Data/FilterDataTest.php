@@ -160,4 +160,17 @@ class FilterDataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($Data,$Data->setProperties(array('required_data' => 'filter')));
         $this->assertEquals(array('required_data' => 'filter'),$Data->getProperties());
     }
+
+    /**
+     * @covers ::execute
+     */
+    public function testExecute(){
+        $FilterData = new FilterData();
+        $this->assertEquals(FALSE,$FilterData->execute());
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setModule('test');
+        $FilterData->setEndpoint($ModuleFilter);
+        $this->assertEquals($ModuleFilter,$FilterData->execute());
+    }
 }

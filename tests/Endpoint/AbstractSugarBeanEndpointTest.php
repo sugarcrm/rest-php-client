@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
@@ -151,6 +151,33 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         ),$Bean->getData()->asArray());
     }
 
+    /**
+     * @covers ::getRelated
+     */
+    public function testGetRelated(){
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setOptions(array('Foo','bar'));
+        $this->assertEquals($Bean,$Bean->getRelated('test'));
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test',$Bean->getRequest()->getURL());
+        $this->assertEquals('GET',$Bean->getRequest()->getMethod());
+    }
+
+    /**
+     * @covers ::filterRelated
+     * @covers Sugarcrm\REST\Endpoint\Data\FilterData::execute
+     */
+    public function testFilterRelated(){
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setOptions(array('Foo','bar'));
+        $Filter = $Bean->filterRelated('test');
+        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData',$Filter);
+        $this->assertEquals($Bean,$Filter->execute());
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test',$Bean->getRequest()->getURL());
+        $this->assertEquals('GET',$Bean->getRequest()->getMethod());
+        $this->assertArrayHasKey('filter',$Bean->getRequest()->getBody());
+    }
 
     /**
      * @covers ::configureURL

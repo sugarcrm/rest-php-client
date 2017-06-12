@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -31,17 +31,11 @@ class Bulk extends AbstractSmartSugarEndpoint
         'auth' => TRUE,
         'httpMethod' => JSON::HTTP_POST,
         'data' => array(
-            'required' => array(),
+            'required' => array(
+                'requests' => 'array'
+            ),
             'defaults' => array()
         )
     );
 
-    /**
-     * @param \Sugarcrm\REST\Endpoint\Data\BulkRequest $data
-     * @return array
-     */
-    protected function configureData($data)
-    {
-        return $data->compile();
-    }
 }

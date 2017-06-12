@@ -1,18 +1,17 @@
 <?php
 /**
- * ©[2016] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
 
-
-use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
+use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarCollectionEndpoint;
 
 /**
  * Class Search
  * @package Sugarcrm\REST\Endpoint
  */
-class Search extends AbstractSugarBeanCollectionEndpoint
+class Search extends AbstractSugarCollectionEndpoint
 {
     /**
      * @inheritdoc
@@ -27,13 +26,16 @@ class Search extends AbstractSugarBeanCollectionEndpoint
     /**
      * When retrieveing the Model from the collection, we can use the _module property to set the Module
      * @inheritdoc
+     * @return Module
      */
     public function get($id)
     {
-        $model = parent::get($id);
-        if (is_object($model)){
-            $model->setModule($model['_module']);
+        $Model = parent::get($id);
+        if (is_object($Model)){
+            if (isset($Model['_module'])){
+                $Model->setModule($Model['_module']);
+            }
         }
-        return $model;
+        return $Model;
     }
 }
