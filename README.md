@@ -4,13 +4,22 @@
 [![License](https://poser.pugx.org/sugarcrm/rest-php-client/license)](https://packagist.org/packages/sugarcrm/rest-php-client)
 [![Total Downloads](https://poser.pugx.org/sugarcrm/rest-php-client/downloads)](https://packagist.org/packages/sugarcrm/rest-php-client)
 
-#SugarCRM REST PHP Client#
+# SugarCRM REST PHP Client
 
-##Overview##
+## Overview
 A simple and intuitive Library for accessing a Sugar 7's REST v10 API. Allows for Object Oriented design around accessing data from a SugarCRM system, so you can easily get your integration project underway.
 
-##Usage
-Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki) for detailed information on 
+## Usage
+Add to any project using composer:
+```
+"require": {
+    "sugarcrm/rest-php-client": "~2.0"
+}
+```
+> If you were previously using v1.x, please note v2.x uses different namespaces and is not backwards compatible. 
+> You can run v1.x and v2.x side-by-side by using the SugarDevSupport/rest-php-client package, which will always maintain the latest 2.x package
+
+__Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki)__ for detailed information on 
 * Installation
 * Usage
 * Customization
@@ -19,8 +28,11 @@ Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki) for detai
 
 ## Developing the PHP REST Client
 
-#### Requirement:
-You need to have installed: [php 5.3+](https://php.org/)
+#### Requirements:
+* v1.x
+  * [php 5.3 - 5.6](https://php.org/)
+* v2.x
+  * [php 5.3+]
 
 #### Steps:
 1. With PHP installed, navigate to the repo folder (rest-php-client) via terminal.
