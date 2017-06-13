@@ -17,7 +17,7 @@ Add to any project using composer:
 }
 ```
 > If you were previously using v1.x, please note v2.x uses different namespaces and is not backwards compatible. 
-> You can run v1.x and v2.x side-by-side by using the SugarDevSupport/rest-php-client package, which will always maintain the latest 2.x package
+> You can run v1.x and v2.x side-by-side by using the sugarcrm/php-rest-client-v2 package, which will always maintain the latest 2.x package
 
 __Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki)__ for detailed information on 
 * Installation
