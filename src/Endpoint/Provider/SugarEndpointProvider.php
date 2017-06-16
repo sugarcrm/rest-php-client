@@ -5,11 +5,11 @@
 
 namespace Sugarcrm\REST\Endpoint\Provider;
 
-use MRussell\REST\Endpoint\Provider\AbstractEndpointProvider;
+use MRussell\REST\Endpoint\Provider\DefaultEndpointProvider;
 
-class SugarEndpointProvider extends AbstractEndpointProvider
+class SugarEndpointProvider extends DefaultEndpointProvider
 {
-    protected static $_DEFAULT_ENDPOINTS = array(
+    protected $registry = array(
         'module' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Module',
             'properties' => array()
