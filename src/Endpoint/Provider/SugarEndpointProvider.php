@@ -45,6 +45,10 @@ class SugarEndpointProvider extends DefaultEndpointProvider
         'bulk' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Bulk',
             'properties' => array()
+        ),
+        'enum' => array(
+            'class' => 'Sugarcrm\\REST\\Endpoint\\Enum',
+            'properties' => array()
         )
     );
 

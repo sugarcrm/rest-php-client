@@ -15,6 +15,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
 use Sugarcrm\REST\Endpoint\Search;
 use Sugarcrm\REST\Endpoint\Metadata;
 use Sugarcrm\REST\Endpoint\Me;
+use Sugarcrm\REST\Endpoint\Enum;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
 
 /**
@@ -25,7 +26,8 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method ModuleFilter list(string $module = '')
  * @method Search       search()
  * @method Metadata     metadata(string $module = '')
- * @method Me         user(string $user_id)
+ * @method Me           user(string $user_id)
+ * @method Enum         enum(string $module,string $field)
 */
 class Sugar7API extends AbstractClient
 {
