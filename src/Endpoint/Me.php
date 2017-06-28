@@ -29,12 +29,12 @@ class Me extends AbstractModelEndpoint
     /**
      * @inheritdoc
      */
-    protected static $_ENDPOINT_URL = 'me/$:action/$:actionarg1';
+    protected static $_ENDPOINT_URL = 'me/$:action/$:actionArg1';
 
     /**
      * @inheritdoc
      */
-    protected $actions = array(
+    protected static $_DEFAULT_SUGAR_USER_ACTIONS = array(
         self::USER_ACTION_PREFERENCES => JSON::HTTP_GET,
         self::USER_ACTION_SAVE_PREFERENCES => JSON::HTTP_PUT,
         self::USER_ACTION_GET_PREFERENCE => JSON::HTTP_GET,
@@ -44,13 +44,21 @@ class Me extends AbstractModelEndpoint
         self::USER_ACTION_FOLLOWING => JSON::HTTP_GET
     );
 
+    public function __construct(array $options = array(), array $properties = array())
+    {
+        parent::__construct($options, $properties);
+        foreach(static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method){
+            $this->actions[$action] = $method;
+        }
+    }
+
     /**
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
     protected function configureURL(array $options) {
-        $action = $this->action;
-        switch($this->action){
+        $action = $this->getCurrentAction();
+        switch($action){
             case self::USER_ACTION_SAVE_PREFERENCES:
                 $action = self::USER_ACTION_PREFERENCES;
                 break;

@@ -5,6 +5,7 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use MRussell\Http\Request\Curl;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 
@@ -80,6 +81,19 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $data = $configureData->invoke($ModuleFilter,new EndpointData());
         $this->assertArrayHasKey('filter',$data);
         $this->assertArrayHasKey('filter',$ModuleFilter->getOptions());
+    }
+
+    /**
+     * @covers ::configureURL
+     */
+    public function testConfigureUrl(){
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setModule('Accounts');
+        $ModuleFilter->setProperty('httpMethod',Curl::HTTP_POST);
+        $Request = $ModuleFilter->compileRequest();
+        $this->assertEquals('POST',$Request->getMethod());
+        $this->assertEquals('http://localhost/rest/v10/Accounts/filter',$Request->getURL());
     }
 
     /**
