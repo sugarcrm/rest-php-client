@@ -54,6 +54,20 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     }
 
     /**
+     * Check for httpMethod setting, and if configured for POST make sure to add Filter to URL
+     * @param array $options
+     * @return string
+     */
+    protected function configureURL(array $options)
+    {
+        $properties = $this->getProperties();
+        if (!isset($options[self::FILTER_PARAM]) && $properties['httpMethod'] == JSON::HTTP_POST){
+            $options[self::FILTER_PARAM] = self::FILTER_PARAM;
+        }
+        return parent::configureURL($options);
+    }
+
+    /**
      * Configure the Filter Parameters for the Filter API
      * @param bool $reset
      * @return FilterData
