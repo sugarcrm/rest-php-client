@@ -28,7 +28,7 @@ class Metadata extends AbstractSugarEndpoint
      */
     protected static $_DEFAULT_PROPERTIES = array(
         'auth' => TRUE,
-        'httpMethod' => Curl::HTTP_POST
+        'httpMethod' => Curl::HTTP_GET
     );
 
     /**

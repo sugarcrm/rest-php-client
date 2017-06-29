@@ -60,7 +60,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * All the extra actions that can be done on a Sugar Bean
      * @var array
      */
-    protected $actions = array(
+    protected static $_DEFAULT_SUGAR_BEAN_ACTIONS = array(
         self::BEAN_ACTION_FAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_UNFAVORITE => JSON::HTTP_PUT,
         self::BEAN_ACTION_FILTER_RELATED => JSON::HTTP_GET,
@@ -81,6 +81,14 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @var string
      */
     protected $module;
+
+    public function __construct(array $options = array(), array $properties = array())
+    {
+        parent::__construct($options, $properties);
+        foreach(static::$_DEFAULT_SUGAR_BEAN_ACTIONS as $action => $method){
+            $this->actions[$action] = $method;
+        }
+    }
 
     /**
      * @inheritdoc
