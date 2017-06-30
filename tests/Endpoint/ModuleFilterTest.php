@@ -87,11 +87,14 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->fetch();
         $this->assertEquals('http://localhost/rest/v10/Accounts/filter',$ModuleFilter->getRequest()->getURL());
-        $this->assertEquals(JSON::HTTP_GET,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $properties = $ModuleFilter->getProperties();
+        $this->assertEquals(JSON::HTTP_GET,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
-        $this->assertEquals(JSON::HTTP_POST,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $properties = $ModuleFilter->getProperties();
+        $this->assertEquals(JSON::HTTP_POST,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->fetch();
-        $this->assertEquals(JSON::HTTP_GET,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $properties = $ModuleFilter->getProperties();
+        $this->assertEquals(JSON::HTTP_GET,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
     }
 
     /**
