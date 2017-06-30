@@ -158,7 +158,8 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
             )
         ));
         $Filter = $ModuleFilter->filter(TRUE);
-        $this->assertEmpty($ModuleFilter->getData()['filter']);
+        $data = $ModuleFilter->getData();
+        $this->assertEmpty($data['filter']);
 
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setData(array(
