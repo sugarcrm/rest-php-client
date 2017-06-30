@@ -161,6 +161,10 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($Bean,$Bean->getRelated('test'));
         $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test',$Bean->getRequest()->getURL());
         $this->assertEquals('GET',$Bean->getRequest()->getMethod());
+
+        $this->assertEquals($Bean,$Bean->getRelated('test',true));
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test/count',$Bean->getRequest()->getURL());
+        $this->assertEquals('GET',$Bean->getRequest()->getMethod());
     }
 
     /**
@@ -175,6 +179,13 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData',$Filter);
         $this->assertEquals($Bean,$Filter->execute());
         $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test',$Bean->getRequest()->getURL());
+        $this->assertEquals('GET',$Bean->getRequest()->getMethod());
+        $this->assertArrayHasKey('filter',$Bean->getRequest()->getBody());
+
+        $Filter = $Bean->filterRelated('test',true);
+        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData',$Filter);
+        $this->assertEquals($Bean,$Filter->execute());
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test/count',$Bean->getRequest()->getURL());
         $this->assertEquals('GET',$Bean->getRequest()->getMethod());
         $this->assertArrayHasKey('filter',$Bean->getRequest()->getBody());
     }

@@ -8,6 +8,7 @@ namespace Sugarcrm\REST\Helpers;
 class Helper
 {
     const API_VERSION = 10;
+
     const API_URL = '/rest/v%d/';
 
     /**

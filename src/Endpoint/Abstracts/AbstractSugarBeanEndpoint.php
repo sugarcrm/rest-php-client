@@ -40,6 +40,14 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     const BEAN_ACTION_ATTACH_FILE = 'attachFile';
 
+    const BEAN_ACTION_ARG1_VAR = 'actionArg1';
+
+    const BEAN_ACTION_ARG2_VAR = 'actionArg2';
+
+    const BEAN_ACTION_ARG3_VAR = 'actionArg3';
+
+    const BEAN_MODULE_VAR = 'module';
+
     /**
      * @inheritdoc
      */
@@ -94,7 +102,6 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      */
     public function compileRequest(){
-        $this->configureAction($this->getCurrentAction());
         return $this->configureRequest($this->getRequest());
     }
 
@@ -106,7 +113,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     public function setOptions(array $options) {
         if (isset($options[0])){
             $this->setModule($options[0]);
-            $options['module'] = $this->module;
+            $options[self::BEAN_MODULE_VAR] = $this->module;
             unset($options[0]);
         }
         if (isset($options[1])){
@@ -140,8 +147,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      */
     protected function configureURL(array $options) {
-        $action = $this->action;
-        switch($this->action){
+        $action = $this->getCurrentAction();
+        switch($action){
             case self::BEAN_ACTION_CREATE_RELATED:
             case self::BEAN_ACTION_MASS_RELATE:
             case self::BEAN_ACTION_UNLINK:
@@ -173,6 +180,11 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      */
     protected function configureAction($action,array $arguments = array()) {
+        $options = $this->getOptions();
+        $options[self::BEAN_MODULE_VAR] = $this->module;
+        if (isset($options[self::BEAN_ACTION_ARG1_VAR])) unset($options[self::BEAN_ACTION_ARG1_VAR]);
+        if (isset($options[self::BEAN_ACTION_ARG2_VAR])) unset($options[self::BEAN_ACTION_ARG2_VAR]);
+        if (isset($options[self::BEAN_ACTION_ARG3_VAR])) unset($options[self::BEAN_ACTION_ARG3_VAR]);
         if (!empty($arguments)){
             switch($action){
                 case self::BEAN_ACTION_RELATE:
@@ -182,18 +194,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                 case self::BEAN_ACTION_CREATE_RELATED:
                 case self::BEAN_ACTION_FILTER_RELATED:
                     if (isset($arguments[0])){
-                        $this->options['actionArg1'] = $arguments[0];
-                    }
-                    if (isset($arguments[1])){
-                        $this->options['actionArg2'] = $arguments[1];
-                    }
-                    if (isset($arguments[2])){
-                        $this->options['actionArg3'] = $arguments[2];
+                        $options[self::BEAN_ACTION_ARG1_VAR] = $arguments[0];
+                        if (isset($arguments[1])){
+                            $options[self::BEAN_ACTION_ARG2_VAR] = $arguments[1];
+                            if (isset($arguments[2])){
+                                $options[self::BEAN_ACTION_ARG3_VAR] = $arguments[2];
+                            }
+                        }
                     }
             }
         }
-        $this->options['module'] = $this->module;
-        parent::configureAction($action);
+        $this->setOptions($options);
+        parent::configureAction($action,$arguments);
     }
 
     /**
@@ -245,21 +257,30 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     /**
      * Human friendly overload for filterLink action
      * @param $linkName - Name of Relationship Link
+     * @param bool $count
      * @return self
      */
-    public function getRelated($linkName){
+    public function getRelated($linkName,$count = false){
+        if ($count){
+            return $this->filterLink($linkName,'count');
+        }
         return $this->filterLink($linkName);
     }
 
     /**
      * Filter generator for Related Links
      * @param $linkName - Name of Relationship Link
+     * @param bool $count - Whether or not to just do a count request
      * @return FilterData
      */
-    public function filterRelated($linkName){
+    public function filterRelated($linkName,$count = false){
         $Filter = new FilterData($this);
         $this->setCurrentAction(self::BEAN_ACTION_FILTER_RELATED);
-        $this->configureAction($this->action,array($linkName));
+        $args = array($linkName);
+        if ($count){
+            $args[] = 'count';
+        }
+        $this->configureAction($this->action,$args);
         return $Filter;
     }
 

@@ -17,6 +17,8 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
  */
 class FilterData extends AbstractExpression implements DataInterface
 {
+    const FILTER_PARAM = 'filter';
+
     /**
      * @var AbstractSmartEndpoint
      */
@@ -96,7 +98,7 @@ class FilterData extends AbstractExpression implements DataInterface
     public function asArray($compile = TRUE){
         if ($compile){
             $data = $this->compile();
-            $this->data[ModuleFilter::FILTER_PARAM] = $data;
+            $this->data = array_replace_recursive($this->data,$data);
         }
         return $this->data;
     }
@@ -148,6 +150,7 @@ class FilterData extends AbstractExpression implements DataInterface
     }
 
     /**
+     * Set the Endpoint using the Filter Data
      * @param AbstractSmartEndpoint $Endpoint
      * @return self
      */
@@ -157,12 +160,22 @@ class FilterData extends AbstractExpression implements DataInterface
     }
 
     /**
+     * Return the Endpoint being used with the Filter Data
+     * @return AbstractSmartEndpoint
+     * @codeCoverageIgnore
+     */
+    public function getEndpoint(){
+        return $this->Endpoint;
+    }
+
+    /**
      * @return AbstractSmartEndpoint|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function execute(){
         if (isset($this->Endpoint)){
-            $this->Endpoint->getData()->update($this->asArray());
+            $filter = $this->asArray();
+            $this->Endpoint->getData()->update(array(self::FILTER_PARAM => $filter));
             return $this->Endpoint->execute();
         }
         return false;

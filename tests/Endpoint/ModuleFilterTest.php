@@ -6,7 +6,9 @@
 namespace Sugarcrm\REST\Tests\Endpoint;
 
 use MRussell\Http\Request\Curl;
+use MRussell\Http\Request\JSON;
 use MRussell\REST\Endpoint\Data\EndpointData;
+use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 
 
@@ -40,6 +42,43 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::setOptions
+     */
+    public function testSetOptions(){
+        $ModuleFilter = new ModuleFilter();
+        $this->assertEquals($ModuleFilter,$ModuleFilter->setOptions(array(
+            'Accounts',
+            'count'
+        )));
+        $this->assertEquals(array(
+            'module' => 'Accounts',
+            'count' => 'count'
+        ),$ModuleFilter->getOptions());
+        $this->assertEquals($ModuleFilter,$ModuleFilter->setOptions(array(
+            'Accounts',
+            true
+        )));
+        $this->assertEquals(array(
+            'module' => 'Accounts',
+            'count' => 'count'
+        ),$ModuleFilter->getOptions());
+        $this->assertEquals($ModuleFilter,$ModuleFilter->setOptions(array(
+            'Accounts',
+            0
+        )));
+        $this->assertEquals(array(
+            'module' => 'Accounts',
+            'count' => 'count'
+        ),$ModuleFilter->getOptions());
+        $this->assertEquals($ModuleFilter,$ModuleFilter->setOptions(array(
+            'Accounts'
+        )));
+        $this->assertEquals(array(
+            'module' => 'Accounts'
+        ),$ModuleFilter->getOptions());
+    }
+
+    /**
      * @covers ::fetch
      */
     public function testFetch(){
@@ -47,12 +86,12 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->fetch();
-        $this->assertEquals('http://localhost/rest/v10/Accounts',$ModuleFilter->getRequest()->getURL());
+        $this->assertEquals('http://localhost/rest/v10/Accounts/filter',$ModuleFilter->getRequest()->getURL());
+        $this->assertEquals(JSON::HTTP_GET,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
-        $this->assertArrayHasKey('filter',$ModuleFilter->getOptions());
+        $this->assertEquals(JSON::HTTP_POST,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->fetch();
-        $this->assertArrayNotHasKey('filter',$ModuleFilter->getOptions());
-        $this->assertEquals('http://localhost/rest/v10/Accounts',$ModuleFilter->getRequest()->getURL());
+        $this->assertEquals(JSON::HTTP_GET,$ModuleFilter->getProperties()[$ModuleFilter::PROPERTY_HTTP_METHOD]);
     }
 
     /**
@@ -66,21 +105,16 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
 
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
-        $ModuleFilter->setOptions(array(ModuleFilter::FILTER_PARAM => array()));
-        $data = $configureData->invoke($ModuleFilter,new EndpointData());
-        $this->assertArrayNotHasKey('filter',$data);
-
         $ModuleFilter->filter();
         $data = $configureData->invoke($ModuleFilter,new EndpointData());
-        $this->assertArrayHasKey('filter',$data);
+        $this->assertArrayNotHasKey('filter',$data);
 
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
-        $ModuleFilter->filter();
+        $ModuleFilter->filter()->contains('foo','bar');
         $data = $configureData->invoke($ModuleFilter,new EndpointData());
         $this->assertArrayHasKey('filter',$data);
-        $this->assertArrayHasKey('filter',$ModuleFilter->getOptions());
     }
 
     /**
@@ -111,6 +145,47 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $Filter->equals('foo','bar');
         $this->assertEquals($Filter,$ModuleFilter->filter(TRUE));
         $this->assertEquals(array(),$Filter->asArray(FALSE));
+        $ModuleFilter->setData(array(
+            'filter' => array(
+                array(
+                    '$equals' => array(
+                        'bar' => 'foo'
+                    )
+                )
+            )
+        ));
+        $Filter = $ModuleFilter->filter(TRUE);
+        $this->assertEmpty($ModuleFilter->getData()['filter']);
+
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setData(array(
+            'filter' => array(
+                array(
+                    '$equals' => array(
+                        'bar' => 'foo'
+                    )
+                )
+            )
+        ));
+        $Filter = $ModuleFilter->filter();
+        $this->assertEquals(array(
+            array(
+                '$equals' => array(
+                    'bar' => 'foo'
+                )
+            )
+        ),$Filter->asArray(FALSE));
+    }
+
+    /**
+     * @covers ::count
+     */
+    public function testCount(){
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setModule('Accounts');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10/');
+        $this->assertEquals($ModuleFilter,$ModuleFilter->count());
+        $this->assertEquals('http://localhost/rest/v10/Accounts/filter/count',$ModuleFilter->getRequest()->getURL());
     }
 
 }

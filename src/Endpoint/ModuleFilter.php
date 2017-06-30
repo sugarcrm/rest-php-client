@@ -16,9 +16,9 @@ use Sugarcrm\REST\Endpoint\Data\FilterData;
  */
 class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
 {
-    const FILTER_PARAM = 'filter';
+    const COUNT_OPTION = 'count';
 
-    protected static $_ENDPOINT_URL = '$module/$:filter';
+    protected static $_ENDPOINT_URL = '$module/filter/$:count';
 
     /**
      * @var FilterData
@@ -31,13 +31,29 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     protected $data;
 
     /**
+     * @var
+     */
+    protected $totalCount;
+
+    /**
+     * Sanitize passed in options
+     * @param array $options
+     * @return $this|mixed
+     */
+    public function setOptions(array $options)
+    {
+        if (isset($options[1])){
+            unset($options[1]);
+            $options[self::COUNT_OPTION] = self::COUNT_OPTION;
+        }
+        return parent::setOptions($options);
+    }
+
+    /**
      * @inheritdoc
      */
     public function fetch(){
-        if (isset($this->options[self::FILTER_PARAM])){
-            unset($this->options[self::FILTER_PARAM]);
-        }
-        $this->setProperty('httpMethod',JSON::HTTP_GET);
+        $this->setProperty(self::PROPERTY_HTTP_METHOD,JSON::HTTP_GET);
         return parent::fetch();
     }
 
@@ -47,24 +63,13 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      */
     protected function configureData($data)
     {
-        if (isset($this->options[self::FILTER_PARAM]) && is_object($this->Filter)){
-            $data->update($this->Filter->asArray());
+        if (is_object($this->Filter)){
+            $compiledFilter = $this->Filter->asArray();
+            if (!empty($compiledFilter)){
+                $data->update(array(FilterData::FILTER_PARAM => $this->Filter->asArray()));
+            }
         }
         return parent::configureData($data);
-    }
-
-    /**
-     * Check for httpMethod setting, and if configured for POST make sure to add Filter to URL
-     * @param array $options
-     * @return string
-     */
-    protected function configureURL(array $options)
-    {
-        $properties = $this->getProperties();
-        if (!isset($options[self::FILTER_PARAM]) && $properties['httpMethod'] == JSON::HTTP_POST){
-            $options[self::FILTER_PARAM] = self::FILTER_PARAM;
-        }
-        return parent::configureURL($options);
     }
 
     /**
@@ -72,17 +77,35 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      * @param bool $reset
      * @return FilterData
      */
-    public function filter($reset = FALSE){
-        $this->options[self::FILTER_PARAM] = self::FILTER_PARAM;
-        $this->setProperty('httpMethod',JSON::HTTP_POST);
+    public function filter($reset = FALSE)
+    {
+        $this->setProperty(self::PROPERTY_HTTP_METHOD,JSON::HTTP_POST);
         if (empty($this->Filter)){
             $this->Filter = new FilterData();
             $this->Filter->setEndpoint($this);
+            $data = $this->getData();
+            if (isset($data[FilterData::FILTER_PARAM]) && !empty($data[FilterData::FILTER_PARAM])){
+                $this->Filter->update($data[FilterData::FILTER_PARAM]);
+            }
         }
         if ($reset){
             $this->Filter->reset();
+            $data = $this->getData();
+            if (isset($data[FilterData::FILTER_PARAM]) && !empty($data[FilterData::FILTER_PARAM])){
+                unset($data[FilterData::FILTER_PARAM]);
+                $this->setData($data);
+            }
         }
         return $this->Filter;
+    }
+
+    /**
+     * Configure the Request to use Count Endpoint
+     */
+    public function count()
+    {
+        $this->setOptions(array($this->getModule(),self::COUNT_OPTION));
+        return $this->execute();
     }
 
 }

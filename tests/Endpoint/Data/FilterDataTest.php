@@ -116,26 +116,21 @@ class FilterDataTest extends \PHPUnit_Framework_TestCase
     public function testDataAccess(){
         $Filter = new ModuleFilter();
         $Data = new FilterData($Filter);
-        $Data['filter'] = $this->data_simple;
-        $this->assertEquals($this->data_simple,$Data['filter']);
-        $this->assertEquals(TRUE,isset($Data['filter']));
+        $Data->update($this->data_simple);
+        $this->assertEquals($this->data_simple,$Data->asArray(false));
         $Data->clear();
-        $this->assertEquals(array('filter' => array()),$Data->asArray());
+        $this->assertEquals(array(),$Data->asArray());
         $Data->starts('name','s')->equals('status','foo')->gte('date_entered','2017-01-01');
-        $this->assertEquals(array(
-            'filter' => $this->data_simple
-        ),$Data->asArray(TRUE));
-        $Data->update(array(
-            'filter' => $this->data_simple
-        ));
-        $this->assertEquals(array(
-            'filter' => $this->data_simple
-        ),$Data->asArray(TRUE));
-        unset($Data['filter']);
+        $this->assertEquals($this->data_simple,$Data->asArray());
+        $Data->update($this->data_simple);
+        $this->assertEquals($this->data_simple,$Data->asArray());
+        $Data->reset();
         $this->assertEmpty($Data->asArray(FALSE));
         $Data[] = 'foo';
         $this->assertEquals('foo',$Data[0]);
-
+        unset($Data[0]);
+        $this->assertEquals(array(),$Data->asArray(FALSE));
+        $Data['$foo'] = 'bar';
         $Data->reset();
         $this->assertEmpty($Data->asArray(FALSE));
 
