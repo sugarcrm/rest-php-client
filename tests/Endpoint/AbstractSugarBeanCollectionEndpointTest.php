@@ -57,7 +57,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCas
             'foo'
         )));
         $this->assertEquals(array(
-            'module' => 'Accounts'
+            'module' => 'Accounts',
+            1 => 'foo'
         ),$Endpoint->getOptions());
     }
 

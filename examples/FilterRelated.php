@@ -13,12 +13,14 @@ try{
     echo "</pre>";
     $Accounts = $SugarAPI->list('Accounts');
     $Accounts->fetch();
-    $account = current($Accounts->asArray());
-    $Account = $Accounts->get($account['id']);
+    $Account = $Accounts->at(1);
+    $Account->getRelated('contacts',true);
+    echo $Account->getRequest()->getURL()."<br>";
+    echo "<pre> Response:".print_r($Account->getResponse()->getBody(),true)."</pre><br>";
     $Filter = $Account->filterRelated('contacts')->contains('first_name','s');
-    echo "<pre> Filter Contacts related to Account {$account['id']} where first_name contains an 's': ".var_dump($Filter->compile())."</pre><br>";
+    echo "<pre> Filter Contacts related to Account {$account['id']} where first_name contains an 's': ".print_r($Filter->compile(),true)."</pre><br>";
     $Filter->execute();
-    echo "<pre> Response:".print_r($Account->getRequest(),true)."</pre><br>";
+    echo "<pre> Response:".print_r($Account->getResponse()->getBody(),true)."</pre><br>";
 }catch (Exception $ex){
     echo "<pre>";
     //print_r($SugarAPI);

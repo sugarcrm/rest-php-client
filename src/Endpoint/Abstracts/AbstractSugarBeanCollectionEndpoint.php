@@ -37,12 +37,12 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
 
     public function setOptions(array $options)
     {
-        $opts = array();
         if (isset($options[0])) {
-            $this->setModule($options[0]);
-            $opts['module'] = $this->module;
+            $options['module'] = $options[0];
+            $this->setModule($options['module']);
+            unset($options[0]);
         }
-        return parent::setOptions($opts);
+        return parent::setOptions($options);
     }
 
     /**

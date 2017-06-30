@@ -16,7 +16,7 @@ try{
                             ->endOr()
                             ->equals('assigned_user_id','seed_max_id')
                         ->endAnd();
-    echo "<pre> Filter Accounts that are assigned to User Max, and that either start with an S or contain 'test' in the name: ".var_dump($Accounts->filter()->compile())."</pre><br>";
+    echo "<pre> Filter Accounts that are assigned to User Max, and that either start with an S or contain 'test' in the name: ".print_r($Accounts->filter()->compile(),true)."</pre><br>";
     $Accounts->filter()->execute();
     echo "<pre> Response:".print_r($Accounts->getResponse()->getBody(),true)."</pre><br>";
 }catch (Exception $ex){
