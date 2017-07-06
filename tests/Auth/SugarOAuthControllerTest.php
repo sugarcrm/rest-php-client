@@ -3,6 +3,7 @@
 namespace Sugarcrm\REST\Tests\Auth;
 
 use Sugarcrm\REST\Auth\SugarOAuthController;
+use Sugarcrm\REST\Storage\SugarStaticStorage;
 
 
 /**
@@ -32,6 +33,38 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
+    }
+
+    /**
+     * @covers ::setCredentials
+     */
+    public function testSetCredentials(){
+        $Auth = new SugarOAuthController();
+        $Storage = new SugarStaticStorage();
+        $Auth->setStorageController($Storage);
+        $this->assertEquals($Auth,$Auth->setCredentials(array(
+            'username' => 'admin',
+            'password' => '',
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'api'
+        )));
+        $this->assertEmpty($Auth->getToken());
+        $Storage->store($Auth->getCredentials(),array(
+            'access_token' => '1234',
+            'refresh_token' => '5678',
+        ));
+        $this->assertEquals($Auth,$Auth->setCredentials(array(
+            'username' => 'admin',
+            'password' => '',
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'api'
+        )));
+        $this->assertEquals(array(
+            'access_token' => '1234',
+            'refresh_token' => '5678',
+        ),$Auth->getToken());
     }
 
     /**
