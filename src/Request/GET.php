@@ -28,7 +28,10 @@ class GET extends AbstractRequest
      */
     public function setBody($body)
     {
-        $this->body = http_build_query($body);
+        if (is_array($body) || is_object($body)) {
+            $body = http_build_query($body);
+        }
+        $this->body = $body;
         return $this;
     }
 
