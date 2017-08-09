@@ -44,6 +44,8 @@ class GETTest extends \PHPUnit_Framework_TestCase {
         $Request = new GET();
         $Request->setBody(array());
         $this->assertEquals(http_build_query(array()),$Request->getBody());
+        $Request->setBody("test=foo&bar=test");
+        $this->assertEquals("test=foo&bar=test",$Request->getBody());
         $Request->setBody(array('test'));
         $this->assertEquals(http_build_query(array('test')),$Request->getBody());
         $Request->setBody($this->body);
