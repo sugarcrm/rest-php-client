@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Tests\Endpoint;
 
 use MRussell\Http\Request\JSON;
 use Sugarcrm\REST\Endpoint\Module;
+use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
 
 
 /**
@@ -353,6 +354,30 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
             'baz' => 'bar',
             'favorite' => 0
         ),$Bean->asArray());
+    }
+
+    /**
+     * @covers ::configureFileUploadData
+     */
+    public function testConfigureFileUploadData(){
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Auth = new SugarOAuthStub();
+        $Bean->setAuth($Auth);
+        $ReflectedEndpoint = new \ReflectionClass(get_class($Bean));
+        $configureFileUploadData = $ReflectedEndpoint->getMethod('configureFileUploadData');
+        $configureFileUploadData->setAccessible(true);
+        $configureFileUploadData->invoke($Bean,FALSE);
+        $this->assertEquals(array(
+            'format' => 'sugar-html-json',
+            'delete_if_fails' => FALSE,
+        ),$Bean->getData()->asArray());
+        $configureFileUploadData->invoke($Bean,TRUE);
+        $this->assertEquals(array(
+            'format' => 'sugar-html-json',
+            'delete_if_fails' => TRUE,
+            'oauth_token' => 'bar'
+        ),$Bean->getData()->asArray());
     }
 }
 
