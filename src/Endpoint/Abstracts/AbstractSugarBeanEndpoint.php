@@ -5,8 +5,8 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\Http\Request\AbstractRequest;
 use MRussell\Http\Request\JSON;
+use MRussell\Http\Request\RequestInterface;
 use MRussell\Http\Response\ResponseInterface;
 use MRussell\REST\Endpoint\JSON\ModelEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
@@ -161,10 +161,10 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     /**
      * Auto configure uploads
-     * @param AbstractRequest $Request
-     * @return AbstractRequest
+     * @param RequestInterface $Request
+     * @return RequestInterface
      */
-    protected function configureRequest(AbstractRequest $Request)
+    protected function configureRequest(RequestInterface $Request)
     {
         $Request = parent::configureRequest($Request);
         $Request->setUpload($this->upload);

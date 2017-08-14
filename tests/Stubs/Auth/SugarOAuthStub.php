@@ -12,6 +12,11 @@ use Sugarcrm\REST\Auth\SugarOAuthController;
 
 class SugarOAuthStub extends SugarOAuthController
 {
+    protected $token = array(
+        'access_token' => 'bar',
+        'refresh_token' => 'foo',
+        'expires_in' => '3600'
+    );
 
     public function authenticate()
     {

@@ -122,5 +122,24 @@ class Sugar7API extends AbstractClient
         return $this->getAuth()->logout();
     }
 
+    /**
+     * Check if authenticated, and attempt Refresh/Login if not
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public function isAuthenticated()
+    {
+        $Auth = $this->getAuth();
+        if ($Auth){
+            if (!$Auth->isAuthenticated()){
+                if (!$this->refreshToken()){
+                    return $this->login();
+                }
+            }
+        } else {
+            return FALSE;
+        }
+        return TRUE;
+    }
 
 }
