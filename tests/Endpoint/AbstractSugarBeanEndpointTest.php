@@ -379,5 +379,42 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
             'oauth_token' => 'bar'
         ),$Bean->getData()->asArray());
     }
+
+    /**
+     * @covers ::attachFile
+     * @covers ::tempFile
+     * @covers ::addFile
+     * @covers ::resetUploads
+     * @covers ::configureUploads
+     */
+    public function testFileAttachments()
+    {
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->set('id','12345a');
+        $Bean->setModule('Accounts');
+        $Reflection = new \ReflectionClass('Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint');
+        $upload = $Reflection->getProperty('upload');
+        $upload->setAccessible(TRUE);
+        $_files = $Reflection->getProperty('_files');
+        $_files->setAccessible(TRUE);
+        $Auth = new SugarOAuthStub();
+        $Bean->setAuth($Auth);
+        $this->assertEquals($Bean,$Bean->attachFile('uploadfile',__FILE__));
+        $this->assertEquals(Module::BEAN_ACTION_ATTACH_FILE,$Bean->getCurrentAction());
+        $this->assertEquals(array(),$_files->getValue($Bean));
+        $this->assertEquals(FALSE,$upload->getValue($Bean));
+        $this->assertEmpty($Bean->getData()->asArray());
+        $rBody = $Bean->getRequest()->getBody();
+        $this->assertNotEmpty($rBody['uploadfile']);
+        $this->assertEquals($Bean,$Bean->tempFile('uploadfile',__FILE__));
+        $this->assertEquals(Module::BEAN_ACTION_TEMP_FILE_UPLOAD,$Bean->getCurrentAction());
+        $this->assertEquals(array(),$_files->getValue($Bean));
+        $this->assertEquals(FALSE,$upload->getValue($Bean));
+        $this->assertEmpty($Bean->getData()->asArray());
+        $this->assertEquals('temp',$Bean['id']);
+        $rBody = $Bean->getRequest()->getBody();
+        $this->assertNotEmpty($rBody['uploadfile']);
+    }
 }
 
