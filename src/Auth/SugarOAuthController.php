@@ -9,9 +9,7 @@ use MRussell\REST\Auth\Abstracts\AbstractOAuth2Controller;
 
 class SugarOAuthController extends AbstractOAuth2Controller
 {
-    protected static $_OAUTH_HEADER = 'OAuth-Token';
-
-    protected static $_TOKEN_VALUE = '%s';
+    protected static $_AUTH_HEADER = 'OAuth-Token';
 
     protected static $_DEFAULT_GRANT_TYPE = self::OAUTH_RESOURCE_OWNER_GRANT;
 
@@ -25,6 +23,14 @@ class SugarOAuthController extends AbstractOAuth2Controller
         'client_secret' => '',
         'platform' => 'api'
     );
+
+    /**
+     * @inheritdoc
+     */
+    protected function getAuthHeaderValue()
+    {
+        return $this->token['access_token'];
+    }
 
     /**
      * @inheritdoc

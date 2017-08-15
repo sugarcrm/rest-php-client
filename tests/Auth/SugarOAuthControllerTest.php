@@ -2,8 +2,10 @@
 
 namespace Sugarcrm\REST\Tests\Auth;
 
+use MRussell\Http\Request\JSON;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
+use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
 
 
 /**
@@ -110,5 +112,17 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'client_secret' => '',
             'platform' => array()
         ),$Auth->getCredentials());
+    }
+
+    /**
+     * @covers ::getAuthHeaderValue
+     */
+    public function testAuthHeader()
+    {
+        $Auth = new SugarOAuthStub();
+        $Request = new JSON();
+        $this->assertEquals($Auth,$Auth->configureRequest($Request));
+        $headers = $Request->getHeaders();
+        $this->assertEquals('bar',$headers['OAuth-Token']);
     }
 }

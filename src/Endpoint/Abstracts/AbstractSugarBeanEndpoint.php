@@ -160,15 +160,25 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
-     * Auto configure uploads
-     * @param RequestInterface $Request
-     * @return RequestInterface
+     * Configure Uploads on Request
+     * @inheritdoc
+     * @codeCoverageIgnore
      */
     protected function configureRequest(RequestInterface $Request)
     {
         $Request = parent::configureRequest($Request);
+        return $this->configureUploads($Request);
+    }
+
+    /**
+     * Configure the Uploads Data on the Request Object
+     * @param RequestInterface $Request
+     * @return RequestInterface
+     */
+    protected function configureUploads(RequestInterface $Request)
+    {
         $Request->setUpload($this->upload);
-        if ($Request->getUpload()){
+        if (!empty($this->_files)){
             foreach($this->_files as $key => $properties){
                 $Request->addFile($key,$properties['path'],$properties['mimeType'],$properties['filename']);
             }
@@ -176,15 +186,26 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         return $Request;
     }
 
+    /**
+     * Add a reset for Upload Settings
+     * @inheritdoc
+     * @codeCoverageIgnore
+     */
     protected function configureResponse(ResponseInterface $Response)
     {
+        $this->resetUploads();
+        return parent::configureResponse($Response);
+    }
+
+    /**
+     * Reset the Upload Settings back to defaults
+     */
+    protected function resetUploads(){
         if ($this->upload){
-            //Reset file uploads after uploading
-            $this->upload = FALSE;
-            $this->_files = array();
             $this->getData()->reset();
         }
-        return parent::configureResponse($Response);
+        $this->upload = FALSE;
+        $this->_files = array();
     }
 
     /**
@@ -368,11 +389,11 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     {
         $this->setCurrentAction(self::BEAN_ACTION_ATTACH_FILE,array($fileField));
         $this->configureFileUploadData($deleteOnFail);
-        $this->_files[$fileField] = array(
+        $this->addFile($fileField,array(
             'path' => $filePath,
             'mimeType' => $mimeType,
             'filename' => $uploadName
-        );
+        ));
         return $this->execute();
     }
 
@@ -395,11 +416,11 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         $this->set($idKey,'temp');
         $this->setCurrentAction(self::BEAN_ACTION_TEMP_FILE_UPLOAD,array($fileField));
         $this->configureFileUploadData($deleteOnFail);
-        $this->_files[$fileField] = array(
+        $this->addFile($fileField,array(
             'path' => $filePath,
             'mimeType' => $mimeType,
             'filename' => $uploadName
-        );
+        ));
         return $this->execute();
     }
 
@@ -417,6 +438,21 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             $data['oauth_token'] = $token['access_token'];
         }
         $this->setData($data);
+    }
+
+    /**
+     * Add a file to the internal Files array to be added to the Request
+     * @param $name
+     * @param array $properties
+     * @return $this
+     */
+    protected function addFile($name,array $properties)
+    {
+        if (isset($properties['path'])){
+            $this->upload = TRUE;
+            $this->_files[$name] = $properties;
+        }
+        return $this;
     }
 
 }
