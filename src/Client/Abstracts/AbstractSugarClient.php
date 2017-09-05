@@ -14,7 +14,7 @@ use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
  * The Abstract Client implementation for Sugar
  * @package SugarAPI\SDK\Client\Abstracts\AbstractClient
  * @method EPInterface ping()
- * @method EPInterface getRecord(string $module = '')
+ * @method EPInterface getRecord(string $module = '',string $record_id = '')
  * @method EPInterface getAttachment(string $module = '',string $record_id = '')
  * @method EPInterface getChangeLog(string $module = '',string $record_id = '')
  * @method EPInterface filterRelated(string $module = '')
