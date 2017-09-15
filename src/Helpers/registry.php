@@ -15,6 +15,7 @@ $entryPoints = array(
     'me' => 'GET\\Me',
     'search' => 'GET\\Search',
     'preferences' => 'GET\\MePreferences',
+    'serverTime' => 'GET\\ServerTime',
 
     //POST API Endpoints
     'oauth2Token' => 'POST\\OAuth2Token',
