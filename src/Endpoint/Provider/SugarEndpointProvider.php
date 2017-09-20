@@ -38,6 +38,10 @@ class SugarEndpointProvider extends DefaultEndpointProvider
             'class' => 'Sugarcrm\\REST\\Endpoint\\OAuth2Logout',
             'properties' => array()
         ),
+        'oauth2Sudo' => array(
+            'class' => 'Sugarcrm\\REST\\Endpoint\\OAuth2Sudo',
+            'properties' => array()
+        ),
         'me' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Me',
             'properties' => array()

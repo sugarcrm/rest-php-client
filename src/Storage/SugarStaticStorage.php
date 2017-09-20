@@ -18,7 +18,10 @@ class SugarStaticStorage extends StaticStorage
                 $return .= $key['client_id']."_";
             }
             if (isset($key['platform'])){
-                $return .= $key['platform'];
+                $return .= $key['platform']."_";
+            }
+            if (isset($key['sudo'])){
+                $return .= "sudo".$key['sudo'];
             }
         }else {
             $return = $key;

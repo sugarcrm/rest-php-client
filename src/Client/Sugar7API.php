@@ -65,6 +65,7 @@ class Sugar7API extends AbstractClient
         $Auth->setActionEndpoint('authenticate',$this->EndpointProvider->getEndpoint('oauth2Token'));
         $Auth->setActionEndpoint('refresh',$this->EndpointProvider->getEndpoint('oauth2Refresh'));
         $Auth->setActionEndpoint('logout',$this->EndpointProvider->getEndpoint('oauth2Logout'));
+        $Auth->setActionEndpoint('sudo',$this->EndpointProvider->getEndpoint('oauth2Sudo'));
         $Auth->setStorageController(new SugarStaticStorage());
     }
 
@@ -120,6 +121,19 @@ class Sugar7API extends AbstractClient
      */
     public function logout(){
         return $this->getAuth()->logout();
+    }
+
+    /**
+     * Helper method to Sudo to new user
+     */
+    public function sudo($user,$data=array())
+    {
+        if (empty($data)){
+            $creds = $this->getAuth()->getCredentials();
+            $data['platform'] = $creds['platform'];
+            $data['client_id'] = $creds['client_id'];
+        }
+        return $this->getAuth()->sudo($user,$data);
     }
 
     /**
