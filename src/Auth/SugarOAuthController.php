@@ -6,12 +6,19 @@
 namespace Sugarcrm\REST\Auth;
 
 use MRussell\REST\Auth\Abstracts\AbstractOAuth2Controller;
+use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 
 class SugarOAuthController extends AbstractOAuth2Controller
 {
+    const ACTION_SUGAR_SUDO = 'sudo';
+
     protected static $_AUTH_HEADER = 'OAuth-Token';
 
     protected static $_DEFAULT_GRANT_TYPE = self::OAUTH_RESOURCE_OWNER_GRANT;
+
+    protected static $_DEFAULT_SUGAR_AUTH_ACTIONS = array(
+        self::ACTION_SUGAR_SUDO
+    );
 
     /**
      * @inheritdoc
@@ -23,6 +30,17 @@ class SugarOAuthController extends AbstractOAuth2Controller
         'client_secret' => '',
         'platform' => 'api'
     );
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        foreach (static::$_DEFAULT_SUGAR_AUTH_ACTIONS as $action) {
+            $this->actions[] = $action;
+        }
+    }
 
     /**
      * @inheritdoc
@@ -96,5 +114,42 @@ class SugarOAuthController extends AbstractOAuth2Controller
             $this->storeToken($this->getCredentials(),$this->getToken());
         }
         return $return;
+    }
+
+    /**
+     * Refreshes the OAuth 2 Token
+     * @return bool
+     * @throws InvalidToken
+     */
+    public function sudo($user,$data = array())
+    {
+        if (isset($this->token['access_token'])) {
+            $Endpoint = $this->getActionEndpoint(self::ACTION_SUGAR_SUDO);
+
+            if ($Endpoint !== null) {
+                $Endpoint = $this->configureSudoEndpoint($Endpoint, $user,$data);
+                $response = $Endpoint->execute()->getResponse();
+                if ($response->getStatus() == '200') {
+                    //@codeCoverageIgnoreStart
+                    $this->setToken($response->getBody());
+                    $creds = $this->getCredentials();
+                    $creds['sudo'] = $user;
+                    $this->storeToken($creds,$this->getToken());
+                    return TRUE;
+                }
+                //@codeCoverageIgnoreEnd
+            }
+        }
+        return FALSE;
+    }
+
+    protected function configureSudoEndpoint(EndpointInterface $Endpoint,$user,$data = array())
+    {
+        $Endpoint->setAuth($this);
+        $Endpoint->setOptions(array($user));
+        if (!empty($data)){
+            $Endpoint->setData($data);
+        }
+        return $Endpoint;
     }
 }
