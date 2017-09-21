@@ -118,16 +118,16 @@ class SugarOAuthController extends AbstractOAuth2Controller
 
     /**
      * Refreshes the OAuth 2 Token
+     * @param $user string
      * @return bool
      * @throws InvalidToken
      */
-    public function sudo($user,$data = array())
+    public function sudo($user)
     {
         if (isset($this->token['access_token'])) {
             $Endpoint = $this->getActionEndpoint(self::ACTION_SUGAR_SUDO);
-
             if ($Endpoint !== null) {
-                $Endpoint = $this->configureSudoEndpoint($Endpoint, $user,$data);
+                $Endpoint = $this->configureSudoEndpoint($Endpoint, $user);
                 $response = $Endpoint->execute()->getResponse();
                 if ($response->getStatus() == '200') {
                     //@codeCoverageIgnoreStart
@@ -143,13 +143,21 @@ class SugarOAuthController extends AbstractOAuth2Controller
         return FALSE;
     }
 
-    protected function configureSudoEndpoint(EndpointInterface $Endpoint,$user,$data = array())
+    /**
+     * Configure the Sudo Endpoint
+     * @param EndpointInterface $Endpoint
+     * @param $user
+     * @return EndpointInterface
+     */
+    protected function configureSudoEndpoint(EndpointInterface $Endpoint,$user)
     {
         $Endpoint->setAuth($this);
         $Endpoint->setOptions(array($user));
-        if (!empty($data)){
-            $Endpoint->setData($data);
-        }
+        $data = array();
+        $creds = $this->getCredentials();
+        $data['platform'] = $creds['platform'];
+        $data['client_id'] = $creds['client_id'];
+        $Endpoint->setData($data);
         return $Endpoint;
     }
 }

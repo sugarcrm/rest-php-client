@@ -53,12 +53,12 @@ class SugarStaticStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true,$Storage->store(array(
             'server' => 'test.sugarondemand.com'
         ),$this->token));
-        $token = $Storage->get('test.sugarondemand.com_');
+        $token = $Storage->get('test.sugarondemand.com');
         $this->assertEquals($this->token,json_decode($token,TRUE));
         $this->assertEquals(true,$Storage->remove(array(
             'server' => 'test.sugarondemand.com'
         )));
-        $token = $Storage->get('test.sugarondemand.com_');
+        $token = $Storage->get('test.sugarondemand.com');
         $this->assertEquals(NULL,$token);
 
 
@@ -88,6 +88,15 @@ class SugarStaticStorageTest extends \PHPUnit_Framework_TestCase
             'platform' => 'base'
         ));
         $this->assertEquals(NULL,$token);
+
+        $this->assertEquals(true,$Storage->store(array(
+            'server' => 'test.sugarondemand.com',
+            'platform' => 'base',
+            'client_id' => 'foo',
+            'sudo' => 'max'
+        ),$this->token));
+        $token = $Storage->get('test.sugarondemand.com_foo_base_sudomax');
+        $this->assertEquals(json_encode($this->token),$token);
     }
 
 }

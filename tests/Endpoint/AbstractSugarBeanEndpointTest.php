@@ -354,6 +354,15 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
             'baz' => 'bar',
             'favorite' => 0
         ),$Bean->asArray());
+
+        $Bean->reset();
+        $body->setValue($Bean->getResponse(),json_encode(array('record' => array('id' => '12345'),'filename' => array('guid' => 'test.txt'))));
+        $Bean->setCurrentAction(Module::BEAN_ACTION_TEMP_FILE_UPLOAD);
+        $updateModel->invoke($Bean);
+        $this->assertEquals(array(
+            'filename_guid' => '12345',
+            'filename' => 'test.txt'
+        ),$Bean->asArray());
     }
 
     /**

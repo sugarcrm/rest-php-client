@@ -150,4 +150,15 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
         $Client->setAuth($Auth);
         $this->assertEquals(true,$Client->logout());
     }
+
+    /**
+     * @covers ::sudo
+     */
+    public function testSudo()
+    {
+        $Client = new Sugar7API('localhost');
+        $Auth = new SugarOAuthStub();
+        $Client->setAuth($Auth);
+        $this->assertEquals(false,$Client->sudo('max'));
+    }
 }
