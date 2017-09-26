@@ -125,15 +125,12 @@ class Sugar7API extends AbstractClient
 
     /**
      * Helper method to Sudo to new user
+     * @param $user string
+     * @return bool
      */
-    public function sudo($user,$data=array())
+    public function sudo($user)
     {
-        if (empty($data)){
-            $creds = $this->getAuth()->getCredentials();
-            $data['platform'] = $creds['platform'];
-            $data['client_id'] = $creds['client_id'];
-        }
-        return $this->getAuth()->sudo($user,$data);
+        return $this->getAuth()->sudo($user);
     }
 
     /**

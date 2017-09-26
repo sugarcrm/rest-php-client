@@ -23,6 +23,7 @@ class SugarStaticStorage extends StaticStorage
             if (isset($key['sudo'])){
                 $return .= "sudo".$key['sudo'];
             }
+            $return = rtrim($return,"_");
         }else {
             $return = $key;
         }

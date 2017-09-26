@@ -4,6 +4,7 @@ namespace Sugarcrm\REST\Tests\Auth;
 
 use MRussell\Http\Request\JSON;
 use Sugarcrm\REST\Auth\SugarOAuthController;
+use Sugarcrm\REST\Endpoint\OAuth2Sudo;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
 
@@ -35,6 +36,15 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         parent::tearDown();
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function testConstructor()
+    {
+        $Auth = new SugarOAuthStub();
+        $this->assertEquals(true,in_array('sudo',$Auth->getActions()));
     }
 
     /**
@@ -124,5 +134,32 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($Auth,$Auth->configureRequest($Request));
         $headers = $Request->getHeaders();
         $this->assertEquals('bar',$headers['OAuth-Token']);
+    }
+
+    /**
+     * @covers ::sudo
+     * @covers ::configureSudoEndpoint
+     * @covers Sugarcrm\REST\Client\Sugar7API::sudo
+     */
+    public function testSudo()
+    {
+        $Auth = new SugarOAuthStub();
+        $Auth->setCredentials(array(
+            'username' => 'system',
+            'password' => 'asdf',
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'api'
+        ));
+        $EP = new OAuth2Sudo();
+        $EP->setBaseUrl('http://localhost/rest/v10');
+        $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO,$EP);
+        $Auth->sudo('max');
+        $request = $EP->getRequest();
+        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max',$request->getURL());
+        $this->assertEquals(array(
+            'client_id' => 'sugar',
+            'platform' => 'api'
+        ),$request->getBody());
     }
 }
