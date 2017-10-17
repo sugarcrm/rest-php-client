@@ -6,9 +6,9 @@
 namespace Sugarcrm\REST\Endpoint;
 
 use MRussell\Http\Request\JSON;
-use MRussell\REST\Endpoint\Abstracts\AbstractModelEndpoint;
+use MRussell\REST\Endpoint\JSON\ModelEndpoint;
 
-class Me extends AbstractModelEndpoint
+class Me extends ModelEndpoint implements SugarEndpointInterface
 {
     const MODEL_ACTION_VAR = 'action';
 
@@ -25,6 +25,11 @@ class Me extends AbstractModelEndpoint
     const USER_ACTION_DELETE_PREFERENCE = 'deletePreference';
 
     const USER_ACTION_FOLLOWING = 'following';
+
+    protected static $_DEFAULT_PROPERTIES = array(
+        'auth' => true,
+        'httpMethod' => JSON::HTTP_GET
+    );
 
     /**
      * @inheritdoc
@@ -50,6 +55,14 @@ class Me extends AbstractModelEndpoint
         foreach(static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method){
             $this->actions[$action] = $method;
         }
+    }
+
+    /**
+     * @inheritdoc
+     * @codeCoverageIgnore
+     */
+    public function compileRequest(){
+        return $this->configureRequest($this->getRequest());
     }
 
     /**
