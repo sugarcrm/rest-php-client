@@ -8,10 +8,27 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 use MRussell\Http\Request\JSON;
 use MRussell\Http\Request\RequestInterface;
 use MRussell\Http\Response\ResponseInterface;
+use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\JSON\ModelEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
+/**
+ * SugarBean Endpoint acts as a base for any given Module API
+ * - Provides action based interface for accessing stock and custom actions
+ * @package Sugarcrm\REST\Endpoint\Abstracts
+ * @method $this    filterLink(string $link_name = '',string $count = '')
+ * @method $this    massLink(string $link_name)
+ * @method $this    createLink(string $link_name)
+ * @method $this    unlink(string $link_name,string $record_id)
+ * @method $this    favorite()
+ * @method $this    unfavorite()
+ * @method $this    subscribe()
+ * @method $this    unsubscribe()
+ * @method $this    audit()
+ * @method $this    file()
+ * @method $this    downloadFile(string $field)
+ */
 abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface
 {
     const MODEL_ACTION_VAR = 'action';
@@ -56,10 +73,10 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      */
     protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => TRUE,
-        'data' => array(
-            'required' => array(),
-            'defaults' => array()
+        self::PROPERTY_AUTH => TRUE,
+        self::PROPERTY_DATA => array(
+            EndpointData::DATA_PROPERTY_REQUIRED => array(),
+            EndpointData::DATA_PROPERTY_DEFAULTS => array()
         )
     );
 
@@ -81,7 +98,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         self::BEAN_ACTION_UNLINK => JSON::HTTP_DELETE,
         self::BEAN_ACTION_CREATE_RELATED => JSON::HTTP_POST,
         self::BEAN_ACTION_FOLLOW => JSON::HTTP_POST,
-        self::BEAN_ACTION_UNFOLLOW => JSON::HTTP_PUT,
+        self::BEAN_ACTION_UNFOLLOW => JSON::HTTP_DELETE,
         self::BEAN_ACTION_AUDIT => JSON::HTTP_GET,
         self::BEAN_ACTION_FILE => JSON::HTTP_GET,
         self::BEAN_ACTION_DOWNLOAD_FILE => JSON::HTTP_GET,
@@ -306,6 +323,24 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
+     * System friendly name for subscribing to a record
+     * @return self
+     */
+    public function follow()
+    {
+        return $this->subscribe();
+    }
+
+    /**
+     * System friendly name for unsubscribing to a record
+     * @return self
+     */
+    public function unfollow()
+    {
+        return $this->unsubscribe();
+    }
+
+    /**
      * Human friendly method name for Link action
      * @param string $linkName - Relationship Link Name
      * @param string $related_id - ID to Relate
@@ -398,6 +433,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
+     * Overloading tempFile dynamic method to provide more functionality
      * @param $fileField
      * @param $filePath
      * @param bool $deleteOnFail

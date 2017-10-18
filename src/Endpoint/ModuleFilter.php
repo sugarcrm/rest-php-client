@@ -11,7 +11,11 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 
 /**
- * Class ModuleFilter
+ * Provides access to the Filter API for a given Module
+ * - Also allows for retrieving counts of filters/records
+ * - Works with a single Module Bean type
+ * - Provides access to the Filter API and Filter Query Builder
+ * - Tracks pagination
  * @package Sugarcrm\REST\Endpoint
  */
 class ModuleFilter extends AbstractSugarBeanCollectionEndpoint

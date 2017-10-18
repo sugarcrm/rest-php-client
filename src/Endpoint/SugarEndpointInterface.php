@@ -5,7 +5,10 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-
+/**
+ * The base interface for Sugar Endpoints, which adds in functionality for use with Bulk API Endpoint
+ * @package Sugarcrm\REST\Endpoint
+ */
 interface SugarEndpointInterface
 {
     /**

@@ -8,7 +8,8 @@ namespace Sugarcrm\REST\Endpoint;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarCollectionEndpoint;
 
 /**
- * Class Search
+ * The Sugar 7 REST Api Search Endpoint
+ * - Provides access to global Elastic Search queries
  * @package Sugarcrm\REST\Endpoint
  */
 class Search extends AbstractSugarCollectionEndpoint

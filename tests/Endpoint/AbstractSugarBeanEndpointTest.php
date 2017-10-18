@@ -153,6 +153,32 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::follow
+     */
+    public function testFollow()
+    {
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setOptions(array('Foo','bar'));
+        $Bean->follow();
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/subscribe',$Bean->getRequest()->getURL());
+        $this->assertEquals('POST',$Bean->getRequest()->getMethod());
+    }
+
+    /**
+     * @covers ::unfollow
+     */
+    public function testUnfollow()
+    {
+        $Bean = new Module();
+        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setOptions(array('Foo','bar'));
+        $Bean->unfollow();
+        $this->assertEquals('http://localhost/rest/v10/Foo/bar/unsubscribe',$Bean->getRequest()->getURL());
+        $this->assertEquals('DELETE',$Bean->getRequest()->getMethod());
+    }
+
+    /**
      * @covers ::getRelated
      */
     public function testGetRelated(){

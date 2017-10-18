@@ -53,6 +53,10 @@ class SugarEndpointProvider extends DefaultEndpointProvider
         'enum' => array(
             'class' => 'Sugarcrm\\REST\\Endpoint\\Enum',
             'properties' => array()
+        ),
+        'ping' => array(
+            'class' => 'Sugarcrm\\REST\\Endpoint\\Ping',
+            'properties' => array()
         )
     );
 

@@ -10,6 +10,10 @@ use MRussell\Http\Request\JSON;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSmartSugarEndpoint;
 
+/**
+ * The Oauth2 Sudo endpoint
+ * @package Sugarcrm\REST\Endpoint
+ */
 class OAuth2Sudo extends AbstractSmartSugarEndpoint
 {
     /**
