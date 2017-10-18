@@ -8,6 +8,20 @@ namespace Sugarcrm\REST\Endpoint;
 use MRussell\Http\Request\JSON;
 use MRussell\REST\Endpoint\JSON\ModelEndpoint;
 
+/**
+ * Me Endpoint provides access to current logged in user details
+ * - Can view and update user
+ * - Can view and update user preferences
+ * - Can view followed records
+ * @package Sugarcrm\REST\Endpoint
+ * @method $this    preferences()
+ * @method $this    savePreferences()
+ * @method $this    preference(string $preference)
+ * @method $this    createPreference(string $preference)
+ * @method $this    updatePreference(string $preference)
+ * @method $this    deletePreference(string $preference)
+ * @method $this    following()
+ */
 class Me extends ModelEndpoint implements SugarEndpointInterface
 {
     const MODEL_ACTION_VAR = 'action';
@@ -27,8 +41,8 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
     const USER_ACTION_FOLLOWING = 'following';
 
     protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => true,
-        'httpMethod' => JSON::HTTP_GET
+        self::PROPERTY_AUTH => true,
+        self::PROPERTY_HTTP_METHOD => JSON::HTTP_GET
     );
 
     /**

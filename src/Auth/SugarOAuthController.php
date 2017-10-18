@@ -8,6 +8,14 @@ namespace Sugarcrm\REST\Auth;
 use MRussell\REST\Auth\Abstracts\AbstractOAuth2Controller;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 
+/**
+ * The Authentication Controller for the Sugar 7 REST Client
+ * - Manages authenticating to API
+ * - Manages refreshing API token for continuous access
+ * - Manages logout
+ * - Configures Endpoints that require auth, so that Requests are properly formatted
+ * @package Sugarcrm\REST\Auth
+ */
 class SugarOAuthController extends AbstractOAuth2Controller
 {
     const ACTION_SUGAR_SUDO = 'sudo';
@@ -60,7 +68,6 @@ class SugarOAuthController extends AbstractOAuth2Controller
         if (!empty($this->credentials)){
             $token = $this->getStoredToken($this->credentials);
             if ($token !== NULL){
-                $token = json_decode($token,TRUE);
                 if (is_array($token)){
                     $this->setToken($token);
                 }

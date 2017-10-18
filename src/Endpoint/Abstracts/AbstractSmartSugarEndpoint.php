@@ -9,7 +9,7 @@ use MRussell\REST\Endpoint\JSON\SmartEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 /**
- * Class AbstractSmartSugarEndpoint
+ * Provide a smarter interface for Endpoints, to better manage passed in data
  * @package Sugarcrm\REST\Endpoint\Abstracts
  */
 class AbstractSmartSugarEndpoint extends SmartEndpoint implements SugarEndpointInterface

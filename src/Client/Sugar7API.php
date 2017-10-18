@@ -6,29 +6,23 @@
 namespace Sugarcrm\REST\Client;
 
 use MRussell\REST\Client\AbstractClient;
-use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Helpers\Helper;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\Provider\SugarEndpointProvider;
-use Sugarcrm\REST\Endpoint\Module;
-use Sugarcrm\REST\Endpoint\ModuleFilter;
-use Sugarcrm\REST\Endpoint\Search;
-use Sugarcrm\REST\Endpoint\Metadata;
-use Sugarcrm\REST\Endpoint\Me;
-use Sugarcrm\REST\Endpoint\Enum;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
 
 /**
- * The Abstract Client implementation for Sugar
+ * The default Sugar 7 REST v10 API implementation
  * @package Sugarcrm\REST\Client\Abstracts\AbstractClient
- * @method EndpointInterface ping()
- * @method Module       module(string $module = '',string $record_id = '')
- * @method ModuleFilter list(string $module = '')
- * @method Search       search()
- * @method Metadata     metadata(string $module = '')
- * @method Me           user(string $user_id)
- * @method Enum         enum(string $module,string $field)
-*/
+ * @method \Sugarcrm\REST\Endpoint\Ping             ping()
+ * @method \Sugarcrm\REST\Endpoint\Module           module(string $module = '',string $record_id = '')
+ * @method \Sugarcrm\REST\Endpoint\ModuleFilter     list(string $module = '')
+ * @method \Sugarcrm\REST\Endpoint\Search           search()
+ * @method \Sugarcrm\REST\Endpoint\Metadata         metadata(string $module = '')
+ * @method \Sugarcrm\REST\Endpoint\Me               me()
+ * @method \Sugarcrm\REST\Endpoint\Enum             enum(string $module = '',string $field = '')
+ * @method \Sugarcrm\REST\Endpoint\Bulk             bulk()
+ */
 class Sugar7API extends AbstractClient
 {
     /**

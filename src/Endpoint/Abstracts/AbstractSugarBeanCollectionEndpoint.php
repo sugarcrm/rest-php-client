@@ -6,7 +6,10 @@
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 /**
- * Class AbstractSugarBeanCollectionEndpoint
+ * Abstract implementation of SugarBean Collections for Sugar 7 REST Api
+ * - Works with a single module
+ * - Built in fields tracking
+ * - Built in order by tracking
  * @package Sugarcrm\REST\Endpoint\Abstracts
  */
 abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollectionEndpoint

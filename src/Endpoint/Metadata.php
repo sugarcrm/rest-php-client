@@ -9,7 +9,7 @@ use MRussell\Http\Request\Curl;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
- * Class Metadata
+ * Metadata Endpoint provides access to the defined Metadata of the system
  * @package Sugarcrm\REST\Endpoint
  */
 class Metadata extends AbstractSugarEndpoint

@@ -6,35 +6,30 @@
 namespace Sugarcrm\REST\Endpoint;
 
 use MRussell\Http\Request\Curl;
+use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Auth\SugarOAuthController;
-use Sugarcrm\REST\Endpoint\Abstracts\AbstractSmartSugarEndpoint;
 
 /**
- * Class OAuth2Refresh
+ * The OAuth2 Refresh Token Endpoint
  * @package Sugarcrm\REST\Endpoint
  */
-class OAuth2Refresh extends AbstractSmartSugarEndpoint
+class OAuth2Refresh extends OAuth2Token
 {
     /**
      * @inheritdoc
      */
-    protected static $_ENDPOINT_URL = 'oauth2/refresh';
-
-    /**
-     * @inheritdoc
-     */
     protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => TRUE,
-        'httpMethod' => Curl::HTTP_POST,
-        'data' => array(
-            'required' => array(
+        self::PROPERTY_AUTH => TRUE,
+        self::PROPERTY_HTTP_METHOD => Curl::HTTP_POST,
+        self::PROPERTY_DATA => array(
+            EndpointData::DATA_PROPERTY_REQUIRED => array(
                 'grant_type' => 'string',
                 'client_id' => 'string',
                 'client_secret' => 'string',
                 'platform' => 'string',
                 'refresh_token' => 'string'
             ),
-            'defaults' => array(
+            EndpointData::DATA_PROPERTY_DEFAULTS => array(
                 'grant_type' => SugarOAuthController::OAUTH_REFRESH_GRANT,
                 'client_id' => 'sugar',
                 'client_secret' => '',

@@ -7,6 +7,10 @@ namespace Sugarcrm\REST\Endpoint;
 
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 
+/**
+ * Stock Module Endpoint
+ * @inheritdoc
+ */
 class Module extends AbstractSugarBeanEndpoint
 {
 }

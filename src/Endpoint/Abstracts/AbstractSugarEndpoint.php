@@ -8,6 +8,10 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 use MRussell\REST\Endpoint\JSON\Endpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
+/**
+ * Base Sugar API Endpoint for the simplest of REST functionality
+ * @package Sugarcrm\REST\Endpoint\Abstracts
+ */
 abstract class AbstractSugarEndpoint extends Endpoint implements SugarEndpointInterface
 {
     /**

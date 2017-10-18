@@ -5,9 +5,15 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
+use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\JSON\CollectionEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
+/**
+ * Provides access to a multi-bean collection retrieved from Sugar 7 REST Api
+ * - Built in pagination functionality
+ * @package Sugarcrm\REST\Endpoint\Abstracts
+ */
 abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
     const SUGAR_OFFSET_PROPERTY = 'offset';
@@ -22,10 +28,10 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @inehritdoc
      */
     protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => TRUE,
-        'data' => array(
-            'required' => array(),
-            'defaults' => array()
+        self::PROPERTY_AUTH => TRUE,
+        self::PROPERTY_DATA => array(
+            EndpointData::DATA_PROPERTY_REQUIRED => array(),
+            EndpointData::DATA_PROPERTY_DEFAULTS => array()
         )
     );
 
