@@ -54,7 +54,11 @@ class Bulk extends AbstractPostEndpoint
                     if ($requestData['requests'][$counter]['method'] == "POST" || $requestData['requests'][$counter]['method'] == "PUT") {
                         $requestData['requests'][$counter]['data'] = json_encode($Endpoint->getData());
                     } else {
-                        $requestData['requests'][$counter]['url'] .= '?' . http_build_query($requestData['requests'][$counter]['data']);
+
+                        if ($requestData['requests'][$counter]['method'] == "GET" && !empty($requestData['requests'][$counter]['data'])){
+                            $requestData['requests'][$counter]['url'] .= '?' . http_build_query($requestData['requests'][$counter]['data']);
+                        }
+
                         unset($requestData['requests'][$counter]['data']);
                     }
                     $requestData['requests'][$counter]['headers'] = $Endpoint->getRequest()->getHeaders();
