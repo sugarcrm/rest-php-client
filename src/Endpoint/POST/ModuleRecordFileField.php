@@ -65,11 +65,11 @@ class ModuleRecordFileField extends AbstractPostFileEndpoint
     {
         if (version_compare(PHP_VERSION, '5.5.0') >= 0){
             if (!($value instanceof \CURLFile)){
-                $value = str_replace("@",'',$value);
+                $value = ltrim($value,"@");
                 $value = new \CURLFile($value);
             }
         } else {
-            if (strpos($value, '@') === false) {
+            if (strpos($value, '@') !== 0) {
                 $value = '@'.$value;
             }
         }
