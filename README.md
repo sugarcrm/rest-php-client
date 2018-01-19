@@ -4,12 +4,12 @@
 [![License](https://poser.pugx.org/sugarcrm/rest-php-client/license)](https://packagist.org/packages/sugarcrm/rest-php-client)
 [![Total Downloads](https://poser.pugx.org/sugarcrm/rest-php-client/downloads)](https://packagist.org/packages/sugarcrm/rest-php-client)
 
-#SugarCRM REST PHP Client#
+# SugarCRM REST PHP Client #
 
-##Overview##
+## Overview ##
 A simple and intuitive Library for accessing a Sugar 7's REST v10 API. Allows for Object Oriented design around accessing data from a SugarCRM system, so you can easily get your integration project underway.
 
-##Usage
+## Usage
 Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki) for detailed information on 
 * Installation
 * Usage
