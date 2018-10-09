@@ -28,6 +28,7 @@ $entryPoints = array(
     'linkRecords' => 'POST\\ModuleRecordLinkRecord',
     'relateRecord' => 'POST\\ModuleRecordLinkRecord',
     'massRelate' => 'POST\\ModuleRecordLink',
+    'duplicateCheck' => 'POST\\ModuleDuplicateCheck',
     'bulk' => 'POST\\Bulk',
 
     //PUT API Endpoints
