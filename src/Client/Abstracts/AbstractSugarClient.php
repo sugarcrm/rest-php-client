@@ -39,6 +39,8 @@ use SugarAPI\SDK\Endpoint\Interfaces\EPInterface;
  * @method EPInterface unfavorite(string $module = '',string $record_id = '')
  * @method EPInterface deleteFile(string $module = '',string $record_id = '')
  * @method EPInterface unlinkRecords(string $module = '',string $record_id = '',string $relationship = '',string $related_id = '')
+ * @method EPInterface duplicateCheck(string $module = '')
+ * @method EPInterface count(string $module = '')
  */
 abstract class AbstractSugarClient extends AbstractClient
 {

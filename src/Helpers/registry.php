@@ -16,6 +16,7 @@ $entryPoints = array(
     'search' => 'GET\\Search',
     'preferences' => 'GET\\MePreferences',
     'serverTime' => 'GET\\ServerTime',
+    'count' => 'GET\\ModuleCount',
 
     //POST API Endpoints
     'oauth2Token' => 'POST\\OAuth2Token',
@@ -28,6 +29,7 @@ $entryPoints = array(
     'linkRecords' => 'POST\\ModuleRecordLinkRecord',
     'relateRecord' => 'POST\\ModuleRecordLinkRecord',
     'massRelate' => 'POST\\ModuleRecordLink',
+    'duplicateCheck' => 'POST\\ModuleDuplicateCheck',
     'bulk' => 'POST\\Bulk',
 
     //PUT API Endpoints
