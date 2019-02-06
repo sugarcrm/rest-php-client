@@ -152,6 +152,9 @@ class AbstractSugarClientTest extends \PHPUnit_Framework_TestCase {
         $Stub->setVersion(11);
         $this->assertEquals("http://localhost/rest/v11/",$Stub->getAPIUrl());
         $this->assertEquals(11,$Stub->getVersion());
+        $Stub->setVersion('11_4');
+        $this->assertEquals("http://localhost/rest/v11_4/",$Stub->getAPIUrl());
+        $this->assertEquals('11_4',$Stub->getVersion());
         return $Stub;
     }
 

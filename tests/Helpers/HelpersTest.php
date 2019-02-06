@@ -79,6 +79,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('http://localhost/Sugar/Test/rest/v10/',Helpers::configureAPIURL('http://localhost/Sugar/Test/rest/v10/rest/v10/rest/v10','10'));
         $this->assertEquals('http://localhost/SugarTest/rest/v10/',Helpers::configureAPIURL('http://localhost/SugarTest/rest/v10/rest/v10/rest/v10',10));
         $this->assertEquals('http://localhost/SugarTest/rest/v11/',Helpers::configureAPIURL('http://localhost/SugarTest/rest/v10/rest/v10/rest/v10',11));
+        $this->assertEquals('http://localhost/SugarTest/rest/v11_1/',Helpers::configureAPIURL('http://localhost/SugarTest/rest/v10/rest/v10/rest/v10','11_1'));
 
     }
 
