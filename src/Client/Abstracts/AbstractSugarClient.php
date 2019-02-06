@@ -85,7 +85,7 @@ abstract class AbstractSugarClient extends AbstractClient
      */
     public function setVersion($version)
     {
-        $this->apiVersion = intval($version);
+        $this->apiVersion = $version;
         $this->setAPIUrl();
         return $this;
     }
