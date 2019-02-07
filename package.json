@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "rest-php-client",
-  "version": "1.2",
+  "version": "1.4.5",
   "description": "An object oriented framework for interacting with Sugar 7's REST API.",
   "directories": {
     "test": "tests"
