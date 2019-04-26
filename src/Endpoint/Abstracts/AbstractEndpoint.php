@@ -266,7 +266,7 @@ abstract class AbstractEndpoint implements EPInterface
     protected function configureAuth()
     {
         if ($this->authRequired()) {
-            $this->Request->addHeader('OAuth-Token', $this->accessToken);
+            $this->Request->replaceHeader('OAuth-Token', $this->accessToken);
         }
     }
 

@@ -134,6 +134,21 @@ abstract class AbstractRequest implements RequestInterface
         $this->headers[] = $token;
         return $this;
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function replaceHeader($name, $value)
+    {
+        /** Fix double initialization for some headers (eg. OAuth-Token) */
+        $token           = $name . ": " . $value;
+        $this->headers   = array_filter($this->headers, function ($item) use ($name) {
+            return strpos($item, $name) !== 0;
+        });
+        $this->headers[] = $token;
+        
+        return $this;
+    }
 
     /**
      * @inheritdoc
