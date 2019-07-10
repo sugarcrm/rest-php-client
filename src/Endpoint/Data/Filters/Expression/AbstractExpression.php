@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
@@ -13,6 +13,7 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
  * @method AndExpression        and()
  * @method OrExpression         or()
+ * @method DateExpression       date($field)
  * @method $this                equals($field,$value)
  * @method $this                notEquals($field,$value)
  * @method $this                starts($field,$value)
@@ -31,13 +32,15 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
  * @method $this                gte($field,$value)
  * @method $this                greaterThanOrEqualTo($field,$value)
  * @method $this                greaterThanOrEquals($field,$value)
+ * @method $this                between($field,$value)
+ * @method $this                dateBetween($field,$value)
  */
 abstract class AbstractExpression implements FilterInterface, ExpressionInterface
 {
     /**
      * @var array
      */
-    private $filters = array();
+    protected $filters = array();
 
     /**
      * @var AbstractExpression
@@ -67,6 +70,8 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
         'gte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
         'greaterThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
         'greaterThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
+        'between' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Between',
+        'dateBetween' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateBetween'
     );
 
     /**
@@ -75,6 +80,7 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
     protected $expressions = array(
         'and' => 'Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression',
         'or' => 'Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression',
+        'date' => 'Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression',
     );
 
     /**

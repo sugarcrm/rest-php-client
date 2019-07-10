@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Client;
@@ -29,9 +29,9 @@ class Sugar7API extends AbstractClient
      * The API Version to be used.
      * Defaults to 10 (for v10), but can be any number above 10,
      * since customizing API allows for additional versioning to allow for duplicate endpoints
-     * @var int
+     * @var string
      */
-    protected $version = 10;
+    protected $version = "10";
 
     /**
      * @var SugarOAuthController

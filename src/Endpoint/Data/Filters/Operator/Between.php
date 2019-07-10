@@ -5,9 +5,11 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 
-class NotNull extends IsNull
+
+class Between extends AbstractOperator
 {
-    const OPERATOR = '$not_null';
+    const OPERATOR = '$between';
 
     protected static $_OPERATOR = self::OPERATOR;
+
 }
