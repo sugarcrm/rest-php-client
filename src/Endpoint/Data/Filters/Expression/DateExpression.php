@@ -122,17 +122,25 @@ class DateExpression extends AbstractExpression
             $range = $this->ranges[$name];
             $args[] = $range;
             $Op = new DateRange($args);
-            $this->filters[] = $Op;
+            $this->filters[0] = $Op;
             return $this;
         }
         if (array_key_exists($name,$this->operators)){
             $args = array_merge($args,$arguments);
             $Operator = $this->operators[$name];
             $O = new $Operator($args);
-            $this->filters[] = $O;
+            $this->filters[0] = $O;
             return $this;
         }
         throw new UnknownFilterOperator(array($name));
+    }
+
+    public function compile()
+    {
+        if (isset($this->filters[0])){
+            return $this->filters[0]->compile();
+        }
+        return array();
     }
 
     /**

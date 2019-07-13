@@ -99,7 +99,7 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
         }
         if (array_key_exists($name,$this->expressions)){
             $Expression =  $this->expressions[$name];
-            $Exp = new $Expression();
+            $Exp = new $Expression($arguments);
             $Exp->setParentExpression($this);
             $this->filters[] = $Exp;
             return $Exp;

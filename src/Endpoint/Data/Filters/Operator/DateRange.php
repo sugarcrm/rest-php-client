@@ -8,7 +8,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 
 class DateRange extends AbstractOperator
 {
-    const OPERATOR = '$dateBetween';
+    const OPERATOR = '$dateRange';
 
     protected static $_OPERATOR = self::OPERATOR;
 

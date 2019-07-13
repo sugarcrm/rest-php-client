@@ -9,14 +9,17 @@ $SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
 
 try{
     if ($SugarAPI->login()){
-        echo "Logged In: <pre>";
-        print_r($SugarAPI->getAuth()->getToken()->access_token);
-        echo "</pre>";
-        $Account = $SugarAPI->module('Accounts')->set("name","Favorite Test");
+        echo "Logged In: ";
+        pre($SugarAPI->getAuth()->getToken());
+        $Account = $SugarAPI->module('Accounts')->set("name","DuplicateCheck Test");
         $Account->save();
-        echo "<pre> Account Created: {$Account['id']}</pre><br>";
-        $Account->favorite();
-        echo "<pre> Account added to Favorites: <br>".print_r($Account,true)."</pre>";
+        pre("Account Created: {$Account['id']}");
+        $a = $Account->asArray();
+        unset($a['id']);
+        echo "Running duplicateCheck for Account: ";
+        pre($a);
+        $Account->duplicateCheck();
+        pre($Account->getResponse()->getBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
