@@ -5,7 +5,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$server = 'http://ent.900.sugarfuel.vm';
+$server = 'localhost';
 $credentials = array(
     'username' => 'admin',
     'password' => 'asdf',
