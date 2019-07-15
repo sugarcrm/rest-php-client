@@ -1,22 +1,25 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 require_once 'include.php';
 
 $SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
 
 try{
-    $SugarAPI->login();
-    echo "Logged In: <pre>";
-    echo $SugarAPI->getAuth()->getToken()->access_token;
-    echo "</pre>";
-    $Enum = $SugarAPI->enum('Accounts','account_type');
-    $response = $Enum->execute()->getResponse();
-    echo "<pre> Account Type options: <br>".print_r($response->getBody(),true)."</pre>";
+    if ($SugarAPI->login()){
+        echo "Logged In:";
+        pre($SugarAPI->getAuth()->getToken());
+        $Enum = $SugarAPI->enum('Accounts','account_type');
+        $response = $Enum->execute()->getResponse();
+        echo "Account Type options: ";
+        pre($response->getBody());
+    } else {
+        echo "Could not login.";
+        pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
+    }
 }catch (Exception $ex){
-    echo "<pre>";
-    //print_r($SugarAPI);
-    echo "</pre>";
-    print $ex->getMessage();
+    echo "Error Occurred: ";
+    pre($ex->getMessage());
+    pre($ex->getTraceAsString());
 }

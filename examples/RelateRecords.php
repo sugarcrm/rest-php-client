@@ -4,23 +4,35 @@ require_once 'include.php';
 
 $SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
 try{
-    $SugarAPI->login();
-    echo "<pre>";
-    print_r($SugarAPI->getAuth()->getToken()->access_token);
-    echo "</pre>";
-    $Account = $SugarAPI->module('Accounts')->set("name","Relate Records Test");
-    $Account->save();
-    echo "<pre> Saved Account ID: {$Account['id']}</pre><br>";
-    $Opportunity = $SugarAPI->module('Opportunities');
-    $Opportunity['name'] = 'Test Opportunity';
-    $Opportunity['description'] = 'This opportunity was created via the SugarCRM REST API Client v2 to test creating relationships.';
-    $Opportunity->save();
-    echo "<pre> Opportunity Created: <br>".print_r($Opportunity->asArray(),true)."</pre>";
-    $Account->relate('opportunities',$Opportunity['id']);
-    echo "<pre> Relationship Created:".print_r($Account->getResponse(),true)."</pre><br>";
+    if ($SugarAPI->login()){
+        echo "Logged In: ";
+        pre($SugarAPI->getAuth()->getToken());
+        $Account = $SugarAPI->module('Accounts')->set("name","Relate Records Test");
+        echo "Creating Account: ";
+        pre($Account->asArray());
+        $Account->save();
+        pre("Saved Account ID: {$Account['id']}");
+        $Opportunity = $SugarAPI->module('Opportunities');
+        $Opportunity['name'] = 'Test Opportunity';
+        $Opportunity['description'] = 'This opportunity was created via the SugarCRM REST API Client v2 to test creating relationships.';
+        echo "Creating Opportunity: ";
+        pre($Account->asArray());
+        $Opportunity->save();
+        pre("Saved Opportunity ID: {$Opportunity['id']}");
+
+        echo "Relating Opportunity to Account: ";
+        $Account->relate('opportunities',$Opportunity['id']);
+        echo "Request: ";
+        pre($Account->getRequest()->getBody());
+        echo "Response: ";
+        pre($Account->getResponse()->getBody());
+    } else {
+        echo "Could not login.";
+        pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
+    }
+
 }catch (Exception $ex){
-    echo "<pre>";
-    //print_r($SugarAPI);
-    echo "</pre>";
-    print $ex->getMessage();
+    echo "Error Occurred: ";
+    pre($ex->getMessage());
+    pre($ex->getTraceAsString());
 }

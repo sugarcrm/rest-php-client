@@ -74,6 +74,10 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(10,$Client->getVersion());
         $this->assertEquals('localhost',$Client->getServer());
         $this->assertEquals('http://localhost/rest/v10/',$Client->getAPIUrl());
+
+        $Client->setVersion("11_4");
+        $this->assertEquals("11_4",$Client->getVersion());
+        $this->assertEquals('http://localhost/rest/v11_4/',$Client->getAPIUrl());
     }
 
     /**

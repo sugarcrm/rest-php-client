@@ -5,9 +5,10 @@
 
 namespace Sugarcrm\REST\Exception\Filter;
 
+
 use MRussell\REST\Exception\Endpoint\EndpointException;
 
-class UnknownFilterOperator extends EndpointException
+class MissingFieldForDateExpression extends EndpointException
 {
-    protected $message = 'Unknown Filter Operator: %s';
+    protected $message = 'Field not configured on DateExpression';
 }

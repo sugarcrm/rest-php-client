@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
@@ -61,6 +61,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     const BEAN_ACTION_TEMP_FILE_UPLOAD = 'tempFile';
 
+    const BEAN_ACTION_DUPLICATE_CHECK = 'duplicateCheck';
+
     const BEAN_ACTION_ARG1_VAR = 'actionArg1';
 
     const BEAN_ACTION_ARG2_VAR = 'actionArg2';
@@ -104,6 +106,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         self::BEAN_ACTION_DOWNLOAD_FILE => JSON::HTTP_GET,
         self::BEAN_ACTION_ATTACH_FILE => JSON::HTTP_POST,
         self::BEAN_ACTION_TEMP_FILE_UPLOAD => JSON::HTTP_POST,
+        self::BEAN_ACTION_DUPLICATE_CHECK => JSON::HTTP_POST
     );
 
     /**
@@ -247,6 +250,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             case self::MODEL_ACTION_UPDATE:
             case self::MODEL_ACTION_CREATE:
             case self::MODEL_ACTION_RETRIEVE:
+            case self::BEAN_ACTION_DUPLICATE_CHECK:
                 $action = NULL;
                 break;
         }
@@ -271,6 +275,9 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         if (isset($options[self::BEAN_ACTION_ARG3_VAR])) unset($options[self::BEAN_ACTION_ARG3_VAR]);
         if (!empty($arguments)){
             switch($action){
+                case self::BEAN_ACTION_DUPLICATE_CHECK:
+                    $options[self::MODEL_ID_VAR] = $action;
+                    break;
                 case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
                 case self::BEAN_ACTION_ATTACH_FILE:
                     $this->upload = TRUE;
@@ -458,6 +465,23 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             'filename' => $uploadName
         ));
         return $this->execute();
+    }
+
+    /**
+     * @return $this
+     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     */
+    public function duplicateCheck()
+    {
+        $action = self::BEAN_ACTION_DUPLICATE_CHECK;
+        $this->setCurrentAction($action);
+        $idKey = $this->modelIdKey();
+        $id = $this[$idKey];
+        $this[$idKey] = $action;
+        $this->setData($this->asArray());
+        $this->execute();
+        $this[$idKey] = $id;
+        return $this;
     }
 
     /**

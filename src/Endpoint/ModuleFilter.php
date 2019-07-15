@@ -1,6 +1,6 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -109,7 +109,9 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     public function count()
     {
         $this->setOptions(array($this->getModule(),self::COUNT_OPTION));
-        return $this->execute();
+        $this->execute();
+        $this->setOptions(array($this->getModule()));
+        return $this;
     }
 
 }
