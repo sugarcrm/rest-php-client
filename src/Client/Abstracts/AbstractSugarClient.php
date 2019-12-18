@@ -229,7 +229,8 @@ abstract class AbstractSugarClient extends AbstractClient
                 $refreshOptions = array(
                     'client_id' => $this->credentials['client_id'],
                     'client_secret' => $this->credentials['client_secret'],
-                    'refresh_token' => $this->token->refresh_token
+                    'refresh_token' => $this->token->refresh_token,
+                    'platform' => $this->credentials['platform']
                 );
                 $response = $this->oauth2Refresh()->execute($refreshOptions)->getResponse();
                 if ($response->getStatus() == '200') {
