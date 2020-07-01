@@ -49,6 +49,8 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::setCredentials
+     * @covers ::setPlatform
+     * @covers ::getPlatform
      */
     public function testSetCredentials(){
         $Auth = new SugarOAuthController();
@@ -61,6 +63,7 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'client_secret' => '',
             'platform' => 'api'
         )));
+        $this->assertEquals('api',$Auth->getPlatform());
         $this->assertEmpty($Auth->getToken());
         $Storage->store($Auth->getCredentials(),array(
             'access_token' => '1234',
@@ -77,6 +80,17 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'access_token' => '1234',
             'refresh_token' => '5678',
         ),$Auth->getToken());
+        $this->assertEquals($Auth,$Auth->setPlatform('mobile'));
+        $creds = $Auth->getCredentials();
+        $this->assertEquals('mobile',$creds[$Auth::OAUTH_PROP_PLATFORM]);
+        $this->assertEquals(array(
+            'username' => 'admin',
+            'password' => '',
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'mobile'
+        ),$creds);
+        $this->assertEquals('mobile',$Auth->getPlatform());
     }
 
     /**
@@ -89,7 +103,7 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'password' => '',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Auth->getCredentials());
         $this->assertEquals($Auth,$Auth->updateCredentials(array(
             'username' => 'admin'
@@ -99,7 +113,7 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'password' => '',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Auth->getCredentials());
         $this->assertEquals($Auth,$Auth->updateCredentials(array(
             'username' => 'system',
@@ -110,7 +124,7 @@ class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Auth->getCredentials());
         $this->assertEquals($Auth,$Auth->updateCredentials(array(
             'platform' => array()
