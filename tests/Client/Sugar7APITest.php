@@ -68,7 +68,7 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Client->getAuth()->getCredentials());
         $this->assertNotEmpty($Client->getEndpointProvider());
         $this->assertEquals(10,$Client->getVersion());
@@ -93,7 +93,7 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Client->getAuth()->getCredentials());
         $this->assertEquals(true,$Client->login('user1','asdf'));
         $this->assertEquals(array(
@@ -101,7 +101,7 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Client->getAuth()->getCredentials());
         $this->assertEquals(true,$Client->login(NULL,'abc123'));
         $this->assertEquals(array(
@@ -109,7 +109,7 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
             'password' => 'abc123',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Client->getAuth()->getCredentials());
         $this->assertEquals(true,$Client->login());
         $this->assertEquals(array(
@@ -117,7 +117,7 @@ class Sugar7APITest extends \PHPUnit_Framework_TestCase
             'password' => 'abc123',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'base'
         ),$Client->getAuth()->getCredentials());
     }
 

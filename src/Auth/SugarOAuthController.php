@@ -20,9 +20,13 @@ class SugarOAuthController extends AbstractOAuth2Controller
 {
     const ACTION_SUGAR_SUDO = 'sudo';
 
+    const OAUTH_PROP_PLATFORM = 'platform';
+
     protected static $_AUTH_HEADER = 'OAuth-Token';
 
     protected static $_DEFAULT_GRANT_TYPE = self::OAUTH_RESOURCE_OWNER_GRANT;
+
+    protected static $_DEFAULT_PLATFORM = 'base';
 
     protected static $_DEFAULT_SUGAR_AUTH_ACTIONS = array(
         self::ACTION_SUGAR_SUDO
@@ -36,8 +40,9 @@ class SugarOAuthController extends AbstractOAuth2Controller
         'password' => '',
         'client_id' => 'sugar',
         'client_secret' => '',
-        'platform' => 'api'
     );
+
+    protected $platform = 'base';
 
     /**
      * @inheritdoc
@@ -45,9 +50,34 @@ class SugarOAuthController extends AbstractOAuth2Controller
     public function __construct()
     {
         parent::__construct();
+        $this->setPlatform(static::$_DEFAULT_PLATFORM);
         foreach (static::$_DEFAULT_SUGAR_AUTH_ACTIONS as $action) {
             $this->actions[] = $action;
         }
+    }
+
+    /**
+     * @param $platform
+     * @return $this
+     */
+    public function setPlatform($platform)
+    {
+        $this->platform = $platform;
+        if (!isset($this->credentials[self::OAUTH_PROP_PLATFORM]) ||
+            $this->credentials[self::OAUTH_PROP_PLATFORM] !== $platform){
+            $this->credentials[self::OAUTH_PROP_PLATFORM] = $this->platform;
+            $this->setCredentials($this->credentials);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlatform()
+    {
+        return $this->platform;
     }
 
     /**
@@ -64,6 +94,10 @@ class SugarOAuthController extends AbstractOAuth2Controller
      */
     public function setCredentials(array $credentials)
     {
+        if (isset($credentials[self::OAUTH_PROP_PLATFORM]) &&
+            $credentials[self::OAUTH_PROP_PLATFORM] !== $this->platform){
+            $this->setPlatform($credentials[self::OAUTH_PROP_PLATFORM]);
+        }
         parent::setCredentials($credentials);
         if (!empty($this->credentials)){
             $token = $this->getStoredToken($this->credentials);
@@ -79,7 +113,8 @@ class SugarOAuthController extends AbstractOAuth2Controller
     /**
      * @inheritdoc
      */
-    public function updateCredentials(array $credentials){
+    public function updateCredentials(array $credentials)
+    {
         $current = array_replace($this->getCredentials(),$credentials);
         return $this->setCredentials($current);
     }
@@ -151,6 +186,27 @@ class SugarOAuthController extends AbstractOAuth2Controller
     }
 
     /**
+     * @inheritDoc
+     */
+    public function reset()
+    {
+        $this->setPlatform(static::$_DEFAULT_PLATFORM);
+        return parent::reset();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function configureEndpoint(EndpointInterface $Endpoint, $action)
+    {
+        $Endpoint = parent::configureEndpoint($Endpoint, $action);
+
+        $platform = $this->getPlatform();
+        $Endpoint->getRequest()->addHeader('X-Sugar-Platform', $platform);
+        return $Endpoint;
+    }
+
+    /**
      * Configure the Sudo Endpoint
      * @param EndpointInterface $Endpoint
      * @param $user
@@ -162,7 +218,7 @@ class SugarOAuthController extends AbstractOAuth2Controller
         $Endpoint->setOptions(array($user));
         $data = array();
         $creds = $this->getCredentials();
-        $data['platform'] = $creds['platform'];
+        $data['platform'] = $this->platform;
         $data['client_id'] = $creds['client_id'];
         $Endpoint->setData($data);
         return $Endpoint;
