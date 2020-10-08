@@ -79,7 +79,7 @@ class BulkRequest extends AbstractEndpointData
             'url' => "/".$urlArray[1],
             'method' => $Request->getMethod(),
             'headers' => isset($curlOptions[CURLOPT_HTTPHEADER])?$curlOptions[CURLOPT_HTTPHEADER]:array(),
-            'data' => isset($curlOptions[CURLOPT_POSTFIELDS])?$curlOptions[CURLOPT_POSTFIELDS]:""
+            'data' => isset($curlOptions[CURLOPT_POSTFIELDS])?$curlOptions[CURLOPT_POSTFIELDS]:null
         );
     }
 }
