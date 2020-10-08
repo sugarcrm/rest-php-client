@@ -42,7 +42,20 @@ class BulkRequest extends AbstractEndpointData
                         $request = $value;
                     }
                     if ($request instanceof AbstractRequest) {
-                        $compiled[self::BULK_REQUEST_DATA_NAME][] = $this->extractRequest($request);
+                        $request = $this->extractRequest($request);
+                        if ($request){
+                            $compiled[self::BULK_REQUEST_DATA_NAME][] = $request;
+                        }
+                    } else {
+                        if (isset($request->url)
+                            && isset($request->method)){
+                            $compiled = array(
+                                'url' => $request->url,
+                                'method' => $request->method,
+                                'headers' => isset($request->headers)?$request->headers:array(),
+                                'data' => isset($request->data)?$request->data:""
+                            );
+                        }
                     }
                 }
             }
@@ -57,13 +70,16 @@ class BulkRequest extends AbstractEndpointData
      */
     protected function extractRequest(AbstractRequest $Request){
         $curlOptions = $Request->getCurlOptions();
-        $url = $curlOptions[CURLOPT_URL];
+        $url = isset($curlOptions[CURLOPT_URL])?$curlOptions[CURLOPT_URL]:"";
+        if (empty($url)){
+            return false;
+        }
         $urlArray = explode("/rest/",$url);
         return array(
             'url' => "/".$urlArray[1],
             'method' => $Request->getMethod(),
-            'headers' => $curlOptions[CURLOPT_HTTPHEADER],
-            'data' => $curlOptions[CURLOPT_POSTFIELDS]
+            'headers' => isset($curlOptions[CURLOPT_HTTPHEADER])?$curlOptions[CURLOPT_HTTPHEADER]:array(),
+            'data' => isset($curlOptions[CURLOPT_POSTFIELDS])?$curlOptions[CURLOPT_POSTFIELDS]:null
         );
     }
 }

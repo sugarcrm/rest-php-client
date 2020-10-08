@@ -115,5 +115,21 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('headers',$result);
         $this->assertArrayHasKey('data',$result);
         $this->assertEquals(json_encode(array('foo'=>'bar')),$result['data']);
+
+        $Data = new BulkRequest();
+        $ReflectedData = new \ReflectionClass('Sugarcrm\\REST\\Endpoint\\Data\\BulkRequest');
+        $extractRequest = $ReflectedData->getMethod('extractRequest');
+        $extractRequest->setAccessible(TRUE);
+        $Request = new JSON();
+        $Request->setURL('http://localhost/rest/v10/Accounts');
+        $Request->setMethod(JSON::HTTP_GET);
+        $result = $extractRequest->invoke($Data,$Request);
+        $this->assertArrayHasKey('url',$result);
+        $this->assertEquals('/v10/Accounts',$result['url']);
+        $this->assertArrayHasKey('method',$result);
+        $this->assertEquals(JSON::HTTP_GET,$result['method']);
+        $this->assertArrayHasKey('headers',$result);
+        $this->assertArrayHasKey('data',$result);
+        $this->assertEquals(null,$result['data']);
     }
 }
