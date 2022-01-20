@@ -5,6 +5,9 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
+use MRussell\REST\Endpoint\Abstracts\AbstractModelEndpoint;
+use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
+
 /**
  * Abstract implementation of SugarBean Collections for Sugar 7 REST Api
  * - Works with a single module
@@ -38,14 +41,14 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
      */
     protected $module;
 
-    public function setOptions(array $options)
+    public function setUrlArgs(array $args): EndpointInterface
     {
-        if (isset($options[0])) {
-            $options['module'] = $options[0];
-            $this->setModule($options['module']);
-            unset($options[0]);
+        if (isset($args[0])) {
+            $args['module'] = $args[0];
+            $this->setModule($args['module']);
+            unset($args[0]);
         }
-        return parent::setOptions($options);
+        return parent::setUrlArgs($args);
     }
 
     /**
@@ -126,8 +129,9 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
      * Add fields based on Endpoint property
      * @inheritdoc
      */
-    protected function configureData($data)
+    protected function configurePayload()
     {
+        $data = parent::configurePayload();
         if ($this->getOrderBy() !== ''){
             $data[self::SUGAR_ORDERBY_PROPERTY] = $this->getOrderBy();
         }
@@ -135,14 +139,14 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
         if (!empty($fields)){
             $data[self::SUGAR_FIELDS_PROPERTY] = implode(',',$this->getFields());
         }
-        return parent::configureData($data);
+        return $data;
     }
 
     /**
      * Add module to url options
      * @inheritdoc
      */
-    protected function configureURL(array $options)
+    protected function configureURL(array $options): string
     {
         $options['module'] = $this->module;
         return parent::configureURL($options);
@@ -151,31 +155,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     /**
      * @inheritdoc
      */
-    protected function updateCollection()
-    {
-        $responseBody = $this->Response->getBody();
-        if (!empty($responseBody['records'])) {
-            if (isset($this->model)) {
-                $modelIdKey = $this->buildModel()->modelIdKey();
-                foreach ($responseBody['records'] as $key => $model) {
-                    if (isset($model[$modelIdKey])) {
-                        $this->collection[$model[$modelIdKey]] = $model;
-                    } else {
-                        $this->collection[] = $model;
-                    }
-                }
-            } else {
-                // @codeCoverageIgnoreStart
-                $this->collection = $responseBody['records'];
-                // @codeCoverageIgnoreEnd
-            }
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function buildModel(array $data = array())
+    protected function buildModel(array $data = array()): AbstractModelEndpoint
     {
         $Model = parent::buildModel($data);
         $module = $this->getModule();

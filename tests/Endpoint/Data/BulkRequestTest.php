@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data;
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Endpoint\Data\BulkRequest;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 
@@ -63,7 +63,7 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
     public function testAsArray(){
         $Data = new BulkRequest();
         $Request = new JSON();
-        $Request->setMethod(JSON::HTTP_POST);
+        $Request->setMethod("POST");
         $Request->setURL('http://localhost/rest/v10/Accounts');
         $Request->setBody(array(
             'foo' => 'bar'
@@ -71,26 +71,26 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
         $Filter = new ModuleFilter(array('Contacts'));
         $Filter->setBaseUrl('http://localhost/rest/v10');
         $Filter->filter()->equals('foo','bar');
-        $Filter->getData()->asArray();
+        $Filter->getData()->toArray();
         $payloadUncompiled = array(
             $Request,
             $Filter
         );
         $Data->update($payloadUncompiled);
-        $this->assertEquals($payloadUncompiled,$Data->asArray(FALSE));
-        $compiled = $Data->asArray();
+        $this->assertEquals($payloadUncompiled,$Data->toArray(FALSE));
+        $compiled = $Data->toArray();
         $this->assertArrayHasKey(BulkRequest::BULK_REQUEST_DATA_NAME,$compiled);
         $this->assertEquals($this->bulkPayload,$compiled[BulkRequest::BULK_REQUEST_DATA_NAME]);
         $Data->reset();
         $Data->update($this->bulkPayload);
-        $compiled = $Data->asArray();
+        $compiled = $Data->toArray();
         $this->assertArrayHasKey(BulkRequest::BULK_REQUEST_DATA_NAME,$compiled);
         $this->assertEquals($this->bulkPayload,$compiled[BulkRequest::BULK_REQUEST_DATA_NAME]);
         $Data->reset();
         $Data->update(array(
             BulkRequest::BULK_REQUEST_DATA_NAME => $this->bulkPayload
         ));
-        $compiled = $Data->asArray();
+        $compiled = $Data->toArray();
         $this->assertArrayHasKey(BulkRequest::BULK_REQUEST_DATA_NAME,$compiled);
         $this->assertEquals($this->bulkPayload,$compiled[BulkRequest::BULK_REQUEST_DATA_NAME]);
     }
@@ -106,12 +106,12 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
         $Request = new JSON();
         $Request->setURL('http://localhost/rest/v10/Accounts');
         $Request->setBody(array('foo' => 'bar'));
-        $Request->setMethod(JSON::HTTP_POST);
+        $Request->setMethod("POST");
         $result = $extractRequest->invoke($Data,$Request);
         $this->assertArrayHasKey('url',$result);
         $this->assertEquals('/v10/Accounts',$result['url']);
         $this->assertArrayHasKey('method',$result);
-        $this->assertEquals(JSON::HTTP_POST,$result['method']);
+        $this->assertEquals("POST",$result['method']);
         $this->assertArrayHasKey('headers',$result);
         $this->assertArrayHasKey('data',$result);
         $this->assertEquals(json_encode(array('foo'=>'bar')),$result['data']);
@@ -122,12 +122,12 @@ class BulkRequestTest extends \PHPUnit_Framework_TestCase
         $extractRequest->setAccessible(TRUE);
         $Request = new JSON();
         $Request->setURL('http://localhost/rest/v10/Accounts');
-        $Request->setMethod(JSON::HTTP_GET);
+        $Request->setMethod("GET");
         $result = $extractRequest->invoke($Data,$Request);
         $this->assertArrayHasKey('url',$result);
         $this->assertEquals('/v10/Accounts',$result['url']);
         $this->assertArrayHasKey('method',$result);
-        $this->assertEquals(JSON::HTTP_GET,$result['method']);
+        $this->assertEquals("GET",$result['method']);
         $this->assertArrayHasKey('headers',$result);
         $this->assertArrayHasKey('data',$result);
         $this->assertEquals(null,$result['data']);

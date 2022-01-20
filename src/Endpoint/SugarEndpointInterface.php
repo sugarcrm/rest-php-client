@@ -15,7 +15,7 @@ interface SugarEndpointInterface
      * Public method to generate a Compiled Request Object based on current Endpoint State
      * - Useful for troubleshooting
      * - Useful for BULK Api Endpoint
-     * @return \MRussell\Http\Request\RequestInterface
+     * @return \GuzzleHttp\Psr7\Request
      */
     public function compileRequest();
 }

@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-use MRussell\Http\Request\Curl;
+
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -28,7 +28,7 @@ class Metadata extends AbstractSugarEndpoint
      */
     protected static $_DEFAULT_PROPERTIES = array(
         'auth' => TRUE,
-        'httpMethod' => Curl::HTTP_GET
+        'httpMethod' => "GET"
     );
 
     /**
@@ -37,7 +37,7 @@ class Metadata extends AbstractSugarEndpoint
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function getHash(){
-        $this->setOptions(array(self::METADATA_TYPE_HASH));
+        $this->setUrlArgs(array(self::METADATA_TYPE_HASH));
         return $this->execute();
     }
 
@@ -47,10 +47,8 @@ class Metadata extends AbstractSugarEndpoint
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function getPublic(){
-        $this->setOptions(array(self::METADATA_TYPE_PUBLIC));
-        if (!$this->getAuth()->isAuthenticated()){
-            $this->setProperty('auth',FALSE);
-        }
+        $this->setUrlArgs(array(self::METADATA_TYPE_PUBLIC));
+        $this->setProperty('auth',FALSE);
         $this->execute();
         $this->setProperty('auth',TRUE);
         return $this;

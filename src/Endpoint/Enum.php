@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -18,6 +18,6 @@ class Enum extends AbstractSugarEndpoint
 
     protected static $_DEFAULT_PROPERTIES = array(
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => JSON::HTTP_GET
+        self::PROPERTY_HTTP_METHOD => "GET"
     );
 }

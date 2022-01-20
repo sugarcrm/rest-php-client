@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Endpoint\Me;
 
 
@@ -84,37 +84,37 @@ class MeTest extends \PHPUnit_Framework_TestCase
 
         $configureAction->invoke($Me,$Me::USER_ACTION_PREFERENCES);
         $properties = $Me->getProperties();
-        $this->assertEquals(JSON::HTTP_GET,$properties['httpMethod']);
+        $this->assertEquals("GET",$properties['httpMethod']);
 
         $configureAction->invoke($Me,$Me::USER_ACTION_SAVE_PREFERENCES);
         $properties = $Me->getProperties();
-        $this->assertEquals(JSON::HTTP_PUT,$properties['httpMethod']);
+        $this->assertEquals("PUT",$properties['httpMethod']);
 
         $configureAction->invoke($Me,$Me::USER_ACTION_CREATE_PREFERENCE,array('foo'));
         $properties = $Me->getProperties();
         $options = $Me->getOptions();
-        $this->assertEquals(JSON::HTTP_POST,$properties['httpMethod']);
+        $this->assertEquals("POST",$properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1',$options);
         $this->assertEquals('foo',$options['actionArg1']);
 
         $configureAction->invoke($Me,$Me::USER_ACTION_GET_PREFERENCE,array('foo'));
         $properties = $Me->getProperties();
         $options = $Me->getOptions();
-        $this->assertEquals(JSON::HTTP_GET,$properties['httpMethod']);
+        $this->assertEquals("GET",$properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1',$options);
         $this->assertEquals('foo',$options['actionArg1']);
 
         $configureAction->invoke($Me,$Me::USER_ACTION_UPDATE_PREFERENCE,array('foo'));
         $properties = $Me->getProperties();
         $options = $Me->getOptions();
-        $this->assertEquals(JSON::HTTP_PUT,$properties['httpMethod']);
+        $this->assertEquals("PUT",$properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1',$options);
         $this->assertEquals('foo',$options['actionArg1']);
 
         $configureAction->invoke($Me,$Me::USER_ACTION_DELETE_PREFERENCE,array('foo'));
         $properties = $Me->getProperties();
         $options = $Me->getOptions();
-        $this->assertEquals(JSON::HTTP_DELETE,$properties['httpMethod']);
+        $this->assertEquals("DELETE",$properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1',$options);
         $this->assertEquals('foo',$options['actionArg1']);
     }

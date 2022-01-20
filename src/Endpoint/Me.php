@@ -5,8 +5,8 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-use MRussell\Http\Request\JSON;
-use MRussell\REST\Endpoint\JSON\ModelEndpoint;
+
+use MRussell\REST\Endpoint\ModelEndpoint;
 
 /**
  * Me Endpoint provides access to current logged in user details
@@ -42,7 +42,7 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
 
     protected static $_DEFAULT_PROPERTIES = array(
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => JSON::HTTP_GET
+        self::PROPERTY_HTTP_METHOD => "GET"
     );
 
     /**
@@ -54,13 +54,13 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
      * @inheritdoc
      */
     protected static $_DEFAULT_SUGAR_USER_ACTIONS = array(
-        self::USER_ACTION_PREFERENCES => JSON::HTTP_GET,
-        self::USER_ACTION_SAVE_PREFERENCES => JSON::HTTP_PUT,
-        self::USER_ACTION_GET_PREFERENCE => JSON::HTTP_GET,
-        self::USER_ACTION_UPDATE_PREFERENCE => JSON::HTTP_PUT,
-        self::USER_ACTION_CREATE_PREFERENCE => JSON::HTTP_POST,
-        self::USER_ACTION_DELETE_PREFERENCE => JSON::HTTP_DELETE,
-        self::USER_ACTION_FOLLOWING => JSON::HTTP_GET
+        self::USER_ACTION_PREFERENCES => "GET",
+        self::USER_ACTION_SAVE_PREFERENCES => "PUT",
+        self::USER_ACTION_GET_PREFERENCE => "GET",
+        self::USER_ACTION_UPDATE_PREFERENCE => "PUT",
+        self::USER_ACTION_CREATE_PREFERENCE => "POST",
+        self::USER_ACTION_DELETE_PREFERENCE => "DELETE",
+        self::USER_ACTION_FOLLOWING => "GET"
     );
 
     public function __construct(array $options = array(), array $properties = array())

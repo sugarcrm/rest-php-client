@@ -6,7 +6,7 @@
 namespace Sugarcrm\REST\Endpoint;
 
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -22,7 +22,7 @@ class Ping extends AbstractSugarEndpoint
 
     protected static $_DEFAULT_PROPERTIES = array(
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => JSON::HTTP_GET
+        self::PROPERTY_HTTP_METHOD => "GET"
     );
 
     /**
@@ -32,9 +32,9 @@ class Ping extends AbstractSugarEndpoint
      */
     public function whattimeisit()
     {
-        $this->setOptions(array(self::SERVER_TIME));
+        $this->setUrlArgs(array(self::SERVER_TIME));
         $this->execute();
-        return $this->setOptions(array());
+        return $this->setUrlArgs(array());
     }
 
     /**

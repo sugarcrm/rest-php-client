@@ -5,8 +5,8 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\REST\Endpoint\Data\EndpointData;
-use MRussell\REST\Endpoint\JSON\CollectionEndpoint;
+use MRussell\REST\Endpoint\Data\AbstractEndpointData;
+use MRussell\REST\Endpoint\CollectionEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 /**
@@ -20,6 +20,10 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
 
     const SUGAR_LIMIT_PROPERTY = 'max_num';
 
+    const SUGAR_COLLECTION_RESP_PROP = 'records';
+
+    protected static $_RESPONSE_PROP = self::SUGAR_COLLECTION_RESP_PROP;
+
     protected $offset = 0;
 
     protected $max_num = 20;
@@ -30,24 +34,26 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
     protected static $_DEFAULT_PROPERTIES = array(
         self::PROPERTY_AUTH => TRUE,
         self::PROPERTY_DATA => array(
-            EndpointData::DATA_PROPERTY_REQUIRED => array(),
-            EndpointData::DATA_PROPERTY_DEFAULTS => array()
+            AbstractEndpointData::DATA_PROPERTY_REQUIRED => array(),
+            AbstractEndpointData::DATA_PROPERTY_DEFAULTS => array()
         )
     );
 
-    protected function configureData($data)
+    protected function configurePayload()
     {
+        $data = parent::configurePayload();
         $data[self::SUGAR_OFFSET_PROPERTY] = $this->getOffset();
         $data[self::SUGAR_LIMIT_PROPERTY] = $this->getLimit();
-        return parent::configureData($data);
+        return $data;
     }
 
     /**
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
+    public function compileRequest()
+    {
+        return $this->buildRequest();
     }
 
     /**
@@ -55,6 +61,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @return int
      */
     public function getOffset(){
+
         return $this->offset;
     }
 

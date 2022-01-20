@@ -18,7 +18,7 @@ class BulkRequest extends AbstractEndpointData
      * @param boolean $compile
      * @return array
      */
-    public function asArray($compile = TRUE){
+    public function toArray($compile = TRUE){
         $data = parent::asArray(FALSE);
         if ($compile){
             $compiled = array(

@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Endpoint\Module;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
 
@@ -48,7 +48,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         $Bean->setOptions(array('Foo','bar'));
         $Request = $Bean->compileRequest();
         $this->assertEquals($Bean->getRequest(),$Request);
-        $this->assertEquals(JSON::HTTP_GET,$Request->getMethod());
+        $this->assertEquals("GET",$Request->getMethod());
         $this->assertEquals('http://localhost/rest/v10/Foo/bar',$Request->getURL());
         $this->assertEmpty($Request->getBody());
     }
@@ -149,7 +149,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
                 '1234',
                 '5678'
             )
-        ),$Bean->getData()->asArray());
+        ),$Bean->getData()->toArray());
     }
 
     /**
@@ -406,13 +406,13 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => FALSE,
-        ),$Bean->getData()->asArray());
+        ),$Bean->getData()->toArray());
         $configureFileUploadData->invoke($Bean,TRUE);
         $this->assertEquals(array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => TRUE,
             'oauth_token' => 'bar'
-        ),$Bean->getData()->asArray());
+        ),$Bean->getData()->toArray());
     }
 
     /**
@@ -439,14 +439,14 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Module::BEAN_ACTION_ATTACH_FILE,$Bean->getCurrentAction());
         $this->assertEquals(array(),$_files->getValue($Bean));
         $this->assertEquals(FALSE,$upload->getValue($Bean));
-        $this->assertEmpty($Bean->getData()->asArray());
+        $this->assertEmpty($Bean->getData()->toArray());
         $rBody = $Bean->getRequest()->getBody();
         $this->assertNotEmpty($rBody['uploadfile']);
         $this->assertEquals($Bean,$Bean->tempFile('uploadfile',__FILE__));
         $this->assertEquals(Module::BEAN_ACTION_TEMP_FILE_UPLOAD,$Bean->getCurrentAction());
         $this->assertEquals(array(),$_files->getValue($Bean));
         $this->assertEquals(FALSE,$upload->getValue($Bean));
-        $this->assertEmpty($Bean->getData()->asArray());
+        $this->assertEmpty($Bean->getData()->toArray());
         $this->assertEquals('temp',$Bean['id']);
         $rBody = $Bean->getRequest()->getBody();
         $this->assertNotEmpty($rBody['uploadfile']);

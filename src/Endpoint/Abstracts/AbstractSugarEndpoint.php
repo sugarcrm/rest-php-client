@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\REST\Endpoint\JSON\Endpoint;
+use MRussell\REST\Endpoint\Endpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 /**

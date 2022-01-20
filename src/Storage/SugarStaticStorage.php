@@ -47,7 +47,7 @@ class SugarStaticStorage extends StaticStorage
      * @param $value
      * @return bool
      */
-    public function store($key, $value)
+    public function store($key, $value): bool
     {
         $key = $this->formatKey($key);
         return parent::store($key,$value);
@@ -58,7 +58,7 @@ class SugarStaticStorage extends StaticStorage
      * @param $key
      * @return bool
      */
-    public function remove($key)
+    public function remove($key): bool
     {
         $key = $this->formatKey($key);
         return parent::remove($key);

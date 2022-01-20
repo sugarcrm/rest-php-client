@@ -5,7 +5,6 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-use MRussell\Http\Request\Curl;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSmartSugarEndpoint;
 
@@ -19,7 +18,7 @@ class OAuth2Logout extends AbstractSmartSugarEndpoint
 
     protected static $_DEFAULT_PROPERTIES = array(
         self::PROPERTY_AUTH => TRUE,
-        self::PROPERTY_HTTP_METHOD => Curl::HTTP_POST,
+        self::PROPERTY_HTTP_METHOD => "POST",
         self::PROPERTY_DATA => array(
             EndpointData::DATA_PROPERTY_REQUIRED => array(
             ),

@@ -5,8 +5,8 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
-use MRussell\Http\Request\Curl;
-use MRussell\Http\Request\JSON;
+
+
 use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
@@ -88,13 +88,13 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $ModuleFilter->fetch();
         $this->assertEquals('http://localhost/rest/v10/Accounts/filter',$ModuleFilter->getRequest()->getURL());
         $properties = $ModuleFilter->getProperties();
-        $this->assertEquals(JSON::HTTP_GET,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $this->assertEquals("GET",$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
         $properties = $ModuleFilter->getProperties();
-        $this->assertEquals(JSON::HTTP_POST,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $this->assertEquals("POST",$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->fetch();
         $properties = $ModuleFilter->getProperties();
-        $this->assertEquals(JSON::HTTP_GET,$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
+        $this->assertEquals("GET",$properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
     }
 
     /**
@@ -147,7 +147,7 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($Filter,$ModuleFilter->filter());
         $Filter->equals('foo','bar');
         $this->assertEquals($Filter,$ModuleFilter->filter(TRUE));
-        $this->assertEquals(array(),$Filter->asArray(FALSE));
+        $this->assertEquals(array(),$Filter->toArray(FALSE));
         $ModuleFilter->setData(array(
             'filter' => array(
                 array(
@@ -178,7 +178,7 @@ class ModuleFilterTest extends \PHPUnit_Framework_TestCase
                     'bar' => 'foo'
                 )
             )
-        ),$Filter->asArray(FALSE));
+        ),$Filter->toArray(FALSE));
     }
 
     /**

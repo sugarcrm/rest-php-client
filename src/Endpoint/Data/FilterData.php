@@ -37,7 +37,8 @@ class FilterData extends AbstractExpression implements DataInterface
     protected $properties;
 
     //Overloads
-    public function __construct(AbstractSmartEndpoint $Endpoint = NULL) {
+    public function __construct(AbstractSmartEndpoint $Endpoint = NULL)
+    {
         if ($Endpoint !== NULL){
             $this->setEndpoint($Endpoint);
         }
@@ -50,7 +51,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param mixed $value - The value to set
      * @abstracting ArrayAccess
      */
-    public function offsetSet($offset,$value) {
+    public function offsetSet($offset,$value)
+    {
         if (is_null($offset)) {
             $this->data[] = $value;
         } else {
@@ -64,7 +66,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return boolean
      * @abstracting ArrayAccess
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->data[$offset]);
     }
 
@@ -73,7 +76,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param string $offset - The offset to unset
      * @abstracting ArrayAccess
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         if ($this->offsetExists($offset)) {
             unset($this->data[$offset]);
         }
@@ -85,7 +89,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return mixed
      * @abstracting ArrayAccess
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return $this->offsetExists($offset) ? $this->data[$offset] : null;
     }
 
@@ -95,7 +100,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param bool $compile - Whether or not to verify if Required Data is filled in
      * @return array
      */
-    public function asArray($compile = TRUE){
+    public function toArray($compile = TRUE): array
+    {
         if ($compile){
             $data = $this->compile();
             $this->data = array_replace_recursive($this->data,$data);
@@ -107,7 +113,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * Get the current Data Properties
      * @return array
      */
-    public function getProperties() {
+    public function getProperties(): array
+    {
         return $this->properties;
     }
 
@@ -116,16 +123,17 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param array $properties
      * @return $this
      */
-    public function setProperties(array $properties) {
+    public function setProperties(array $properties) : void
+    {
         $this->properties = $properties;
-        return $this;
     }
 
     /**
      * Set Data back to Defaults and clear out data
      * @return AbstractEndpointData
      */
-    public function reset(){
+    public function reset(): DataInterface
+    {
         return $this->clear();
     }
 
@@ -133,7 +141,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * Clear out data array
      * @return $this
      */
-    public function clear(){
+    public function clear(): DataInterface
+    {
         $this->data = array();
         parent::clear();
         return $this;
@@ -142,7 +151,8 @@ class FilterData extends AbstractExpression implements DataInterface
     /**
      * @inheritdoc
      */
-    public function update(array $data){
+    public function update(array $data): DataInterface
+    {
         foreach($data as $key => $value){
             $this->data[$key] = $value;
         }
@@ -154,7 +164,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param AbstractSmartEndpoint $Endpoint
      * @return self
      */
-    public function setEndpoint(AbstractSmartEndpoint $Endpoint){
+    public function setEndpoint(AbstractSmartEndpoint $Endpoint): FilterData
+    {
         $this->Endpoint = $Endpoint;
         return $this;
     }
@@ -164,7 +175,8 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return AbstractSmartEndpoint
      * @codeCoverageIgnore
      */
-    public function getEndpoint(){
+    public function getEndpoint(): AbstractSmartEndpoint
+    {
         return $this->Endpoint;
     }
 
@@ -172,9 +184,10 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return AbstractSmartEndpoint|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function execute(){
+    public function execute()
+    {
         if (isset($this->Endpoint)){
-            $filter = $this->asArray();
+            $filter = $this->toArray();
             $this->Endpoint->getData()->update(array(self::FILTER_PARAM => $filter));
             return $this->Endpoint->execute();
         }

@@ -5,11 +5,15 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\Http\Request\JSON;
-use MRussell\Http\Request\RequestInterface;
-use MRussell\Http\Response\ResponseInterface;
+
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
+use MRussell\REST\Endpoint\Data\DataInterface;
 use MRussell\REST\Endpoint\Data\EndpointData;
-use MRussell\REST\Endpoint\JSON\ModelEndpoint;
+use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
+use MRussell\REST\Endpoint\ModelEndpoint;
+use PHPUnit\Util\Filter;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
@@ -92,21 +96,21 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @var array
      */
     protected static $_DEFAULT_SUGAR_BEAN_ACTIONS = array(
-        self::BEAN_ACTION_FAVORITE => JSON::HTTP_PUT,
-        self::BEAN_ACTION_UNFAVORITE => JSON::HTTP_PUT,
-        self::BEAN_ACTION_FILTER_RELATED => JSON::HTTP_GET,
-        self::BEAN_ACTION_RELATE => JSON::HTTP_POST,
-        self::BEAN_ACTION_MASS_RELATE => JSON::HTTP_POST,
-        self::BEAN_ACTION_UNLINK => JSON::HTTP_DELETE,
-        self::BEAN_ACTION_CREATE_RELATED => JSON::HTTP_POST,
-        self::BEAN_ACTION_FOLLOW => JSON::HTTP_POST,
-        self::BEAN_ACTION_UNFOLLOW => JSON::HTTP_DELETE,
-        self::BEAN_ACTION_AUDIT => JSON::HTTP_GET,
-        self::BEAN_ACTION_FILE => JSON::HTTP_GET,
-        self::BEAN_ACTION_DOWNLOAD_FILE => JSON::HTTP_GET,
-        self::BEAN_ACTION_ATTACH_FILE => JSON::HTTP_POST,
-        self::BEAN_ACTION_TEMP_FILE_UPLOAD => JSON::HTTP_POST,
-        self::BEAN_ACTION_DUPLICATE_CHECK => JSON::HTTP_POST
+        self::BEAN_ACTION_FAVORITE => "PUT",
+        self::BEAN_ACTION_UNFAVORITE => "PUT",
+        self::BEAN_ACTION_FILTER_RELATED => "GET",
+        self::BEAN_ACTION_RELATE => "POST",
+        self::BEAN_ACTION_MASS_RELATE => "POST",
+        self::BEAN_ACTION_UNLINK => "DELETE",
+        self::BEAN_ACTION_CREATE_RELATED => "POST",
+        self::BEAN_ACTION_FOLLOW => "POST",
+        self::BEAN_ACTION_UNFOLLOW => "DELETE",
+        self::BEAN_ACTION_AUDIT => "GET",
+        self::BEAN_ACTION_FILE => "GET",
+        self::BEAN_ACTION_DOWNLOAD_FILE => "GET",
+        self::BEAN_ACTION_ATTACH_FILE => "POST",
+        self::BEAN_ACTION_TEMP_FILE_UPLOAD => "POST",
+        self::BEAN_ACTION_DUPLICATE_CHECK => "POST"
     );
 
     /**
@@ -138,8 +142,9 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     /**
      * @inheritdoc
      */
-    public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
+    public function compileRequest(): Request
+    {
+        return $this->buildRequest();
     }
 
     /**
@@ -147,18 +152,19 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * 2nd Option (Key 1) becomes ID
      * @inheritdoc
      */
-    public function setOptions(array $options) {
-        if (isset($options[0])){
-            $this->setModule($options[0]);
-            $options[self::BEAN_MODULE_VAR] = $this->module;
-            unset($options[0]);
+    public function setUrlArgs(array $args) : EndpointInterface
+    {
+        if (isset($args[0])){
+            $this->setModule($args[0]);
+            $args[self::BEAN_MODULE_VAR] = $this->module;
+            unset($args[0]);
         }
-        if (isset($options[1])){
-            $this->set(static::$_MODEL_ID_KEY,$options[1]);
-            $options[self::MODEL_ID_VAR] = $options[1];
-            unset($options[1]);
+        if (isset($args[1])){
+            $this->set(static::$_MODEL_ID_KEY,$args[1]);
+            $args[self::MODEL_ID_VAR] = $args[1];
+            unset($args[1]);
         }
-        return parent::setOptions($options);
+        return parent::setUrlArgs($args);
     }
 
     /**
@@ -166,44 +172,39 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param $module
      * @return $this
      */
-    public function setModule($module){
+    public function setModule($module): AbstractSugarBeanEndpoint
+    {
         $this->module = $module;
         return $this;
     }
 
     /**
      * Get the Sugar Module currently configured
-     * @return mixed
+     * @return string
      */
-    public function getModule(){
+    public function getModule(): string
+    {
         return $this->module;
     }
 
-    /**
-     * Configure Uploads on Request
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    protected function configureRequest(RequestInterface $Request)
-    {
-        $Request = parent::configureRequest($Request);
-        return $this->configureUploads($Request);
-    }
+//    /**
+//     * Configure Uploads on Request
+//     * @inheritdoc
+//     * @codeCoverageIgnore
+//     */
+//    protected function configureRequest(Request $Request)
+//    {
+//        $Request = parent::configureRequest($Request);
+//        return $this->configureUploads($Request);
+//    }
 
     /**
      * Configure the Uploads Data on the Request Object
-     * @param RequestInterface $Request
-     * @return RequestInterface
+     * @param Request $Request
+     * @return Request
      */
-    protected function configureUploads(RequestInterface $Request)
+    protected function configureUploads(Request $Request)
     {
-        $Request->setUpload($this->upload);
-        if (!empty($this->_files)){
-            foreach($this->_files as $key => $properties){
-                $Request->addFile($key,$properties['path'],$properties['mimeType'],$properties['filename']);
-            }
-        }
-        return $Request;
     }
 
     /**
@@ -211,16 +212,31 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    protected function configureResponse(ResponseInterface $Response)
+    public function parseResponse(Response $response): void
     {
         $this->resetUploads();
-        return parent::configureResponse($Response);
+        if ($this->response->getStatusCode() == "200"){
+            switch($this->getCurrentAction()) {
+                case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
+                    $body = $this->getResponseBody();
+                    if (isset($body['record'])){
+                        $this->reset();
+                        $this->update(array(
+                            'filename_guid' => $body['record']['id'],
+                            'filename' => $body['filename']['guid']
+                        ));
+                    }
+                    return;
+            }
+        }
+        parent::parseResponse($response);
     }
 
     /**
      * Reset the Upload Settings back to defaults
      */
-    protected function resetUploads(){
+    protected function resetUploads()
+    {
         if ($this->upload){
             $this->getData()->reset();
         }
@@ -232,7 +248,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
-    protected function configureURL(array $options) {
+    protected function configureURL(array $options) : string
+    {
         $action = $this->getCurrentAction();
         switch($action){
             case self::BEAN_ACTION_CREATE_RELATED:
@@ -268,8 +285,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @inheritdoc
      */
     protected function configureAction($action,array $arguments = array()) {
-        $options = $this->getOptions();
-        $options[self::BEAN_MODULE_VAR] = $this->module;
+        $options = $this->getUrlArgs();
+        $options[self::BEAN_MODULE_VAR] = $this->getModule();
         if (isset($options[self::BEAN_ACTION_ARG1_VAR])) unset($options[self::BEAN_ACTION_ARG1_VAR]);
         if (isset($options[self::BEAN_ACTION_ARG2_VAR])) unset($options[self::BEAN_ACTION_ARG2_VAR]);
         if (isset($options[self::BEAN_ACTION_ARG3_VAR])) unset($options[self::BEAN_ACTION_ARG3_VAR]);
@@ -297,35 +314,23 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                     }
             }
         }
-        $this->setOptions($options);
+        $this->setUrlArgs($options);
         parent::configureAction($action,$arguments);
     }
 
     /**
      * @inheritdoc
      */
-    protected function updateModel()
+    protected function syncFromApi(array $model)
     {
-        $body = $this->Response->getBody();
         switch ($this->action){
             case self::BEAN_ACTION_FAVORITE:
             case self::BEAN_ACTION_UNFAVORITE:
-                if (is_array($body)){
-                    $this->reset();
-                    $this->update($body);
-                }
+                $this->reset();
+                $this->update($model);
                 break;
-            case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
-                if (is_array($body) && isset($body['record'])){
-                    $this->reset();
-                    $model = array(
-                        'filename_guid' => $body['record']['id'],
-                        'filename' => $body['filename']['guid']
-                    );
-                    $this->update($model);
-                }
             default:
-                parent::updateModel();
+                parent::syncFromApi($model);
         }
     }
 
@@ -333,7 +338,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * System friendly name for subscribing to a record
      * @return self
      */
-    public function follow()
+    public function follow(): AbstractSugarBeanEndpoint
     {
         return $this->subscribe();
     }
@@ -342,7 +347,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * System friendly name for unsubscribing to a record
      * @return self
      */
-    public function unfollow()
+    public function unfollow(): AbstractSugarBeanEndpoint
     {
         return $this->unsubscribe();
     }
@@ -353,7 +358,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param string $related_id - ID to Relate
      * @return self
      */
-    public function relate($linkName,$related_id){
+    public function relate(string $linkName,string $related_id): AbstractSugarBeanEndpoint
+    {
         return $this->link($linkName,$related_id);
     }
 
@@ -361,7 +367,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Another Human Friendly overload, file & files are the same action
      * @return self
      */
-    public function files(){
+    public function files(): AbstractSugarBeanEndpoint
+    {
         return $this->file();
     }
 
@@ -370,17 +377,19 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param $field - Name of File Field
      * @return self
      */
-    public function getFile($field){
+    public function getFile($field): AbstractSugarBeanEndpoint
+    {
         return $this->downloadFile($field);
     }
 
     /**
      * Human friendly overload for filterLink action
-     * @param $linkName - Name of Relationship Link
+     * @param string $linkName - Name of Relationship Link
      * @param bool $count
      * @return self
      */
-    public function getRelated($linkName,$count = false){
+    public function getRelated(string $linkName,bool $count = false): AbstractSugarBeanEndpoint
+    {
         if ($count){
             return $this->filterLink($linkName,'count');
         }
@@ -393,7 +402,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param bool $count - Whether or not to just do a count request
      * @return FilterData
      */
-    public function filterRelated($linkName,$count = false){
+    public function filterRelated(string $linkName,bool $count = false): FilterData
+    {
         $Filter = new FilterData($this);
         $this->setCurrentAction(self::BEAN_ACTION_FILTER_RELATED);
         $args = array($linkName);
@@ -406,28 +416,31 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     /**
      * Mass Related records to current Bean Model
-     * @param $linkName
+     * @param string $linkName
      * @param array $related_ids
+     * @return AbstractSugarBeanEndpoint
      */
-    public function massRelate($linkName,array $related_ids){
+    public function massRelate(string $linkName,array $related_ids): AbstractSugarBeanEndpoint
+    {
         $this->setData(array(
             'link_name' => $linkName,
             'ids' => $related_ids
         ));
-        return $this->massLink();
+        return $this->massLink($linkName);
     }
 
     /**
      * Overloading attachFile dynamic method to handle more functionality for file uploads
-     * @param $fileField
-     * @param $filePath
+     * @param string $fileField
+     * @param string $filePath
      * @param bool $deleteOnFail
      * @param string $mimeType
      * @param string $uploadName
      * @return $this
      * @throws \MRussell\REST\Exception\Endpoint\InvalidDataType
      */
-    public function attachFile($fileField,$filePath,$deleteOnFail = false,$mimeType = '',$uploadName='')
+    public function attachFile(string $fileField,string $filePath,
+        bool $deleteOnFail = false,string $mimeType = '',string $uploadName=''): AbstractSugarBeanEndpoint
     {
         $this->setCurrentAction(self::BEAN_ACTION_ATTACH_FILE,array($fileField));
         $this->configureFileUploadData($deleteOnFail);
@@ -441,17 +454,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 
     /**
      * Overloading tempFile dynamic method to provide more functionality
-     * @param $fileField
-     * @param $filePath
+     * @param string $fileField
+     * @param string $filePath
      * @param bool $deleteOnFail
      * @param string $mimeType
      * @param string $uploadName
      * @return $this
      * @throws \MRussell\REST\Exception\Endpoint\InvalidDataType
      */
-    public function tempFile($fileField,$filePath,$deleteOnFail = false,$mimeType = '',$uploadName='')
+    public function tempFile(string $fileField,string $filePath,
+        bool $deleteOnFail = false,string $mimeType = '',string $uploadName=''): AbstractSugarBeanEndpoint
     {
-        $model = $this->asArray();
+        $model = $this->toArray();
         $idKey = $this->modelIdKey();
         if (isset($model[$idKey])){
             $this->reset();
@@ -471,14 +485,14 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @return $this
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function duplicateCheck()
+    public function duplicateCheck(): AbstractSugarBeanEndpoint
     {
         $action = self::BEAN_ACTION_DUPLICATE_CHECK;
         $this->setCurrentAction($action);
         $idKey = $this->modelIdKey();
         $id = $this[$idKey];
         $this[$idKey] = $action;
-        $this->setData($this->asArray());
+        $this->setData($this->toArray());
         $this->execute();
         $this[$idKey] = $id;
         return $this;
@@ -488,7 +502,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param bool $deleteOnFail
      * @throws \MRussell\REST\Exception\Endpoint\InvalidDataType
      */
-    protected function configureFileUploadData($deleteOnFail = FALSE){
+    protected function configureFileUploadData(bool $deleteOnFail = FALSE): void
+    {
         $data = array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => $deleteOnFail,
@@ -506,7 +521,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @param array $properties
      * @return $this
      */
-    protected function addFile($name,array $properties)
+    protected function addFile($name,array $properties): AbstractSugarBeanEndpoint
     {
         if (isset($properties['path'])){
             $this->upload = TRUE;

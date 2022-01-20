@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
-use MRussell\REST\Endpoint\JSON\SmartEndpoint;
+use MRussell\REST\Endpoint\SmartEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
 /**
@@ -18,7 +18,8 @@ class AbstractSmartSugarEndpoint extends SmartEndpoint implements SugarEndpointI
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
+    public function compileRequest()
+    {
+        return $this->buildRequest();
     }
 }

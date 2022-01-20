@@ -117,22 +117,22 @@ class FilterDataTest extends \PHPUnit_Framework_TestCase
         $Filter = new ModuleFilter();
         $Data = new FilterData($Filter);
         $Data->update($this->data_simple);
-        $this->assertEquals($this->data_simple,$Data->asArray(false));
+        $this->assertEquals($this->data_simple,$Data->toArray(false));
         $Data->clear();
-        $this->assertEquals(array(),$Data->asArray());
+        $this->assertEquals(array(),$Data->toArray());
         $Data->starts('name','s')->equals('status','foo')->gte('date_entered','2017-01-01');
-        $this->assertEquals($this->data_simple,$Data->asArray());
+        $this->assertEquals($this->data_simple,$Data->toArray());
         $Data->update($this->data_simple);
-        $this->assertEquals($this->data_simple,$Data->asArray());
+        $this->assertEquals($this->data_simple,$Data->toArray());
         $Data->reset();
-        $this->assertEmpty($Data->asArray(FALSE));
+        $this->assertEmpty($Data->toArray(FALSE));
         $Data[] = 'foo';
         $this->assertEquals('foo',$Data[0]);
         unset($Data[0]);
-        $this->assertEquals(array(),$Data->asArray(FALSE));
+        $this->assertEquals(array(),$Data->toArray(FALSE));
         $Data['$foo'] = 'bar';
         $Data->reset();
-        $this->assertEmpty($Data->asArray(FALSE));
+        $this->assertEmpty($Data->toArray(FALSE));
 
         $Data->and()
                 ->or()

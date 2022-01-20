@@ -5,8 +5,10 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-use MRussell\Http\Request\JSON;
+
 use MRussell\REST\Endpoint\Data\EndpointData;
+use MRussell\REST\Endpoint\Interfaces\CollectionInterface;
+use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 
@@ -41,23 +43,24 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
 
     /**
      * Sanitize passed in options
-     * @param array $options
+     * @param array $args
      * @return $this|mixed
      */
-    public function setOptions(array $options)
+    public function setUrlArgs(array $args): EndpointInterface
     {
-        if (isset($options[1])){
-            unset($options[1]);
-            $options[self::COUNT_OPTION] = self::COUNT_OPTION;
+        if (isset($args[1])){
+            unset($args[1]);
+            $args[self::COUNT_OPTION] = self::COUNT_OPTION;
         }
-        return parent::setOptions($options);
+        return parent::setUrlArgs($args);
     }
 
     /**
      * @inheritdoc
      */
-    public function fetch(){
-        $this->setProperty(self::PROPERTY_HTTP_METHOD,JSON::HTTP_GET);
+    public function fetch(): CollectionInterface
+    {
+        $this->setProperty(self::PROPERTY_HTTP_METHOD,"GET");
         return parent::fetch();
     }
 
@@ -65,15 +68,16 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      * If Filter Options is configured, use Filter Object to update Data
      * @inheritdoc
      */
-    protected function configureData($data)
+    protected function configurePayload()
     {
+        $data = parent::configurePayload();
         if (is_object($this->Filter)){
-            $compiledFilter = $this->Filter->asArray();
+            $compiledFilter = $this->Filter->toArray();
             if (!empty($compiledFilter)){
-                $data->update(array(FilterData::FILTER_PARAM => $this->Filter->asArray()));
+                $data->update(array(FilterData::FILTER_PARAM => $this->Filter->toArray()));
             }
         }
-        return parent::configureData($data);
+        return $data;
     }
 
     /**
@@ -83,7 +87,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      */
     public function filter($reset = FALSE)
     {
-        $this->setProperty(self::PROPERTY_HTTP_METHOD,JSON::HTTP_POST);
+        $this->setProperty(self::PROPERTY_HTTP_METHOD,"POST");
         if (empty($this->Filter)){
             $this->Filter = new FilterData();
             $this->Filter->setEndpoint($this);
@@ -108,9 +112,9 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      */
     public function count()
     {
-        $this->setOptions(array($this->getModule(),self::COUNT_OPTION));
+        $this->setUrlArgs(array($this->getModule(),self::COUNT_OPTION));
         $this->execute();
-        $this->setOptions(array($this->getModule()));
+        $this->setUrlArgs(array($this->getModule()));
         return $this;
     }
 

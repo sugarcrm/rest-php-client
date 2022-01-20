@@ -2,7 +2,7 @@
 
 namespace Sugarcrm\REST\Tests\Auth;
 
-use MRussell\Http\Request\JSON;
+
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
