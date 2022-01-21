@@ -199,6 +199,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
 //    }
 
     /**
+     * @TODO - Need to work out how to manage file uploads with Guzzle (Multipart data)
      * Configure the Uploads Data on the Request Object
      * @param Request $Request
      * @return Request

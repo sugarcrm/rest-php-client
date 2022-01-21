@@ -8,7 +8,6 @@ namespace Sugarcrm\REST\Client;
 use GuzzleHttp\Middleware;
 use MRussell\REST\Client\AbstractClient;
 use GuzzleHttp\Psr7\Request;
-use Sugarcrm\REST\Helpers\Helper;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\Provider\SugarEndpointProvider;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
@@ -25,7 +24,7 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method \Sugarcrm\REST\Endpoint\Enum             enum(string $module = '',string $field = '')
  * @method \Sugarcrm\REST\Endpoint\Bulk             bulk()
  */
-class Sugar7API extends AbstractClient implements PlatformAwareInterface
+class SugarApi extends AbstractClient implements PlatformAwareInterface
 {
     const PLATFORM_BASE = 'base';
     const API_VERSION = "10";
@@ -57,7 +56,7 @@ class Sugar7API extends AbstractClient implements PlatformAwareInterface
      * @param int $version
      * @return string
      */
-    public static function configureAPIURL($instance, $version = null)
+    public static function configureApiUrl($instance, $version = null): string
     {
         $url = 0;
         $version = ($version === null ? self::API_VERSION : $version);
@@ -122,7 +121,7 @@ class Sugar7API extends AbstractClient implements PlatformAwareInterface
      */
     protected function setAPIUrl()
     {
-        $this->apiURL = self::configureAPIURL($this->server, $this->version);
+        $this->apiURL = self::configureApiUrl($this->server, $this->version);
         $Auth = $this->getAuth();
         foreach($Auth->getActions() as $action){
             $EP = $Auth->getActionEndpoint($action);
@@ -175,12 +174,12 @@ class Sugar7API extends AbstractClient implements PlatformAwareInterface
      * @param $platform
      * @return $this
      */
-    public function setPlatform($platform): SugarOAuthController
+    public function setPlatform($platform): PlatformAwareInterface
     {
         $this->platform = $platform;
-        if (!isset($this->credentials[self::OAUTH_PROP_PLATFORM]) ||
-            $this->credentials[self::OAUTH_PROP_PLATFORM] !== $platform){
-            $this->credentials[self::OAUTH_PROP_PLATFORM] = $this->platform;
+        if (!isset($this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM]) ||
+            $this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM] !== $platform){
+            $this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM] = $this->platform;
             $this->setCredentials($this->credentials);
         }
 
@@ -196,6 +195,7 @@ class Sugar7API extends AbstractClient implements PlatformAwareInterface
     }
 
     /**
+     * @TODO - Pretty sure Sudo is broken completely in the auth controller.
      * Helper method to Sudo to new user
      * @param $user string
      * @return bool
@@ -208,7 +208,6 @@ class Sugar7API extends AbstractClient implements PlatformAwareInterface
     /**
      * Check if authenticated, and attempt Refresh/Login if not
      * @return bool
-     * @codeCoverageIgnore
      */
     public function isAuthenticated()
     {

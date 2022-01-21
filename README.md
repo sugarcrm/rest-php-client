@@ -13,11 +13,11 @@ A simple and intuitive Library for accessing a Sugar 7's REST v10 API. Allows fo
 Add to any project using composer:
 ```
 "require": {
-    "sugarcrm/rest-php-client": "~2.0"
+    "sugarcrm/rest-php-client": "~3.0"
 }
 ```
-> If you were previously using v1.x, please note v2.x uses different namespaces and is not backwards compatible. 
-> You can run v1.x and v2.x side-by-side by using the sugarcrm/php-rest-client-v2 package, which will always maintain the latest 2.x package
+> If you were previously using v1.x, please note v3.x uses different namespaces and design and is not backwards compatible. 
+> You can run v1.x and v2.x side-by-side by using the sugarcrm/php-rest-client-v3 package, which will always maintain the latest 3.x package
 
 __Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki)__ for detailed information on 
 * Installation
@@ -29,10 +29,11 @@ __Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki)__ for d
 ## Developing the PHP REST Client
 
 #### Requirements:
+* v3.x
+  * [php 7.2+](https://php.org/)
+  * [Composer](https://getcomposer.org/)
 * v1.x
   * [php 5.3 - 5.6](https://php.org/)
-* v2.x
-  * [php 5.3+]
 
 #### Steps:
 1. With PHP installed, navigate to the repo folder (rest-php-client) via terminal.
