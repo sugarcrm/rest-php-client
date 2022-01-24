@@ -20,7 +20,7 @@
   ],
   "require": {
     "php": ">=7.2",
-    "michaelj2324/php-rest-client": "^2.0.0"
+    "michaelj2324/php-rest-client": "<2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "9.*",
@@ -35,6 +35,11 @@
   "autoload-dev": {
     "psr-4": {
       "Sugarcrm\\REST\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "symfony/flex": true
     }
   }
 }
