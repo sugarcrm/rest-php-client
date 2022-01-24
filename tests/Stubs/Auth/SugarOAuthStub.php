@@ -18,17 +18,17 @@ class SugarOAuthStub extends SugarOAuthController
         'expires_in' => '3600'
     );
 
-    public function authenticate()
+    public function authenticate(): bool
     {
         return TRUE;
     }
 
-    public function refresh()
+    public function refresh(): bool
     {
         return TRUE;
     }
 
-    public function logout()
+    public function logout(): bool
     {
         return TRUE;
     }

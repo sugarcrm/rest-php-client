@@ -2,7 +2,7 @@
 
 namespace Sugarcrm\REST\Tests\Auth;
 
-
+use GuzzleHttp\Psr7\Request;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
@@ -144,7 +144,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
     public function testAuthHeader()
     {
         $Auth = new SugarOAuthStub();
-        $Request = new JSON();
+        $Request = new Request("POST", "/");
         $this->assertEquals($Auth,$Auth->configureRequest($Request));
         $headers = $Request->getHeaders();
         $this->assertEquals('bar',$headers['OAuth-Token']);
@@ -170,7 +170,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
         $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO,$EP);
         $Auth->sudo('max');
         $request = $EP->getRequest();
-        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max',$request->getURL());
+        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max',$request->getUri());
         $this->assertEquals(array(
             'client_id' => 'sugar',
             'platform' => 'api'
