@@ -18,7 +18,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\ModuleFilter
  * @group ModuleFilterTest
  */
-class ModuleFilterTest extends \PHPUnit_Framework_TestCase
+class ModuleFilterTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

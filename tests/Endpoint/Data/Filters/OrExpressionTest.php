@@ -16,7 +16,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression
  * @group OrExpressionTest
  */
-class OrExpressionTest extends \PHPUnit_Framework_TestCase
+class OrExpressionTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

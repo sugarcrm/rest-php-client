@@ -12,7 +12,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\FilterData
  * @group FilterDataTest
  */
-class FilterDataTest extends \PHPUnit_Framework_TestCase
+class FilterDataTest extends \PHPUnit\Framework\TestCase
 {
 
     protected $data_simple = array(

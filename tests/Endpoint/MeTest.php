@@ -15,7 +15,7 @@ use Sugarcrm\REST\Endpoint\Me;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Me
  * @group MeTest
  */
-class MeTest extends \PHPUnit_Framework_TestCase
+class MeTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

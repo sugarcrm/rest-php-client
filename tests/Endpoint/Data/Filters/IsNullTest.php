@@ -16,7 +16,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Operator\IsNull;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Operator\IsNull
  * @group IsNullTest
  */
-class IsNullTest extends \PHPUnit_Framework_TestCase
+class IsNullTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

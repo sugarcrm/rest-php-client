@@ -16,7 +16,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\BulkRequest
  * @group BulkRequestTest
  */
-class BulkRequestTest extends \PHPUnit_Framework_TestCase
+class BulkRequestTest extends \PHPUnit\Framework\TestCase
 {
     protected $bulkPayload = array(
         array(

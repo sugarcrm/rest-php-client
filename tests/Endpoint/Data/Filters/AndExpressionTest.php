@@ -16,7 +16,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression
  * @group AndExpressionTest
  */
-class AndExpressionTest extends \PHPUnit_Framework_TestCase
+class AndExpressionTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

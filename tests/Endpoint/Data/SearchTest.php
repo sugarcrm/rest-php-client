@@ -14,7 +14,7 @@ use Sugarcrm\REST\Endpoint\Search;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Search
  * @group SearchTest
  */
-class SearchTest extends \PHPUnit_Framework_TestCase
+class SearchTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

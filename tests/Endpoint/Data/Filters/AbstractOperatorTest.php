@@ -28,7 +28,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Starts;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Operator\AbstractOperator
  * @group AbstractOperatorTest
  */
-class AbstractOperatorTest extends \PHPUnit_Framework_TestCase
+class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

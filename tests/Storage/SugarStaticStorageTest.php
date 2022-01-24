@@ -14,7 +14,7 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @coversDefaultClass Sugarcrm\REST\Storage\SugarStaticStorage
  * @group SugarStaticStorageTest
  */
-class SugarStaticStorageTest extends \PHPUnit_Framework_TestCase
+class SugarStaticStorageTest extends \PHPUnit\Framework\TestCase
 {
 
     protected $token = array(

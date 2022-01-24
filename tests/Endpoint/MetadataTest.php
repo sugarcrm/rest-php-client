@@ -15,7 +15,7 @@ use Sugarcrm\REST\Endpoint\Metadata;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Metadata
  * @group MetadataTest
  */
-class MetadataTest extends \PHPUnit_Framework_TestCase
+class MetadataTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

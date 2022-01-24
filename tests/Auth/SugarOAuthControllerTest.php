@@ -15,7 +15,7 @@ use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
  * @coversDefaultClass Sugarcrm\REST\Auth\SugarOAuthController
  * @group SugarOAuthControllerTest
  */
-class SugarOAuthControllerTest extends \PHPUnit_Framework_TestCase
+class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

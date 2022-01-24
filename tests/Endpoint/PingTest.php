@@ -15,7 +15,7 @@ use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Ping
  * @group PingTest
  */
-class PingTest extends \PHPUnit_Framework_TestCase
+class PingTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

@@ -17,7 +17,7 @@ use Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint
  * @group AbstractSugarBeanCollectionEndpointTest
  */
-class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit_Framework_TestCase
+class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()

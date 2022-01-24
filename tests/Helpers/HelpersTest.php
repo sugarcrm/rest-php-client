@@ -12,7 +12,7 @@ use Sugarcrm\REST\Helpers\Helper;
  * @package Sugarcrm\REST\Tests\Helpers
  * @coversDefaultClass Sugarcrm\REST\Helpers\Helper
  */
-class HelpersTest extends \PHPUnit_Framework_TestCase {
+class HelpersTest extends \PHPUnit\Framework\TestCase {
 
     public static function setUpBeforeClass()
     {

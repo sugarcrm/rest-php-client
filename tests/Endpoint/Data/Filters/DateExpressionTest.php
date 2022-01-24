@@ -14,7 +14,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression
  * @group DateExpressionTest
  */
-class DateExpressionTest extends \PHPUnit_Framework_TestCase
+class DateExpressionTest extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass()
