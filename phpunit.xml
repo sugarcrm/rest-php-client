@@ -4,8 +4,7 @@
          backupStaticAttributes="false"
          colors="true"
          processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="true">
+         stopOnFailure="false">
     <testsuites>
         <testsuite>
             <directory>./tests</directory>
