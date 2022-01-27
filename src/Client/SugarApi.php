@@ -80,7 +80,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
             $this->setServer($server);
         }
         if (!empty($credentials)){
-            $this->getAuth()->updateCredentials($credentials);
+            $this->getAuth()->setCredentials($credentials);
         }
     }
 

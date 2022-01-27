@@ -98,25 +98,25 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers ::configureData
+     * @covers ::configurePayload
      */
-    public function testConfigureData(){
+    public function testConfigurePayload(){
         $ModuleFilter = new ModuleFilter();
         $Reflection = new \ReflectionClass(get_class($ModuleFilter));
-        $configureData = $Reflection->getMethod('configureData');
-        $configureData->setAccessible(TRUE);
+        $configurePayload = $Reflection->getMethod('configurePayload');
+        $configurePayload->setAccessible(TRUE);
 
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter();
-        $data = $configureData->invoke($ModuleFilter,new EndpointData());
+        $data = $configurePayload->invoke($ModuleFilter,new EndpointData());
         $this->assertArrayNotHasKey('filter',$data);
 
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter()->contains('foo','bar');
-        $data = $configureData->invoke($ModuleFilter,new EndpointData());
+        $data = $configurePayload->invoke($ModuleFilter,new EndpointData());
         $this->assertArrayHasKey('filter',$data);
     }
 

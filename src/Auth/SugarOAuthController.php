@@ -9,7 +9,7 @@ use MRussell\REST\Auth\Abstracts\AbstractOAuth2Controller;
 use MRussell\REST\Auth\AuthControllerInterface;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Client\PlatformAwareInterface;
-use Sugarcrm\REST\Client\Sugar7API;
+use Sugarcrm\REST\Client\SugarApi;
 
 /**
  * The Authentication Controller for the Sugar 7 REST Client
@@ -51,7 +51,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
     public function __construct()
     {
         parent::__construct();
-        $this->setPlatform(Sugar7API::PLATFORM_BASE);
+        $this->setPlatform(SugarApi::PLATFORM_BASE);
         foreach (static::$_DEFAULT_SUGAR_AUTH_ACTIONS as $action) {
             $this->actions[] = $action;
         }
@@ -180,7 +180,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
             if ($Endpoint !== null) {
                 $Endpoint = $this->configureSudoEndpoint($Endpoint, $user);
                 $response = $Endpoint->execute()->getResponse();
-                if ($response->getStatus() == '200') {
+                if ($response->getStatusCode() == 200) {
                     //@codeCoverageIgnoreStart
                     $this->setToken($response->getBody());
                     $creds = $this->getCredentials();
@@ -199,7 +199,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
      */
     public function reset(): AuthControllerInterface
     {
-        $this->setPlatform(Sugar7API::PLATFORM_BASE);
+        $this->setPlatform(SugarApi::PLATFORM_BASE);
         return parent::reset();
     }
 

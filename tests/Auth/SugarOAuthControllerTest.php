@@ -127,14 +127,14 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
             'platform' => 'base'
         ),$Auth->getCredentials());
         $this->assertEquals($Auth,$Auth->updateCredentials(array(
-            'platform' => array()
+            'platform' => ''
         )));
         $this->assertEquals(array(
             'username' => 'system',
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => array()
+            'platform' => ''
         ),$Auth->getCredentials());
     }
 

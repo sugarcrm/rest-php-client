@@ -83,7 +83,7 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
-    protected function configureURL(array $options) {
+    protected function configureURL(array $options): string {
         $action = $this->getCurrentAction();
         switch($action){
             case self::USER_ACTION_SAVE_PREFERENCES:
