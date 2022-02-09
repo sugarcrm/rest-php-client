@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
@@ -6,8 +7,8 @@
 namespace Sugarcrm\REST\Client;
 
 use GuzzleHttp\Middleware;
-use MRussell\REST\Client\AbstractClient;
 use GuzzleHttp\Psr7\Request;
+use MRussell\REST\Client\AbstractClient;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\Provider\SugarEndpointProvider;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
@@ -24,8 +25,7 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method \Sugarcrm\REST\Endpoint\Enum             enum(string $module = '',string $field = '')
  * @method \Sugarcrm\REST\Endpoint\Bulk             bulk()
  */
-class SugarApi extends AbstractClient implements PlatformAwareInterface
-{
+class SugarApi extends AbstractClient implements PlatformAwareInterface {
     const PLATFORM_BASE = 'base';
     const API_VERSION = "10";
     const API_URL = '/rest/v%s/';
@@ -56,30 +56,28 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * @param int $version
      * @return string
      */
-    public static function configureApiUrl($instance, $version = null): string
-    {
+    public static function configureApiUrl($instance, $version = null): string {
         $url = 0;
         $version = ($version === null ? self::API_VERSION : $version);
         $instance = preg_replace('/\/rest\/v.+/', '', $instance);
-        $url = rtrim($instance,"/").sprintf(self::API_URL, $version);
+        $url = rtrim($instance, "/") . sprintf(self::API_URL, $version);
         if (preg_match('/^(http|https):\/\//i', $url) === 0) {
-            $url = "http://".$url;
+            $url = "http://" . $url;
         }
         return $url;
     }
 
-    public function __construct($server = '', array $credentials = array())
-    {
+    public function __construct($server = '', array $credentials = []) {
         parent::__construct();
         $self = $this;
-        $this->getHandlerStack()->push(Middleware::mapRequest(function (Request $request)  use ($self){
-            return $request->withHeader('X-Sugar-Platform',$self->getPlatform());
-        }),'sugarPlatformHeader');
+        $this->getHandlerStack()->push(Middleware::mapRequest(function (Request $request)  use ($self) {
+            return $request->withHeader('X-Sugar-Platform', $self->getPlatform());
+        }), 'sugarPlatformHeader');
         $this->init();
-        if ($server !== '' || !empty($server)){
+        if ($server !== '' || !empty($server)) {
             $this->setServer($server);
         }
-        if (!empty($credentials)){
+        if (!empty($credentials)) {
             $this->getAuth()->setCredentials($credentials);
         }
     }
@@ -87,8 +85,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     /**
      * Setup the default Auth Controller and EndpointProvider
      */
-    protected function init(): void
-    {
+    protected function init(): void {
         $this->initEndpointProvider();
         $this->initAuthProvider();
     }
@@ -96,34 +93,31 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     /**
      * @return void
      */
-    protected function initEndpointProvider(): void
-    {
+    protected function initEndpointProvider(): void {
         $this->setEndpointProvider(new SugarEndpointProvider());
     }
 
     /**
      * @return void
      */
-    protected function initAuthProvider(): void
-    {
+    protected function initAuthProvider(): void {
         $this->setAuth(new SugarOAuthController());
 
         $Auth = $this->getAuth();
-        $Auth->setActionEndpoint('authenticate',$this->EndpointProvider->getEndpoint('oauth2Token')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('refresh',$this->EndpointProvider->getEndpoint('oauth2Refresh')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('logout',$this->EndpointProvider->getEndpoint('oauth2Logout')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('sudo',$this->EndpointProvider->getEndpoint('oauth2Sudo')->setHttpClient($this->getHttpClient()));
+        $Auth->setActionEndpoint('authenticate', $this->EndpointProvider->getEndpoint('oauth2Token')->setHttpClient($this->getHttpClient()));
+        $Auth->setActionEndpoint('refresh', $this->EndpointProvider->getEndpoint('oauth2Refresh')->setHttpClient($this->getHttpClient()));
+        $Auth->setActionEndpoint('logout', $this->EndpointProvider->getEndpoint('oauth2Logout')->setHttpClient($this->getHttpClient()));
+        $Auth->setActionEndpoint('sudo', $this->EndpointProvider->getEndpoint('oauth2Sudo')->setHttpClient($this->getHttpClient()));
         $Auth->setStorageController(new SugarStaticStorage());
     }
 
     /**
      * @inheritdoc
      */
-    protected function setAPIUrl()
-    {
+    protected function setAPIUrl() {
         $this->apiURL = self::configureApiUrl($this->server, $this->version);
         $Auth = $this->getAuth();
-        foreach($Auth->getActions() as $action){
+        foreach ($Auth->getActions() as $action) {
             $EP = $Auth->getActionEndpoint($action);
             $EP->setBaseUrl($this->apiURL);
         }
@@ -135,15 +129,15 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * @param null $password
      * @return bool
      */
-    public function login($username = NULL,$password = NULL){
-        $creds = array();
-        if ($username !== NULL){
+    public function login($username = NULL, $password = NULL) {
+        $creds = [];
+        if ($username !== NULL) {
             $creds['username'] = $username;
         }
-        if ($password !== NULL){
+        if ($password !== NULL) {
             $creds['password'] = $password;
         }
-        if (!empty($creds)){
+        if (!empty($creds)) {
             $this->getAuth()->updateCredentials($creds);
         }
         return $this->getAuth()->authenticate();
@@ -153,20 +147,19 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * Helper Method to Refresh Authentication Token
      * @return bool
      */
-    public function refreshToken(){
+    public function refreshToken() {
         $creds = $this->getAuth()->getCredentials();
-        if (isset($creds['client_id']) &&
-            isset($creds['client_secret'])){
+        if (isset($creds['client_id']) && isset($creds['client_secret'])) {
             return $this->getAuth()->refresh();
         }
-        return FALSE;
+        return true;
     }
 
     /**
      * Helper method to Logout of API
      * @return bool
      */
-    public function logout(){
+    public function logout() {
         return $this->getAuth()->logout();
     }
 
@@ -174,11 +167,12 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * @param $platform
      * @return $this
      */
-    public function setPlatform($platform): PlatformAwareInterface
-    {
+    public function setPlatform($platform): PlatformAwareInterface {
         $this->platform = $platform;
-        if (!isset($this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM]) ||
-            $this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM] !== $platform){
+        if (
+            !isset($this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM]) 
+            || $this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM] !== $platform
+        ) {
             $this->credentials[SugarOAuthController::OAUTH_PROP_PLATFORM] = $this->platform;
             $this->setCredentials($this->credentials);
         }
@@ -189,8 +183,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     /**
      * @return string
      */
-    public function getPlatform(): string
-    {
+    public function getPlatform(): string {
         return $this->platform;
     }
 
@@ -200,8 +193,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * @param $user string
      * @return bool
      */
-    public function sudo($user)
-    {
+    public function sudo($user): bool {
         return $this->getAuth()->sudo($user);
     }
 
@@ -209,19 +201,12 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * Check if authenticated, and attempt Refresh/Login if not
      * @return bool
      */
-    public function isAuthenticated()
-    {
+    public function isAuthenticated() {
         $Auth = $this->getAuth();
-        if ($Auth){
-            if (!$Auth->isAuthenticated()){
-                if (!$this->refreshToken()){
-                    return $this->login();
-                }
-            }
-        } else {
-            return FALSE;
+        $ret = true;
+        if ($Auth && !$Auth->isAuthenticated() && !$this->refreshToken()) {
+            $ret = $this->login();
         }
-        return TRUE;
+        return $ret;
     }
-
 }

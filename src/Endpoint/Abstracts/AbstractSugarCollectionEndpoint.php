@@ -32,7 +32,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @inehritdoc
      */
     protected static $_DEFAULT_PROPERTIES = array(
-        self::PROPERTY_AUTH => TRUE,
+        self::PROPERTY_AUTH => true,
         self::PROPERTY_DATA => array(
             AbstractEndpointData::DATA_PROPERTY_REQUIRED => array(),
             AbstractEndpointData::DATA_PROPERTY_DEFAULTS => array()

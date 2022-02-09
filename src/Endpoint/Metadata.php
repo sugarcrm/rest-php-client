@@ -27,7 +27,7 @@ class Metadata extends AbstractSugarEndpoint
      * @inheritdoc
      */
     protected static $_DEFAULT_PROPERTIES = array(
-        'auth' => TRUE,
+        'auth' => true,
         'httpMethod' => "GET"
     );
 
@@ -48,9 +48,9 @@ class Metadata extends AbstractSugarEndpoint
      */
     public function getPublic(){
         $this->setUrlArgs(array(self::METADATA_TYPE_PUBLIC));
-        $this->setProperty('auth',FALSE);
+        $this->setProperty('auth',true);
         $this->execute();
-        $this->setProperty('auth',TRUE);
+        $this->setProperty('auth',true);
         return $this;
     }
 }

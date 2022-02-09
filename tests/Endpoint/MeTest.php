@@ -1,13 +1,8 @@
 <?php
-/**
- * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
- */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
-
 use Sugarcrm\REST\Endpoint\Me;
-
 
 /**
  * Class MeTest
@@ -15,31 +10,25 @@ use Sugarcrm\REST\Endpoint\Me;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Me
  * @group MeTest
  */
-class MeTest extends \PHPUnit\Framework\TestCase
-{
+class MeTest extends \PHPUnit\Framework\TestCase {
 
-    public static function setUpBeforeClass(): void
-    {
+    public static function setUpBeforeClass(): void {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void
-    {
+    public static function tearDownAfterClass(): void {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
-    {
+    public function setUp(): void {
         parent::setUp();
     }
 
-    public function tearDown(): void
-    {
+    public function tearDown(): void {
         parent::tearDown();
     }
 
-    public function testConstruct()
-    {
+    public function testConstruct() {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $actions = $Reflection->getProperty('actions');
@@ -52,8 +41,7 @@ class MeTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::configureURL
      */
-    public function testConfigureUrl()
-    {
+    public function testConfigureUrl() {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $configureUrl = $Reflection->getMethod('configureURL');
@@ -61,61 +49,61 @@ class MeTest extends \PHPUnit\Framework\TestCase
         $action = $Reflection->getProperty('action');
         $action->setAccessible(true);
 
-        $this->assertEquals('me',$configureUrl->invoke($Me,array()));
-        $action->setValue($Me,$Me::USER_ACTION_PREFERENCES);
-        $this->assertEquals('me/preferences',$configureUrl->invoke($Me,array()));
-        $action->setValue($Me,$Me::USER_ACTION_SAVE_PREFERENCES);
-        $this->assertEquals('me/preferences',$configureUrl->invoke($Me,array()));
-        $action->setValue($Me,$Me::USER_ACTION_CREATE_PREFERENCE);
-        $this->assertEquals('me/preference/pref1',$configureUrl->invoke($Me,array('actionArg1' => 'pref1')));
-        $action->setValue($Me,$Me::MODEL_ACTION_DELETE);
-        $this->assertEquals('me',$configureUrl->invoke($Me,array('action' => 'preference')));
+        $this->assertEquals('me', $configureUrl->invoke($Me, []));
+        $action->setValue($Me, $Me::USER_ACTION_PREFERENCES);
+        $this->assertEquals('me/preferences', $configureUrl->invoke($Me, []));
+        $action->setValue($Me, $Me::USER_ACTION_SAVE_PREFERENCES);
+        $this->assertEquals('me/preferences', $configureUrl->invoke($Me, []));
+        $action->setValue($Me, $Me::USER_ACTION_CREATE_PREFERENCE);
+        $this->assertEquals('me/preference/pref1', $configureUrl->invoke($Me, ['actionArg1' => 'pref1']));
+        $action->setValue($Me, $Me::MODEL_ACTION_DELETE);
+        $this->assertEquals('me', $configureUrl->invoke($Me, array('action' => 'preference')));
     }
 
     /**
      * @covers ::configureAction
      */
-    public function testConfigureAction()
-    {
+    public function testConfigureAction() {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $configureAction = $Reflection->getMethod('configureAction');
         $configureAction->setAccessible(true);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_PREFERENCES);
+        $configureAction->invoke($Me, $Me::USER_ACTION_PREFERENCES);
         $properties = $Me->getProperties();
-        $this->assertEquals("GET",$properties['httpMethod']);
+        $this->assertEquals("GET", $properties['httpMethod']);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_SAVE_PREFERENCES);
+        $configureAction->invoke($Me, $Me::USER_ACTION_SAVE_PREFERENCES);
         $properties = $Me->getProperties();
-        $this->assertEquals("PUT",$properties['httpMethod']);
+        $this->assertEquals("PUT", $properties['httpMethod']);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_CREATE_PREFERENCE,array('foo'));
+        $configureAction->invoke($Me, $Me::USER_ACTION_CREATE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        $options = $Me->getOptions();
-        $this->assertEquals("POST",$properties['httpMethod']);
-        $this->assertArrayHasKey('actionArg1',$options);
-        $this->assertEquals('foo',$options['actionArg1']);
+        $options = $Me->getUrlArgs();
+        print_r($options);
+        $this->assertEquals("POST", $properties['httpMethod']);
+        $this->assertArrayHasKey('actionArg1', $options);
+        $this->assertEquals('foo', $options['actionArg1']);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_GET_PREFERENCE,array('foo'));
+        $configureAction->invoke($Me, $Me::USER_ACTION_GET_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        $options = $Me->getOptions();
-        $this->assertEquals("GET",$properties['httpMethod']);
-        $this->assertArrayHasKey('actionArg1',$options);
-        $this->assertEquals('foo',$options['actionArg1']);
+        $options = $Me->getUrlArgs();
+        $this->assertEquals("GET", $properties['httpMethod']);
+        $this->assertArrayHasKey('actionArg1', $options);
+        $this->assertEquals('foo', $options['actionArg1']);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_UPDATE_PREFERENCE,array('foo'));
+        $configureAction->invoke($Me, $Me::USER_ACTION_UPDATE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        $options = $Me->getOptions();
-        $this->assertEquals("PUT",$properties['httpMethod']);
-        $this->assertArrayHasKey('actionArg1',$options);
-        $this->assertEquals('foo',$options['actionArg1']);
+        $options = $Me->getUrlArgs();
+        $this->assertEquals("PUT", $properties['httpMethod']);
+        $this->assertArrayHasKey('actionArg1', $options);
+        $this->assertEquals('foo', $options['actionArg1']);
 
-        $configureAction->invoke($Me,$Me::USER_ACTION_DELETE_PREFERENCE,array('foo'));
+        $configureAction->invoke($Me, $Me::USER_ACTION_DELETE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        $options = $Me->getOptions();
-        $this->assertEquals("DELETE",$properties['httpMethod']);
-        $this->assertArrayHasKey('actionArg1',$options);
-        $this->assertEquals('foo',$options['actionArg1']);
+        $options = $Me->getUrlArgs();
+        $this->assertEquals("DELETE", $properties['httpMethod']);
+        $this->assertArrayHasKey('actionArg1', $options);
+        $this->assertEquals('foo', $options['actionArg1']);
     }
 }

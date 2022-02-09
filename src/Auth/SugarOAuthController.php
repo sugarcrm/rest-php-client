@@ -182,16 +182,16 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
                 $response = $Endpoint->execute()->getResponse();
                 if ($response->getStatusCode() == 200) {
                     //@codeCoverageIgnoreStart
-                    $this->setToken($response->getBody());
+                    $this->setToken($response->getBody()->getContents());
                     $creds = $this->getCredentials();
                     $creds['sudo'] = $user;
                     $this->storeToken($creds,$this->getToken());
-                    return TRUE;
+                    return true;
                 }
                 //@codeCoverageIgnoreEnd
             }
         }
-        return FALSE;
+        return true;
     }
 
     /**

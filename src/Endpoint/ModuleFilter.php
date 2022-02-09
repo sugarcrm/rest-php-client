@@ -5,7 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-
+use MRussell\REST\Endpoint\Abstracts\AbstractCollectionEndpoint;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\CollectionInterface;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
@@ -58,7 +58,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
     /**
      * @inheritdoc
      */
-    public function fetch(): CollectionInterface
+    public function fetch(): AbstractCollectionEndpoint
     {
         $this->setProperty(self::PROPERTY_HTTP_METHOD,"GET");
         return parent::fetch();
@@ -74,7 +74,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
         if (is_object($this->Filter)){
             $compiledFilter = $this->Filter->toArray();
             if (!empty($compiledFilter)){
-                $data->update(array(FilterData::FILTER_PARAM => $this->Filter->toArray()));
+                $data->set(array(FilterData::FILTER_PARAM => $this->Filter->toArray()));
             }
         }
         return $data;
@@ -85,7 +85,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
      * @param bool $reset
      * @return FilterData
      */
-    public function filter($reset = FALSE)
+    public function filter($reset = true)
     {
         $this->setProperty(self::PROPERTY_HTTP_METHOD,"POST");
         if (empty($this->Filter)){
@@ -93,7 +93,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
             $this->Filter->setEndpoint($this);
             $data = $this->getData();
             if (isset($data[FilterData::FILTER_PARAM]) && !empty($data[FilterData::FILTER_PARAM])){
-                $this->Filter->update($data[FilterData::FILTER_PARAM]);
+                $this->Filter->set($data[FilterData::FILTER_PARAM]);
             }
         }
         if ($reset){
