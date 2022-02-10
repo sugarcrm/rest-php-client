@@ -145,12 +145,27 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
      */
     public function testFilter() {
         self::$client->mockResponses->append(new Response(200));
-        self::$client->mockResponses->append(new Response(200));
         
+        $sampleData = [
+            "filter" => [
+                [ 'foo' => [ '$equals' => 'bar' ] ]
+            ]
+        ];
+
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setHttpClient(self::$client->getHttpClient());
         $ModuleFilter->setModule('Foo');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $Filter = $ModuleFilter->filter();
+        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
+        $this->assertEquals([], $Filter->toArray());
+        $Filter->equals('foo', 'bar');
+        $this->assertEquals($sampleData['filter'], $Filter->compile());
+
+        $Filter = $ModuleFilter->filter();
+        $this->assertEquals([], $Filter->compile());
+        $ModuleFilter->setData($sampleData);
+
         $Filter = $ModuleFilter->filter();
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
         $this->assertEquals($ModuleFilter, $Filter->execute());
@@ -158,39 +173,9 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $Filter->equals('foo', 'bar');
         $this->assertEquals($Filter, $ModuleFilter->filter(true));
         $this->assertEquals(array(), $Filter->toArray(true));
-        $ModuleFilter->setData(array(
-            'filter' => array(
-                array(
-                    '$equals' => array(
-                        'bar' => 'foo'
-                    )
-                )
-            )
-        ));
-        $Filter = $ModuleFilter->filter(true);
         $data = $ModuleFilter->getData();
         $this->assertEmpty($data['filter']);
 
-        $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setHttpClient(self::$client->getHttpClient());
-        $ModuleFilter->setData(array(
-            'filter' => array(
-                array(
-                    '$equals' => array(
-                        'bar' => 'foo'
-                    )
-                )
-            )
-        ));
-        $Filter = $ModuleFilter->filter();
-        print_r($Filter->getData()->toArray());
-        $this->assertEquals(array(
-            array(
-                '$equals' => array(
-                    'bar' => 'foo'
-                )
-            )
-        ), $Filter->toArray());
     }
 
     /**

@@ -19,6 +19,7 @@ abstract class AbstractSugarEndpoint extends Endpoint implements SugarEndpointIn
      * @codeCoverageIgnore
      */
     public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
+        return $this->buildRequest();
+        // return $this->configureRequest($this->getRequest());
     }
 }
