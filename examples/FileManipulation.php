@@ -15,7 +15,7 @@ if (file_exists($file) && is_readable($file)) {
             $Note->save();
             echo "Saved Note ID: {$Note['id']}<br>";
             echo "Attempting to attach $file...";
-            $Note->attachFile('filename', $file,TRUE,'text/plain','testtest.txt');
+            $Note->attachFile('filename', $file,true,'text/plain','testtest.txt');
             $response = $Note->getResponse()->getBody();
             //echo "<pre>" . print_r($Note->getRequest(), true) . "</pre>";
             echo "File uploaded: ";

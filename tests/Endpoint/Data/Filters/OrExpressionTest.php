@@ -1,9 +1,4 @@
 <?php
-/**
- * User: mrussell
- * Date: 4/30/17
- * Time: 4:21 PM
- */
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data\Filters;
 
@@ -16,36 +11,29 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression
  * @group OrExpressionTest
  */
-class OrExpressionTest extends \PHPUnit_Framework_TestCase
-{
+class OrExpressionTest extends \PHPUnit\Framework\TestCase {
 
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass(): void {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass()
-    {
+    public static function tearDownAfterClass(): void {
         //Add Tear Down for static properties here
     }
 
-    public function setUp()
-    {
+    public function setUp(): void {
         parent::setUp();
     }
 
-    public function tearDown()
-    {
+    public function tearDown(): void {
         parent::tearDown();
     }
 
     /**
      * @covers ::compile
      */
-    public function testCompile()
-    {
+    public function testCompile() {
         $Expression = new OrExpression();
-        $this->assertArrayHasKey(OrExpression::OPERATOR,$Expression->compile());
+        $this->assertArrayHasKey(OrExpression::OPERATOR, $Expression->compile());
     }
-
 }

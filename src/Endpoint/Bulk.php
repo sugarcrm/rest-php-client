@@ -29,7 +29,7 @@ class Bulk extends AbstractSmartSugarEndpoint
      * @var array
      */
     protected static $_DEFAULT_PROPERTIES = array(
-        self::PROPERTY_AUTH => TRUE,
+        self::PROPERTY_AUTH => true,
         self::PROPERTY_HTTP_METHOD => "POST",
         self::PROPERTY_DATA => array(
             EndpointData::DATA_PROPERTY_REQUIRED => array(

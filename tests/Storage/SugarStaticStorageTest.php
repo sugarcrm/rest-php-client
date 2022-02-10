@@ -14,29 +14,29 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @coversDefaultClass Sugarcrm\REST\Storage\SugarStaticStorage
  * @group SugarStaticStorageTest
  */
-class SugarStaticStorageTest extends \PHPUnit_Framework_TestCase
+class SugarStaticStorageTest extends \PHPUnit\Framework\TestCase
 {
 
     protected $token = array(
         'access_token' => '1234'
     );
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         //Add Tear Down for static properties here
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }

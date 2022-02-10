@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
@@ -22,22 +23,15 @@ use MRussell\REST\Endpoint\ModelEndpoint;
  * @method $this    deletePreference(string $preference)
  * @method $this    following()
  */
-class Me extends ModelEndpoint implements SugarEndpointInterface
-{
+class Me extends ModelEndpoint implements SugarEndpointInterface {
     const MODEL_ACTION_VAR = 'action';
 
     const USER_ACTION_PREFERENCES = 'preferences';
-
     const USER_ACTION_SAVE_PREFERENCES = 'savePreferences';
-
     const USER_ACTION_GET_PREFERENCE = 'preference';
-
     const USER_ACTION_CREATE_PREFERENCE = 'createPreference';
-
     const USER_ACTION_UPDATE_PREFERENCE = 'updatePreference';
-
     const USER_ACTION_DELETE_PREFERENCE = 'deletePreference';
-
     const USER_ACTION_FOLLOWING = 'following';
 
     protected static $_DEFAULT_PROPERTIES = array(
@@ -63,10 +57,9 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
         self::USER_ACTION_FOLLOWING => "GET"
     );
 
-    public function __construct(array $options = array(), array $properties = array())
-    {
+    public function __construct(array $options = [], array $properties = []) {
         parent::__construct($options, $properties);
-        foreach(static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method){
+        foreach (static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method) {
             $this->actions[$action] = $method;
         }
     }
@@ -75,17 +68,17 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function compileRequest(){
-        return $this->configureRequest($this->getRequest());
+    public function compileRequest() {
+        return $this->configureRequest($this->getRequest(), []);
     }
 
     /**
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
-    protected function configureURL(array $options) {
+    protected function configureURL(array $options): string {
         $action = $this->getCurrentAction();
-        switch($action){
+        switch ($action) {
             case self::USER_ACTION_SAVE_PREFERENCES:
                 $action = self::USER_ACTION_PREFERENCES;
                 break;
@@ -101,10 +94,10 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
                 $action = NULL;
                 break;
         }
-        if ($action !== NULL){
+        if ($action !== NULL) {
             $options[self::MODEL_ACTION_VAR] = $action;
         } else {
-            if (isset($options[self::MODEL_ACTION_VAR])){
+            if (isset($options[self::MODEL_ACTION_VAR])) {
                 unset($options[self::MODEL_ACTION_VAR]);
             }
         }
@@ -114,14 +107,14 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
     /**
      * @inheritdoc
      */
-    protected function configureAction($action,array $arguments = array()) {
-        if (!empty($arguments)){
-            switch($action){
+    protected function configureAction($action, array $arguments = []) {
+        if (!empty($arguments)) {
+            switch ($action) {
                 case self::USER_ACTION_GET_PREFERENCE:
                 case self::USER_ACTION_UPDATE_PREFERENCE:
                 case self::USER_ACTION_DELETE_PREFERENCE:
                 case self::USER_ACTION_CREATE_PREFERENCE:
-                    if (isset($arguments[0])){
+                    if (isset($arguments[0])) {
                         $this->options['actionArg1'] = $arguments[0];
                     }
             }

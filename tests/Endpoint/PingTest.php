@@ -1,13 +1,9 @@
 <?php
-/**
- * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
- */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
 use Sugarcrm\REST\Endpoint\Ping;
-use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
-
+use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
 /**
  * Class PingTest
@@ -15,39 +11,38 @@ use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Ping
  * @group PingTest
  */
-class PingTest extends \PHPUnit_Framework_TestCase
-{
+class PingTest extends \PHPUnit\Framework\TestCase {
+    /**
+     * @var Client
+     */
+    protected static $client;
 
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass(): void {
         //Add Setup for static properties here
+        self::$client = new Client();
     }
 
-    public static function tearDownAfterClass()
-    {
+    public static function tearDownAfterClass(): void {
         //Add Tear Down for static properties here
     }
 
-    public function setUp()
-    {
+    public function setUp(): void {
         parent::setUp();
     }
 
-    public function tearDown()
-    {
+    public function tearDown(): void {
         parent::tearDown();
     }
 
     /**
      * @covers ::whattimeisit
      */
-    public function testWhattimeisit()
-    {
+    public function testWhattimeisit() {
+        self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Ping = new Ping();
+        $Ping->setHttpClient(self::$client->getHttpClient());
         $Ping->setBaseUrl('http://localhost/rest/v10');
         $Ping->whattimeisit();
-        $this->assertEquals('http://localhost/rest/v10/ping/whattimeisit',$Ping->getRequest()->getURL());
-        $this->assertEquals(array(),$Ping->getOptions());
+        $this->assertEquals('http://localhost/rest/v10/ping/whattimeisit', $Ping->getRequest()->getUri());
     }
-
 }

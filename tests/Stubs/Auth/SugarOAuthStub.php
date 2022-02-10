@@ -10,26 +10,25 @@ namespace Sugarcrm\REST\Tests\Stubs\Auth;
 
 use Sugarcrm\REST\Auth\SugarOAuthController;
 
-class SugarOAuthStub extends SugarOAuthController
-{
+class SugarOAuthStub extends SugarOAuthController {
     protected $token = array(
         'access_token' => 'bar',
         'refresh_token' => 'foo',
         'expires_in' => '3600'
     );
 
-    public function authenticate()
+    public function authenticate(): bool
     {
-        return TRUE;
+        return true;
     }
 
-    public function refresh()
+    public function refresh(): bool
     {
-        return TRUE;
+        return true;
     }
 
-    public function logout()
+    public function logout(): bool
     {
-        return TRUE;
+        return true;
     }
-}
+} 

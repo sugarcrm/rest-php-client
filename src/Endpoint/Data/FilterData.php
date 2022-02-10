@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ©[2019] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
@@ -8,15 +9,20 @@ namespace Sugarcrm\REST\Endpoint\Data;
 use MRussell\REST\Endpoint\Abstracts\AbstractSmartEndpoint;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\Data\DataInterface;
+use MRussell\REST\Endpoint\Traits\ArrayObjectAttributesTrait;
+use MRussell\REST\Endpoint\Traits\ClearAttributesTrait;
+use MRussell\REST\Endpoint\Traits\GetAttributesTrait;
+use MRussell\REST\Endpoint\Traits\PropertiesTrait;
+use MRussell\REST\Endpoint\Traits\SetAttributesTrait;
 use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression;
-use Sugarcrm\REST\Endpoint\ModuleFilter;
 
 /**
  * Class FilterData
  * @package Sugarcrm\REST\Endpoint\Data
  */
-class FilterData extends AbstractExpression implements DataInterface
-{
+class FilterData extends AbstractExpression implements DataInterface {
+    use ArrayObjectAttributesTrait, PropertiesTrait, GetAttributesTrait, SetAttributesTrait, ClearAttributesTrait;
+
     const FILTER_PARAM = 'filter';
 
     /**
@@ -24,139 +30,21 @@ class FilterData extends AbstractExpression implements DataInterface
      */
     private $Endpoint;
 
-    /**
-     * The array representation of the Data
-     * @var array
-     */
-    private $data = array();
-
-    /**
-     * The properties Array that provide useful attributes to internal logic of Data
-     * @var array
-     */
-    protected $properties;
 
     //Overloads
-    public function __construct(AbstractSmartEndpoint $Endpoint = NULL)
-    {
-        if ($Endpoint !== NULL){
+    public function __construct(AbstractSmartEndpoint $Endpoint = NULL) {
+        if ($Endpoint !== NULL) {
             $this->setEndpoint($Endpoint);
         }
-    }
-
-    //Array Access
-    /**
-     * Assigns a value to the specified offset
-     * @param string $offset - The offset to assign the value to
-     * @param mixed $value - The value to set
-     * @abstracting ArrayAccess
-     */
-    public function offsetSet($offset,$value)
-    {
-        if (is_null($offset)) {
-            $this->data[] = $value;
-        } else {
-            $this->data[$offset] = $value;
-        }
-    }
-
-    /**
-     * Whether or not an offset exists
-     * @param string $offset - An offset to check for
-     * @return boolean
-     * @abstracting ArrayAccess
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->data[$offset]);
-    }
-
-    /**
-     * Unsets an offset
-     * @param string $offset - The offset to unset
-     * @abstracting ArrayAccess
-     */
-    public function offsetUnset($offset)
-    {
-        if ($this->offsetExists($offset)) {
-            unset($this->data[$offset]);
-        }
-    }
-
-    /**
-     * Returns the value at specified offset
-     * @param string $offset - The offset to retrieve
-     * @return mixed
-     * @abstracting ArrayAccess
-     */
-    public function offsetGet($offset)
-    {
-        return $this->offsetExists($offset) ? $this->data[$offset] : null;
-    }
-
-    //Data Interface
-    /**
-     * Return the entire Data array
-     * @param bool $compile - Whether or not to verify if Required Data is filled in
-     * @return array
-     */
-    public function toArray($compile = TRUE): array
-    {
-        if ($compile){
-            $data = $this->compile();
-            $this->data = array_replace_recursive($this->data,$data);
-        }
-        return $this->data;
-    }
-
-    /**
-     * Get the current Data Properties
-     * @return array
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * Set properties for data
-     * @param array $properties
-     * @return $this
-     */
-    public function setProperties(array $properties) : void
-    {
-        $this->properties = $properties;
     }
 
     /**
      * Set Data back to Defaults and clear out data
      * @return AbstractEndpointData
      */
-    public function reset(): DataInterface
-    {
+    public function reset(): DataInterface {
+        $this->filters = [];
         return $this->clear();
-    }
-
-    /**
-     * Clear out data array
-     * @return $this
-     */
-    public function clear(): DataInterface
-    {
-        $this->data = array();
-        parent::clear();
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function update(array $data): DataInterface
-    {
-        foreach($data as $key => $value){
-            $this->data[$key] = $value;
-        }
-        return $this;
     }
 
     /**
@@ -164,8 +52,7 @@ class FilterData extends AbstractExpression implements DataInterface
      * @param AbstractSmartEndpoint $Endpoint
      * @return self
      */
-    public function setEndpoint(AbstractSmartEndpoint $Endpoint): FilterData
-    {
+    public function setEndpoint(AbstractSmartEndpoint $Endpoint): FilterData {
         $this->Endpoint = $Endpoint;
         return $this;
     }
@@ -175,8 +62,7 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return AbstractSmartEndpoint
      * @codeCoverageIgnore
      */
-    public function getEndpoint(): AbstractSmartEndpoint
-    {
+    public function getEndpoint(): AbstractSmartEndpoint {
         return $this->Endpoint;
     }
 
@@ -184,14 +70,10 @@ class FilterData extends AbstractExpression implements DataInterface
      * @return AbstractSmartEndpoint|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function execute()
-    {
-        if (isset($this->Endpoint)){
-            $filter = $this->toArray();
-            $this->Endpoint->getData()->update(array(self::FILTER_PARAM => $filter));
-            return $this->Endpoint->execute();
+    public function execute() {
+        if (isset($this->Endpoint)) {
+            return $this->Endpoint->execute($this->toArray());
         }
         return false;
     }
-
 }
