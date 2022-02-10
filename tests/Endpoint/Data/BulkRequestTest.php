@@ -18,6 +18,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
             'url' => '/v10/Accounts',
             'method' => 'POST',
             'headers' => array(
+                'Host: localhost',
                 'Content-Type: application/json'
             ),
             'data' => '{"foo":"bar"}'
@@ -26,9 +27,10 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
             'url' => '/v10/Contacts/filter',
             'method' => 'POST',
             'headers' => array(
+                'Host: localhost',
                 'Content-Type: application/json'
             ),
-            'data' => '{"filter":[{"foo":{"$equals":"bar"}}],"offset":0,"max_num":20}'
+            'data' => '{"offset":0,"max_num":20,"filter":[{"foo":{"$equals":"bar"}}]}'
         ),
     );
 
@@ -54,7 +56,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
     public function testAsArray() {
         $Data = new BulkRequest();
 
-        $Request = new Request("POST", 'http://localhost/rest/v10/Accounts', [], json_encode(['foo' => 'bar']));
+        $Request = new Request("POST", 'http://localhost/rest/v10/Accounts', ['Content-Type' => 'application/json'], json_encode(['foo' => 'bar']));
 
         $Filter = new ModuleFilter(['Contacts']);
         $Filter->setBaseUrl('http://localhost/rest/v10');
@@ -91,7 +93,8 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $ReflectedData = new \ReflectionClass('Sugarcrm\\REST\\Endpoint\\Data\\BulkRequest');
         $extractRequest = $ReflectedData->getMethod('extractRequest');
         $extractRequest->setAccessible(true);
-        $Request = new Request("POST", "http://localhost/rest/v10/Accounts");
+        $testBodyData = json_encode(['foo' => 'bar']);
+        $Request = new Request("POST", "http://localhost/rest/v10/Accounts", [], $testBodyData);
         $result = $extractRequest->invoke($Data, $Request);
         $this->assertArrayHasKey('url', $result);
         $this->assertEquals('/v10/Accounts', $result['url']);
@@ -99,7 +102,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals("POST", $result['method']);
         $this->assertArrayHasKey('headers', $result);
         $this->assertArrayHasKey('data', $result);
-        $this->assertEquals(json_encode(array('foo' => 'bar')), $result['data']);
+        $this->assertEquals($testBodyData, $result['data']);
 
         $Data = new BulkRequest();
         $ReflectedData = new \ReflectionClass('Sugarcrm\\REST\\Endpoint\\Data\\BulkRequest');

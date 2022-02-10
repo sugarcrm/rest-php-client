@@ -69,7 +69,8 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
      * @codeCoverageIgnore
      */
     public function compileRequest() {
-        return $this->configureRequest($this->getRequest(), []);
+        return $this->buildRequest();
+        // return $this->configureRequest($this->getRequest(), []);
     }
 
     /**

@@ -79,8 +79,19 @@ class BulkRequest extends AbstractEndpointData {
         return array(
             'url' => "/" . $urlArray[1],
             'method' => $Request->getMethod(),
-            'headers' => $Request->getHeaders(),
+            'headers' => $this->normaliseHeaders($Request->getHeaders()),
             'data' => $Request->getBody()->getContents()
         );
     }
+
+    private function normaliseHeaders(array $headers): array {
+        $normalisedHeaders = [];
+        foreach ($headers as $name => $values) { 
+            foreach ($values as $value) { 
+                $normalisedHeaders[] = sprintf('%s: %s', $name, $value);
+            }
+        }
+        return $normalisedHeaders;
+    }
+    
 }

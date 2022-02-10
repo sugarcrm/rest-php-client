@@ -100,7 +100,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Current Module
      * @var string
      */
-    protected $module;
+    protected $module = "";
 
     /**
      * Whether or not a file upload is occurring

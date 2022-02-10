@@ -152,7 +152,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
         if (isset($creds['client_id']) && isset($creds['client_secret'])) {
             return $this->getAuth()->refresh();
         }
-        return true;
+        return false;
     }
 
     /**
