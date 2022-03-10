@@ -42,18 +42,16 @@ class MetadataTest extends \PHPUnit\Framework\TestCase {
     public function testGetMetadataTypes() {
         self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Metadata = new Metadata();
-        $Metadata->setHttpClient(self::$client->getHttpClient());
+        $Metadata->setClient(self::$client);
         // $Metadata->setAuth(new SugarOAuthController());
         $Metadata->setBaseUrl('http://localhost/rest/v10');
         $Metadata->getHash();
-        $request = $Metadata->getRequest();
         $this->assertEquals(array($Metadata::METADATA_TYPE_HASH), $Metadata->getUrlArgs());
-        $this->assertEquals('http://localhost/rest/v10/metadata/_hash', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v10/metadata/_hash', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         
         self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Metadata->getPublic();
-        $request = $Metadata->getRequest();
         $this->assertEquals(array($Metadata::METADATA_TYPE_PUBLIC), $Metadata->getUrlArgs());
-        $this->assertEquals('http://localhost/rest/v10/metadata/public', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v10/metadata/public', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
     }
 }

@@ -155,6 +155,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
      * @covers Sugarcrm\REST\Client\SugarApi::sudo
      */
     public function testSudo() {
+        self::$client->container = [];
         self::$client->mockResponses->append(new Response(200, [], json_encode(['access_token' => 'at-bar'])));
 
         $Auth = new SugarOAuthStub();
@@ -166,12 +167,12 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
             'platform' => 'api'
         ));
         $EP = new OAuth2Sudo();
-        $EP->setHttpClient(self::$client->getHttpClient());
+        $EP->setClient(self::$client);
         $EP->setBaseUrl('http://localhost/rest/v10');
         $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO, $EP);
         $Auth->sudo('max');
-        $request = $EP->getRequest();
-        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max', $request->getUri());
+        $request = current(self::$client->container)['request'];
+        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max', $request->getUri()->__toString());
         $this->assertEquals('{"platform":"api","client_id":"sugar"}', $request->getBody()->getContents());
     }
 }

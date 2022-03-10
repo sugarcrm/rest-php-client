@@ -82,12 +82,12 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         self::$client->mockResponses->append(new Response(200));
         
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setHttpClient(self::$client->getHttpClient());
+        $ModuleFilter->setClient(self::$client);
 
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->fetch();
-        $this->assertEquals('http://localhost/rest/v10/Accounts/filter', $ModuleFilter->getRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v10/Accounts/filter', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         $properties = $ModuleFilter->getProperties();
         $this->assertEquals("GET", $properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
@@ -105,7 +105,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         self::$client->mockResponses->append(new Response(200));
 
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setHttpClient(self::$client->getHttpClient());
+        $ModuleFilter->setClient(self::$client);
         $Reflection = new \ReflectionClass(get_class($ModuleFilter));
         $configurePayload = $Reflection->getMethod('configurePayload');
         $configurePayload->setAccessible(true);
@@ -153,7 +153,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         ];
 
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setHttpClient(self::$client->getHttpClient());
+        $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Foo');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $Filter = $ModuleFilter->filter();
@@ -185,10 +185,10 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         self::$client->mockResponses->append(new Response(200));
         
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setHttpClient(self::$client->getHttpClient());
+        $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10/');
         $this->assertEquals($ModuleFilter, $ModuleFilter->count());
-        $this->assertEquals('http://localhost/rest/v10/Accounts/filter/count', $ModuleFilter->getRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v10/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
     }
 }

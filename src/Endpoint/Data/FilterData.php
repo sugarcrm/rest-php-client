@@ -21,14 +21,17 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression;
  * @package Sugarcrm\REST\Endpoint\Data
  */
 class FilterData extends AbstractExpression implements DataInterface {
-    use ArrayObjectAttributesTrait, PropertiesTrait, GetAttributesTrait, SetAttributesTrait, ClearAttributesTrait;
+    use PropertiesTrait, GetAttributesTrait, SetAttributesTrait, ClearAttributesTrait;
+    use ArrayObjectAttributesTrait {
+        toArray as protected attributesArray;
+    }
 
     const FILTER_PARAM = 'filter';
 
     /**
      * @var AbstractSmartEndpoint
      */
-    private $Endpoint;
+    private $endpoint;
 
 
     //Overloads
@@ -49,11 +52,11 @@ class FilterData extends AbstractExpression implements DataInterface {
 
     /**
      * Set the Endpoint using the Filter Data
-     * @param AbstractSmartEndpoint $Endpoint
+     * @param AbstractSmartEndpoint $endpoint
      * @return self
      */
-    public function setEndpoint(AbstractSmartEndpoint $Endpoint): FilterData {
-        $this->Endpoint = $Endpoint;
+    public function setEndpoint(AbstractSmartEndpoint $endpoint): FilterData {
+        $this->endpoint = $endpoint;
         return $this;
     }
 
@@ -62,8 +65,8 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @return AbstractSmartEndpoint
      * @codeCoverageIgnore
      */
-    public function getEndpoint(): AbstractSmartEndpoint {
-        return $this->Endpoint;
+    public function getEndpoint() {
+        return $this->endpoint;
     }
 
     /**
@@ -71,9 +74,26 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
     public function execute() {
-        if (isset($this->Endpoint)) {
-            return $this->Endpoint->execute($this->toArray());
+        $endpoint = $this->getEndpoint();
+        if ($endpoint) {
+            $endpoint->getData()->set([FilterData::FILTER_PARAM => $this->toArray()]);
+            return $endpoint->execute();
         }
         return false;
+    }
+
+    /**
+     * Return the entire Data array
+     * @param bool $compile - Whether or not to verify if Required Data is filled in
+     * @return array
+     */
+    public function toArray($compile = TRUE): array {
+        if ($compile){
+            $data = $this->compile();
+            if (!empty($data)){
+                $this->attributes = array_replace_recursive($this->attributes,$data);
+            }
+        }
+        return $this->attributes;
     }
 }

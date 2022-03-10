@@ -24,6 +24,10 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method \Sugarcrm\REST\Endpoint\Me               me()
  * @method \Sugarcrm\REST\Endpoint\Enum             enum(string $module = '',string $field = '')
  * @method \Sugarcrm\REST\Endpoint\Bulk             bulk()
+ * @method \Sugarcrm\REST\Endpoint\OAuth2Token      oauth2Token() - Use login()
+ * @method \Sugarcrm\REST\Endpoint\OAuth2Refresh    oauth2Refresh() - Use refresh()
+ * @method \Sugarcrm\REST\Endpoint\OAuth2Logout     oauth2Logout() - Use logout()
+ * @method \Sugarcrm\REST\Endpoint\OAuth2Sudo       oauth2Sudo() - Use sudo()
  */
 class SugarApi extends AbstractClient implements PlatformAwareInterface {
     const PLATFORM_BASE = 'base';
@@ -104,10 +108,10 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
         $this->setAuth(new SugarOAuthController());
 
         $Auth = $this->getAuth();
-        $Auth->setActionEndpoint('authenticate', $this->EndpointProvider->getEndpoint('oauth2Token')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('refresh', $this->EndpointProvider->getEndpoint('oauth2Refresh')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('logout', $this->EndpointProvider->getEndpoint('oauth2Logout')->setHttpClient($this->getHttpClient()));
-        $Auth->setActionEndpoint('sudo', $this->EndpointProvider->getEndpoint('oauth2Sudo')->setHttpClient($this->getHttpClient()));
+        $Auth->setActionEndpoint('authenticate', $this->oauth2Token());
+        $Auth->setActionEndpoint('refresh', $this->oauth2Refresh());
+        $Auth->setActionEndpoint('logout', $this->oauth2Logout());
+        $Auth->setActionEndpoint('sudo', $this->oauth2Sudo());
         $Auth->setStorageController(new SugarStaticStorage());
     }
 

@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./tests/bootstrap.php"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="./tests/bootstrap.php"
+         cacheResultFile=".phpunit.cache/test-results"
+         executionOrder="depends,defects"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         convertDeprecationsToExceptions="true"
+         verbose="true"
          backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
          processIsolation="false"
          stopOnFailure="false">
+    <!--    beStrictAboutCoversAnnotation="true"-->
+    <!--         forceCoversAnnotation="true"-->
+    <!--         failOnRisky="true"-->
+    <!--         failOnWarning="true"-->
     <testsuites>
-        <testsuite name="SugarCRM-Rest-PHP-Client">
-            <directory>./tests</directory>
+        <testsuite name="Rest-PHP-Client">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <coverage processUncoveredFiles="true">
+
+    <coverage cacheDirectory=".phpunit.cache/code-coverage"
+              processUncoveredFiles="true">
         <include>
             <directory suffix=".php">src</directory>
         </include>
-
-        <exclude>
-            <directory suffix=".php">./</directory>
-            <file>./tests/bootstrap.php</file>
-        </exclude>
     </coverage>
 </phpunit>

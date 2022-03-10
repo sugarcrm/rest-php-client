@@ -30,7 +30,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     /**
      * @var FilterData
      */
-    protected $Filter;
+    protected $filter;
 
     /**
      * @var EndpointData
@@ -69,13 +69,8 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      */
     protected function configurePayload() {
         $data = parent::configurePayload();
-        if (is_object($this->Filter)) {
-            // Important to compile the filters
-            // FIXME: mrussell to review
-            // In the meeting it felt like it was not failing but after couple more test I found 
-            // out disabling it causes Sugarcrm\REST\Tests\Endpoint\Data\BulkRequestTest::testAsArray 
-            // to fail. 
-            $compiledFilter = $this->Filter->compile();
+        if (is_object($this->filter)) {
+            $compiledFilter = $this->filter->compile();
             
             if (!empty($compiledFilter)) {
                 $data->set([FilterData::FILTER_PARAM => $compiledFilter]);
@@ -91,23 +86,23 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      */
     public function filter($reset = true) {
         $this->setProperty(self::PROPERTY_HTTP_METHOD, "POST");
-        if (empty($this->Filter)) {
-            $this->Filter = new FilterData();
-            $this->Filter->setEndpoint($this);
+        if (empty($this->filter)) {
+            $this->filter = new FilterData();
+            $this->filter->setEndpoint($this);
             $data = $this->getData()->toArray();
             if (isset($data[FilterData::FILTER_PARAM]) && !empty($data[FilterData::FILTER_PARAM])) {
-                $this->Filter->set($data[FilterData::FILTER_PARAM]);
+                $this->filter->set($data[FilterData::FILTER_PARAM]);
             }
         }
         if ($reset) {
-            $this->Filter->reset();
+            $this->filter->reset();
             $data = $this->getData()->toArray();
             if (isset($data[FilterData::FILTER_PARAM]) && !empty($data[FilterData::FILTER_PARAM])) {
                 unset($data[FilterData::FILTER_PARAM]);
                 $this->setData($data);
             }
         }
-        return $this->Filter;
+        return $this->filter;
     }
     
 
