@@ -80,7 +80,7 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
     public function testConstructor() {
         $Filter = new FilterData();
         $ReflectedFilter = new \ReflectionClass('Sugarcrm\REST\Endpoint\Data\FilterData');
-        $endpoint = $ReflectedFilter->getProperty('Endpoint');
+        $endpoint = $ReflectedFilter->getProperty('endpoint');
         $endpoint->setAccessible(true);
         $this->assertEmpty($endpoint->getValue($Filter));
         $Endpoint = new ModuleFilter();
@@ -98,11 +98,11 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
      * @covers ::offsetGet
      * @covers ::offsetExists
      * @covers ::offsetUnset
-     * @covers ::asArray
+     * @covers ::toArray
      * @covers ::compile
      * @covers ::reset
      * @covers ::clear
-     * @covers ::update
+     * @covers ::set
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression::__call
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression::compile
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression::clear

@@ -51,7 +51,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @covers ::asArray
+     * @covers ::toArray
      */
     public function testAsArray() {
         $Data = new BulkRequest();

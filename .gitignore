@@ -5,3 +5,4 @@ composer.lock
 coverage/
 docs/
 .phpunit*
+.DS_STORE

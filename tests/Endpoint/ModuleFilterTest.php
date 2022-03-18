@@ -87,7 +87,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->fetch();
-        $this->assertEquals('http://localhost/rest/v10/Accounts/filter', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('/rest/v10/Accounts/filter', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $properties = $ModuleFilter->getProperties();
         $this->assertEquals("GET", $properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
@@ -189,6 +189,6 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v10/');
         $this->assertEquals($ModuleFilter, $ModuleFilter->count());
-        $this->assertEquals('http://localhost/rest/v10/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('/rest/v10/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
     }
 }

@@ -30,6 +30,8 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method \Sugarcrm\REST\Endpoint\OAuth2Sudo       oauth2Sudo() - Use sudo()
  */
 class SugarApi extends AbstractClient implements PlatformAwareInterface {
+    use PlatformAwareTrait;
+
     const PLATFORM_BASE = 'base';
     const API_VERSION = "10";
     const API_URL = '/rest/v%s/';

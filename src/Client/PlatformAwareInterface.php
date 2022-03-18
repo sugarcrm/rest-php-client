@@ -7,7 +7,16 @@ namespace Sugarcrm\REST\Client;
  */
 interface PlatformAwareInterface
 {
-    public function setPlatform(string $platform): self;
+    /**
+     * Set the API platform
+     * @param string $platform
+     * @return mixed
+     */
+    public function setPlatform(string $platform);
 
+    /**
+     * Get the API Platform
+     * @return string
+     */
     public function getPlatform(): string;
 }

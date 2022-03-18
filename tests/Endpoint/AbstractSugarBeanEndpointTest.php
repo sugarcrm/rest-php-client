@@ -50,7 +50,6 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Request = $Bean->compileRequest();
         $this->assertEquals("GET", $Request->getMethod());
         $this->assertEquals('http://localhost/rest/v10/Foo/bar', $Request->getUri()->__toString());
-        print_r($Request->getBody()->getContents());
         $this->assertEmpty($Request->getBody()->getContents());
     }
 
@@ -108,9 +107,9 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean->setClient(self::$client);
         $Bean->setBaseUrl('http://localhost/rest/v10/');
         $Bean->setUrlArgs(['Foo', 'bar']);
-        $request = self::$client->mockResponses->getLastRequest();
         $this->assertEquals($Bean, $Bean->relate('baz', 'foz'));
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/baz/foz', $request->getUri()->__toString());
+        $request = self::$client->mockResponses->getLastRequest();
+        $this->assertEquals('/rest/v10/Foo/bar/link/baz/foz', $request->getUri()->getPath());
         $this->assertEquals('POST', $request->getMethod());
     }
 
@@ -125,7 +124,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean->setUrlArgs(['Foo', 'bar']);
         $this->assertEquals($Bean, $Bean->files());
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/file', $request->getUri()->__toString());
+        $this->assertEquals('/rest/v10/Foo/bar/file', $request->getUri()->getPath());
         $this->assertEquals('GET', $request->getMethod());
     }
 
@@ -236,9 +235,10 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Filter->equals('name','foobar');
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
         $this->assertEquals($Bean, $Filter->execute());
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('/rest/v10/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
-        $this->assertArrayHasKey('filter', json_decode(self::$client->mockResponses->getLastRequest()->getBody()->getContents(),true));
+        parse_str(self::$client->mockResponses->getLastRequest()->getUri()->getQuery(),$query);
+        $this->assertArrayHasKey('filter', $query);
     }
 
     /**

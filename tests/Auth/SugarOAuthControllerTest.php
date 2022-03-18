@@ -5,6 +5,7 @@ namespace Sugarcrm\REST\Tests\Auth;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Auth\SugarOAuthController;
+use Sugarcrm\REST\Client\SugarApi;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
 use Sugarcrm\REST\Storage\SugarStaticStorage;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
@@ -52,6 +53,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
      * @covers ::setCredentials
      * @covers ::setPlatform
      * @covers ::getPlatform
+     * @covers ::reset
      */
     public function testSetCredentials() {
         $Auth = new SugarOAuthController();
@@ -92,6 +94,9 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
             'platform' => 'mobile'
         ), $creds);
         $this->assertEquals('mobile', $Auth->getPlatform());
+        $Auth->reset();
+        $this->assertEquals(SugarApi::PLATFORM_BASE,$Auth->getPlatform());
+        $this->assertEquals([],$Auth->getCredentials());
     }
 
     /**
