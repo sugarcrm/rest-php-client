@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\REST\Endpoint\SmartEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
+use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
 /**
  * Provide a smarter interface for Endpoints, to better manage passed in data
@@ -14,12 +15,5 @@ use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
  */
 class AbstractSmartSugarEndpoint extends SmartEndpoint implements SugarEndpointInterface
 {
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function compileRequest()
-    {
-        return $this->buildRequest();
-    }
+    use CompileRequestTrait;
 }

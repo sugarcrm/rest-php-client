@@ -2,8 +2,10 @@
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data;
 
+use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
+use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
 /**
  * Class FilterDataTest
@@ -150,17 +152,18 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array('required_data' => 'filter'), $Data->getProperties());
     }
 
-    // FIXME: mrussell to review
-    // /**
-    //  * @covers ::execute
-    //  */
-    // public function testExecute() {
-    //     $FilterData = new FilterData();
-    //     $this->assertEquals(true, $FilterData->execute());
-    //     $ModuleFilter = new ModuleFilter();
-    //     $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
-    //     $ModuleFilter->setModule('test');
-    //     $FilterData->setEndpoint($ModuleFilter);
-    //     $this->assertEquals($ModuleFilter, $FilterData->execute());
-    // }
+     /**
+      * @covers ::execute
+      */
+     public function testExecute() {
+         $client = new Client();
+         $FilterData = new FilterData();
+         $this->assertEquals(false, $FilterData->execute());
+         $ModuleFilter = new ModuleFilter();
+         $ModuleFilter->setClient($client);
+         $ModuleFilter->setModule('test');
+         $FilterData->setEndpoint($ModuleFilter);
+         $client->mockResponses->append(new Response(200));
+         $this->assertEquals($ModuleFilter, $FilterData->execute());
+     }
 }

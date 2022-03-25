@@ -79,9 +79,7 @@ class MeTest extends \PHPUnit\Framework\TestCase {
 
         $configureAction->invoke($Me, $Me::USER_ACTION_CREATE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        // FIXME: mrussell to review
-        // This change satisfy the test however I'm not sure it is the right way
-        $options = $Me->get("options");
+        $options = $Me->getUrlArgs();
 
         $this->assertEquals("POST", $properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1', $options);
@@ -89,9 +87,7 @@ class MeTest extends \PHPUnit\Framework\TestCase {
 
         $configureAction->invoke($Me, $Me::USER_ACTION_GET_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        // FIXME: mrussell to review
-        // This change satisfy the test however I'm not sure it is the right way
-        $options = $Me->get("options");
+        $options = $Me->getUrlArgs();
 
         $this->assertEquals("GET", $properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1', $options);
@@ -99,9 +95,7 @@ class MeTest extends \PHPUnit\Framework\TestCase {
 
         $configureAction->invoke($Me, $Me::USER_ACTION_UPDATE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        // FIXME: mrussell to review
-        // This change satisfy the test however I'm not sure it is the right way
-        $options = $Me->get("options");
+        $options = $Me->getUrlArgs();
 
         $this->assertEquals("PUT", $properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1', $options);
@@ -109,9 +103,7 @@ class MeTest extends \PHPUnit\Framework\TestCase {
 
         $configureAction->invoke($Me, $Me::USER_ACTION_DELETE_PREFERENCE, ['foo']);
         $properties = $Me->getProperties();
-        // FIXME: mrussell to review
-        // This change satisfy the test however I'm not sure it is the right way
-        $options = $Me->get("options");
+        $options = $Me->getUrlArgs();
 
         $this->assertEquals("DELETE", $properties['httpMethod']);
         $this->assertArrayHasKey('actionArg1', $options);

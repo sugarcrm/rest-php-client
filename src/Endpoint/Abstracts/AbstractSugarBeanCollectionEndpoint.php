@@ -23,6 +23,8 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
 
     protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
 
+    protected static $_RESPONSE_PROP = 'records';
+
     /**
      * Order By statement
      * @var string

@@ -30,26 +30,26 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
     }
 
     /**
-     * @covers ::setOptions
+     * @covers ::setUrlArgs
      */
-    // public function testSetOptions()
-    // {
-    //     $Endpoint = new SugarBeanCollectionEndpoint();
-    //     $this->assertEquals($Endpoint,$Endpoint->setOptions(array(
-    //         'Accounts'
-    //     )));
-    //     $this->assertEquals(array(
-    //         'module' => 'Accounts'
-    //     ),$Endpoint->getOptions());
-    //     $this->assertEquals($Endpoint,$Endpoint->setOptions(array(
-    //         'Accounts',
-    //         'foo'
-    //     )));
-    //     $this->assertEquals(array(
-    //         'module' => 'Accounts',
-    //         1 => 'foo'
-    //     ),$Endpoint->getOptions());
-    // }
+     public function testSetUrlArgs()
+     {
+         $Endpoint = new SugarBeanCollectionEndpoint();
+         $this->assertEquals($Endpoint,$Endpoint->setUrlArgs(array(
+             'Accounts'
+         )));
+         $this->assertEquals(array(
+             'module' => 'Accounts'
+         ),$Endpoint->getUrlArgs());
+         $this->assertEquals($Endpoint,$Endpoint->setUrlArgs(array(
+             'Accounts',
+             'foo'
+         )));
+         $this->assertEquals(array(
+             'module' => 'Accounts',
+             1 => 'foo'
+         ),$Endpoint->getUrlArgs());
+     }
 
     /**
      * @covers ::getModule
@@ -125,52 +125,6 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
         $this->assertEquals('Accounts/list', $configureURL->invoke($Endpoint, array()));
         $this->assertEquals('Accounts/list', $configureURL->invoke($Endpoint, array('foo')));
     }
-
-    // FIXME: mrussell to review
-    // /**
-    //  * @covers ::updateCollection
-    //  */
-    // public function testUpdateCollection(){
-    //     $Endpoint = new SugarBeanCollectionEndpoint();
-    //     $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint');
-    //     $updateCollection = $Reflection->getMethod('updateCollection');
-    //     $updateCollection->setAccessible(true);
-    //     $Response = new Response();
-    //     $ReflectedResponse = new \ReflectionClass(get_class($Response));
-    //     $body = $ReflectedResponse->getProperty('body');
-    //     $body->setAccessible(true);
-    //     $body->setValue($Response,json_encode(array(
-    //         'next_offset' => -1,
-    //         'records' => array(
-    //             array(
-    //                 'id' => '12345',
-    //                 'foo' => 'bar'
-    //             ),
-    //             array(
-    //                 'id' => '5678',
-    //                 'foo' => 'baz'
-    //             ),
-    //             array(
-    //                 'foo' => 'foo'
-    //             )
-    //         )
-    //     )));
-    //     $Endpoint->setResponse($Response);
-    //     $updateCollection->invoke($Endpoint);
-    //     $this->assertEquals(array(
-    //         '12345' => array(
-    //             'id' => '12345',
-    //             'foo' => 'bar'
-    //         ),
-    //         '5678' => array(
-    //             'id' => '5678',
-    //             'foo' => 'baz'
-    //         ),
-    //         array(
-    //             'foo' => 'foo'
-    //         )
-    //     ),$Endpoint->toArray());
-    // }
 
     /**
      * @covers ::buildModel

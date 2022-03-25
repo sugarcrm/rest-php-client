@@ -368,7 +368,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
     }
 
     // FIXME: Looks like Response handling has to be reviewed here and test needs to be re-written
-    // Either needs to modify this setAccessible stuff or re-written for now gonna disable.
+    // TODO: Use MockResponse Handler and build out JSON Encoded responses
     /**
      * @covers ::updateModel
      */
@@ -423,10 +423,10 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
      */
     public function testConfigureFileUploadData() {
         $Bean = new Module();
+        $Bean->setClient(static::$client);
+        static::$client->setAuth(new SugarOAuthStub());
         $Bean->setBaseUrl('http://localhost/rest/v10/');
-        
-        // $Auth = new SugarOAuthStub();
-        // $Bean->setAuth($Auth);
+
         $ReflectedEndpoint = new \ReflectionClass(get_class($Bean));
         $configureFileUploadData = $ReflectedEndpoint->getMethod('configureFileUploadData');
         $configureFileUploadData->setAccessible(true);
@@ -439,8 +439,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => true,
-            // FIXME: mrussell to review
-            // 'oauth_token' => 'bar'
+            'oauth_token' => 'bar'
         ), $Bean->getData()->toArray());
     }
 

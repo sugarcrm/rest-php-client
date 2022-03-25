@@ -17,6 +17,7 @@ use MRussell\REST\Endpoint\ModelEndpoint;
 use PHPUnit\Util\Filter;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
+use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
 /**
  * SugarBean Endpoint acts as a base for any given Module API
@@ -35,6 +36,7 @@ use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
  * @method $this    downloadFile(string $field)
  */
 abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface {
+    use CompileRequestTrait;
     const MODEL_ACTION_VAR = 'action';
 
     const BEAN_ACTION_RELATE = 'link';
@@ -119,13 +121,6 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         foreach (static::$_DEFAULT_SUGAR_BEAN_ACTIONS as $action => $method) {
             $this->actions[$action] = $method;
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function compileRequest(): Request {
-        return $this->buildRequest();
     }
 
     /**
@@ -481,10 +476,13 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             'delete_if_fails' => $deleteOnFail,
         );
 
-        // FIXME: mrussell to review 
         if ($deleteOnFail) {
-        //     $token = $this->getAuth()->getToken();
-        //     $data['oauth_token'] = $token['access_token'];
+            $Client = $this->getClient();
+            if ($Client){
+                $token = $Client->getAuth()->getToken();
+                $data['oauth_token'] = $token['access_token'];
+            }
+
         }
         $this->setData($data);
     }

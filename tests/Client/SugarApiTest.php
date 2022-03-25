@@ -11,7 +11,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
 /**
  * Class SugarApiTest
  * @package Sugarcrm\REST\Tests\Client
- * @coversDefaultClass Sugarcrm\REST\Client\SugarApi
+ * @coversDefaultClass \Sugarcrm\REST\Client\SugarApi
  * @group SugarApiTest
  */
 class SugarApiTest extends \PHPUnit\Framework\TestCase {
@@ -176,69 +176,49 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(true, $Client->logout());
     }
 
-    // FIXME: mrussell to review
-    // /**
-    //  * @covers ::sudo
-    //  */
-    // public function testSudo() {
-    //     $Client = new SugarApi('localhost');
-    //     $Auth = new SugarOAuthStub();
-    //     $Client->setAuth($Auth);
-    //     $this->assertEquals(false, $Client->sudo('max'));
-    // }
+    /**
+     * Test that we have the registered endpoints we expect
+     * @covers ::__call
+     * @return void
+     */
+     public function testEndpoints() {
+         $Client = new SugarApi('localhost');
+         $Auth = new SugarOAuthStub();
+         $Client->setAuth($Auth);
 
-    // FIXME: mrussell to review
-    // public function testEndpoints() {
-    //     $Client = new SugarApi('localhost');
-    //     $Auth = new SugarOAuthStub();
-    //     $Client->setAuth($Auth);
+         $Endpoint = $Client->bulk();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Bulk', $Endpoint);
 
-    //     $Endpoint = $Client->bulk();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Bulk', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest()->getBody()->getContents());
+         $Endpoint = $Client->module();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Module', $Endpoint);
 
-    //     $Endpoint = $Client->module();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Module', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->metadata();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Metadata', $Endpoint);
 
-    //     $Endpoint = $Client->metadata();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Metadata', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->enum();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Enum', $Endpoint);
+         $Endpoint = $Client->me();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Me', $Endpoint);
 
-    //     $Endpoint = $Client->enum();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Enum', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->list();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleFilter', $Endpoint);
 
-    //     $Endpoint = $Client->me();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Me', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->oauth2Logout();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Logout', $Endpoint);
 
-    //     $Endpoint = $Client->list();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleFilter', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->oauth2Refresh();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Refresh', $Endpoint);
 
-    //     $Endpoint = $Client->oauth2Logout();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Logout', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->oauth2Sudo();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Sudo', $Endpoint);
 
-    //     $Endpoint = $Client->oauth2Refresh();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Refresh', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->oauth2Token();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Token', $Endpoint);
 
-    //     $Endpoint = $Client->oauth2Sudo();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Sudo', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
+         $Endpoint = $Client->ping();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Ping', $Endpoint);
 
-    //     $Endpoint = $Client->oauth2Token();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Token', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
-
-    //     $Endpoint = $Client->ping();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Ping', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
-
-    //     $Endpoint = $Client->search();
-    //     $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
-    //     $this->assertNotEmpty($Endpoint->getRequest());
-    // }
+         $Endpoint = $Client->search();
+         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
+     }
 }

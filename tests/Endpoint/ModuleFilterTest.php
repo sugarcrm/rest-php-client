@@ -121,9 +121,8 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter()->contains('foo', 'bar');
         $data = $configurePayload->invoke($ModuleFilter, new EndpointData());
-        
-        // FIXME: mrussell to review
-        // $this->assertArrayHasKey('filter', $data);
+
+        $this->assertArrayHasKey('filter', $data);
     }
 
     /**

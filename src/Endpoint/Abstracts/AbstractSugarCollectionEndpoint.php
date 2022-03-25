@@ -8,6 +8,7 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\CollectionEndpoint;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
+use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
 /**
  * Provides access to a multi-bean collection retrieved from Sugar 7 REST Api
@@ -16,6 +17,8 @@ use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
  */
 abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
+    use CompileRequestTrait;
+
     const SUGAR_OFFSET_PROPERTY = 'offset';
 
     const SUGAR_LIMIT_PROPERTY = 'max_num';
@@ -45,15 +48,6 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
         $data[self::SUGAR_OFFSET_PROPERTY] = $this->getOffset();
         $data[self::SUGAR_LIMIT_PROPERTY] = $this->getLimit();
         return $data;
-    }
-
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function compileRequest()
-    {
-        return $this->buildRequest();
     }
 
     /**

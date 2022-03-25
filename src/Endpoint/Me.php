@@ -8,6 +8,7 @@ namespace Sugarcrm\REST\Endpoint;
 
 
 use MRussell\REST\Endpoint\ModelEndpoint;
+use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
 /**
  * Me Endpoint provides access to current logged in user details
@@ -24,6 +25,8 @@ use MRussell\REST\Endpoint\ModelEndpoint;
  * @method $this    following()
  */
 class Me extends ModelEndpoint implements SugarEndpointInterface {
+    use CompileRequestTrait;
+
     const MODEL_ACTION_VAR = 'action';
 
     const USER_ACTION_PREFERENCES = 'preferences';
@@ -62,15 +65,6 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
         foreach (static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method) {
             $this->actions[$action] = $method;
         }
-    }
-
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function compileRequest() {
-        return $this->buildRequest();
-        // return $this->configureRequest($this->getRequest(), []);
     }
 
     /**
@@ -116,7 +110,7 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
                 case self::USER_ACTION_DELETE_PREFERENCE:
                 case self::USER_ACTION_CREATE_PREFERENCE:
                     if (isset($arguments[0])) {
-                        $this->options['actionArg1'] = $arguments[0];
+                        $this->urlArgs['actionArg1'] = $arguments[0];
                     }
             }
         }
