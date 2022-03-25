@@ -2,9 +2,11 @@
 
 namespace Sugarcrm\REST\Tests\Client;
 
+use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Client\SugarApi;
 use Sugarcrm\REST\Endpoint\Metadata;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
+use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
 /**
  * Class SugarApiTest
@@ -33,7 +35,11 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::__construct
      * @covers ::init
+     * @covers ::initEndpointProvider
+     * @covers ::initAuthProvider
      * @covers ::setAPIUrl
+     * @covers ::configureApiUrl
+     * @covers ::updateAuthCredentials
      */
     public function testConstructor() {
         $Client = new SugarApi();
@@ -59,12 +65,9 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals([
             'username' => 'admin',
             'password' => 'asdf',
-
-            // FIXME: mrussell to review
-            // These are no longer coming with credentials. The has to be a call to be populated.
-            // 'client_id' => 'sugar',
-            // 'client_secret' => '',
-            // 'platform' => 'base'
+             'client_id' => 'sugar',
+             'client_secret' => '',
+             'platform' => 'base'
         ], $Client->getAuth()->getCredentials());
         $this->assertNotEmpty($Client->getEndpointProvider());
         $this->assertEquals(10, $Client->getVersion());
@@ -74,6 +77,28 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $Client->setVersion("11_4");
         $this->assertEquals("11_4", $Client->getVersion());
         $this->assertEquals('http://localhost/rest/v11_4/', $Client->getAPIUrl());
+    }
+
+    /**
+     * @covers ::setPlatform
+     * @covers ::setRawPlatform
+     * @covers ::getPlatform
+     * @covers ::updateAuthCredentials
+     * @covers ::init
+     * @return void
+     */
+    public function testPlatformAwareness()
+    {
+        $Client = new Client();
+        $this->assertEquals(SugarApi::PLATFORM_BASE,$Client->getPlatform());
+        $this->assertEquals($Client,$Client->setPlatform('api'));
+        $this->assertEquals('api',$Client->getAuth()->getCredentials()['platform']);
+
+        $Client->mockResponses->append(new Response(200));
+        $Client->ping()->execute();
+        $headers = $Client->mockResponses->getLastRequest()->getHeaders();
+        $this->assertArrayHasKey('X-Sugar-Platform',$headers);
+        $this->assertEquals('api',$headers['X-Sugar-Platform'][0]);
     }
 
     /**

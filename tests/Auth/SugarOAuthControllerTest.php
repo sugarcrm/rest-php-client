@@ -4,6 +4,7 @@ namespace Sugarcrm\REST\Tests\Auth;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Psr\Log\Test\TestLogger;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Client\SugarApi;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
@@ -51,8 +52,6 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::setCredentials
-     * @covers ::setPlatform
-     * @covers ::getPlatform
      * @covers ::reset
      */
     public function testSetCredentials() {
@@ -66,7 +65,6 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
             'client_secret' => '',
             'platform' => 'api'
         )));
-        $this->assertEquals('api', $Auth->getPlatform());
         $this->assertEmpty($Auth->getToken());
         $Storage->store($Auth->getCredentials(), array(
             'access_token' => '1234',
@@ -83,19 +81,15 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
             'access_token' => '1234',
             'refresh_token' => '5678',
         ), $Auth->getToken());
-        $this->assertEquals($Auth, $Auth->setPlatform('mobile'));
         $creds = $Auth->getCredentials();
-        $this->assertEquals('mobile', $creds[$Auth::OAUTH_PROP_PLATFORM]);
         $this->assertEquals(array(
             'username' => 'admin',
             'password' => '',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'mobile'
+            'platform' => 'api'
         ), $creds);
-        $this->assertEquals('mobile', $Auth->getPlatform());
         $Auth->reset();
-        $this->assertEquals(SugarApi::PLATFORM_BASE,$Auth->getPlatform());
         $this->assertEquals([],$Auth->getCredentials());
     }
 
@@ -162,8 +156,11 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
     public function testSudo() {
         self::$client->container = [];
         self::$client->mockResponses->append(new Response(200, [], json_encode(['access_token' => 'at-bar'])));
+        self::$client->mockResponses->append(new Response(500, []));
 
         $Auth = new SugarOAuthStub();
+        $logger = new TestLogger();
+        $Auth->setLogger($logger);
         $Auth->setCredentials(array(
             'username' => 'system',
             'password' => 'asdf',
@@ -175,9 +172,11 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
         $EP->setClient(self::$client);
         $EP->setBaseUrl('http://localhost/rest/v10');
         $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO, $EP);
-        $Auth->sudo('max');
+        $this->assertEquals(true,$Auth->sudo('max'));
         $request = current(self::$client->container)['request'];
         $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max', $request->getUri()->__toString());
         $this->assertEquals('{"platform":"api","client_id":"sugar"}', $request->getBody()->getContents());
+        $this->assertEquals(false,$Auth->sudo('max'));
+        $this->assertEquals(true,$logger->hasErrorThatContains("Exception Occurred sending SUDO request:"));
     }
 }

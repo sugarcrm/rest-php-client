@@ -20,10 +20,8 @@ use Sugarcrm\REST\Client\SugarApi;
  * - Configures Endpoints that require auth, so that Requests are properly formatted
  * @package Sugarcrm\REST\Auth
  */
-class SugarOAuthController extends AbstractOAuth2Controller implements PlatformAwareInterface
+class SugarOAuthController extends AbstractOAuth2Controller
 {
-    use PlatformAwareTrait;
-
     const ACTION_SUGAR_SUDO = 'sudo';
 
     const OAUTH_PROP_PLATFORM = 'platform';
@@ -44,6 +42,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
         'password' => '',
         'client_id' => 'sugar',
         'client_secret' => '',
+        self::OAUTH_PROP_PLATFORM => SugarApi::PLATFORM_BASE
     );
 
     /**
@@ -52,26 +51,9 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
     public function __construct()
     {
         parent::__construct();
-        $this->setPlatform(SugarApi::PLATFORM_BASE);
         foreach (static::$_DEFAULT_SUGAR_AUTH_ACTIONS as $action) {
             $this->actions[] = $action;
         }
-    }
-
-    /**
-     * @param $platform
-     * @return $this
-     */
-    public function setPlatform(string $platform)
-    {
-        $this->platform = $platform;
-        if (!isset($this->credentials[self::OAUTH_PROP_PLATFORM]) ||
-            $this->credentials[self::OAUTH_PROP_PLATFORM] !== $platform){
-            $this->credentials[self::OAUTH_PROP_PLATFORM] = $this->platform;
-            $this->setCredentials($this->credentials);
-        }
-
-        return $this;
     }
 
     /**
@@ -79,7 +61,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
      */
     protected function getAuthHeaderValue(): string
     {
-        return $this->token['access_token'];
+        return $this->getTokenProp('access_token');
     }
 
     /**
@@ -88,29 +70,14 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
      */
     public function setCredentials(array $credentials): AuthControllerInterface
     {
-        if (isset($credentials[self::OAUTH_PROP_PLATFORM]) &&
-            $credentials[self::OAUTH_PROP_PLATFORM] !== $this->platform){
-            $this->setPlatform($credentials[self::OAUTH_PROP_PLATFORM]);
-        }
         parent::setCredentials($credentials);
         if (!empty($this->credentials)){
             $token = $this->getStoredToken($this->credentials);
             if ($token !== NULL){
-                if (is_array($token)){
-                    $this->setToken($token);
-                }
+                $this->setToken($token);
             }
         }
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function updateCredentials(array $credentials): AuthControllerInterface
-    {
-        $current = array_replace($this->getCredentials(),$credentials);
-        return $this->setCredentials($current);
     }
 
     /**
@@ -156,34 +123,28 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
      * Refreshes the OAuth 2 Token
      * @param $user string
      * @return bool
-     * @throws InvalidToken
      */
     public function sudo($user): bool
     {
-        if (isset($this->token['access_token'])) {
-            $Endpoint = $this->getActionEndpoint(self::ACTION_SUGAR_SUDO);
-            if ($Endpoint !== null) {
-                $Endpoint = $this->configureSudoEndpoint($Endpoint, $user);
+        $accessToken = $this->getTokenProp('access_token');
+        $return = false;
+        if (!empty($accessToken)) {
+            try {
+                $Endpoint = $this->configureSudoEndpoint($this->getActionEndpoint(self::ACTION_SUGAR_SUDO), $user);
                 $response = $Endpoint->execute()->getResponse();
                 if ($response->getStatusCode() == 200) {
                     $this->parseResponseToToken(self::ACTION_SUGAR_SUDO,$response);
                     $creds = $this->getCredentials();
                     $creds['sudo'] = $user;
                     $this->storeToken($creds,$this->getToken());
-                    return true;
+                    $return = true;
                 }
+            } catch(\Exception $ex){
+                $this->getLogger()->error("Exception Occurred sending SUDO request: ".$ex->getMessage());
             }
-        }
-        return true;
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function reset(): AuthControllerInterface
-    {
-        $this->setPlatform(SugarApi::PLATFORM_BASE);
-        return parent::reset();
+        }
+        return $return;
     }
 
     /**
@@ -197,7 +158,7 @@ class SugarOAuthController extends AbstractOAuth2Controller implements PlatformA
         $Endpoint->setUrlArgs(array($user));
         $data = array();
         $creds = $this->getCredentials();
-        $data['platform'] = $this->platform;
+        $data['platform'] = $creds['platform'];
         $data['client_id'] = $creds['client_id'];
         $Endpoint->setData($data);
         return $Endpoint;
