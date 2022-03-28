@@ -1,8 +1,6 @@
 <?php
 /**
- * User: mrussell
- * Date: 4/28/17
- * Time: 1:33 PM
+ * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Stubs\Auth;

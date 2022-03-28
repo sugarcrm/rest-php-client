@@ -1,8 +1,7 @@
 <?php
 /**
- * ©[2017] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
-
 namespace Sugarcrm\REST\Tests\Storage;
 
 use Sugarcrm\REST\Storage\SugarStaticStorage;
