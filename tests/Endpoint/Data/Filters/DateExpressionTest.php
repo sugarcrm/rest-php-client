@@ -52,10 +52,17 @@ class DateExpressionTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::__call
+     * @covers ::compile
      */
     public function testCall() {
         $Expression = new DateExpression(array('foobar'));
+        $this->assertEquals([],$Expression->compile());
         $this->assertEquals($Expression, $Expression->equals('bar'));
+        $this->assertEquals([
+            'foobar' => [
+                '$equals' => 'bar'
+            ]
+        ],$Expression->compile());
         $this->assertEquals($Expression, $Expression->notEquals('foo'));
         $this->assertEquals($Expression, $Expression->isNull());
         $this->assertEquals($Expression, $Expression->notNull());

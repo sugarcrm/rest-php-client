@@ -47,9 +47,11 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::__call
+     * @covers ::clear
      */
     public function testCall() {
         $Expression = new AndExpression();
+        $this->assertEquals([],$Expression->compile()['$and']);
         $this->assertEquals($Expression, $Expression->equals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->notEquals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->starts('foo', 'bar'));
@@ -72,8 +74,11 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression", $Expression->and());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression", $Expression->or());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression", $Expression->date('test'));
+        $this->assertEquals($Expression,$Expression->clear());
+        $this->assertEquals([],$Expression->compile()['$and']);
 
         $Expression = new OrExpression();
+        $this->assertEquals([],$Expression->compile()['$or']);
         $this->assertEquals($Expression, $Expression->equals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->notEquals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->starts('foo', 'bar'));
@@ -96,6 +101,8 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression", $Expression->and());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression", $Expression->or());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression", $Expression->date('test'));
+        $this->assertEquals($Expression,$Expression->clear());
+        $this->assertEquals([],$Expression->compile()['$or']);
     }
 
     /**

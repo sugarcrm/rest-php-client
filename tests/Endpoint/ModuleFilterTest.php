@@ -146,8 +146,6 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
      * @covers Sugarcrm\REST\Endpoint\Data\FilterData
      */
     public function testFilter() {
-        self::$client->mockResponses->append(new Response(200));
-        
         $sampleData = [
             "filter" => [
                 [ 'foo' => [ '$equals' => 'bar' ] ]
@@ -164,15 +162,20 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $Filter->equals('foo', 'bar');
         $this->assertEquals($sampleData['filter'], $Filter->compile());
 
-        $Filter = $ModuleFilter->filter();
-        $this->assertEquals([], $Filter->compile());
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setClient(self::$client);
+        $ModuleFilter->setModule('Foo');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
         $ModuleFilter->setData($sampleData);
-
         $Filter = $ModuleFilter->filter();
-        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
+        $this->assertEquals($sampleData['filter'], $Filter->toArray());
+
+        self::$client->mockResponses->append(new Response(200));
+        $Filter = $ModuleFilter->filter(true);
+        $this->assertEquals([], $Filter->compile());
         $this->assertEquals($ModuleFilter, $Filter->execute());
         $this->assertEquals($Filter, $ModuleFilter->filter());
-        $Filter->equals('foo', 'bar');
+
         $this->assertEquals($Filter, $ModuleFilter->filter(true));
         $this->assertEquals(array(), $Filter->toArray(true));
         $data = $ModuleFilter->getData();

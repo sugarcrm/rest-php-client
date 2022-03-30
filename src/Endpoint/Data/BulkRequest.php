@@ -46,18 +46,6 @@ class BulkRequest extends AbstractEndpointData {
                         if ($request) {
                             $compiled[self::BULK_REQUEST_DATA_NAME][] = $request;
                         }
-                    } else {
-                        if (
-                            isset($request->url)
-                            && isset($request->method)
-                        ) {
-                            $compiled = array(
-                                'url' => $request->url,
-                                'method' => $request->method,
-                                'headers' => isset($request->headers) ? $request->headers : array(),
-                                'data' => isset($request->data) ? $request->data : ""
-                            );
-                        }
                     }
                 }
             }
@@ -71,7 +59,7 @@ class BulkRequest extends AbstractEndpointData {
      * @return array
      */
     protected function extractRequest(Request $Request) {
-        $url = $Request->getUri();
+        $url = $Request->getUri()->getPath();
         if (empty($url)) {
             return false;
         }

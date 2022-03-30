@@ -90,6 +90,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::extractRequest
+     * @covers ::normaliseHeaders
      */
     public function testExtractRequest() {
         $Data = new BulkRequest();
@@ -120,5 +121,24 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertArrayHasKey('headers', $result);
         $this->assertArrayHasKey('data', $result);
         $this->assertEquals(null, $result['data']);
+
+        $Request = new Request("GET", "http://localhost/rest/v10/Accounts", [
+                'X-Sugar-Platform' => "foobar"
+            ]);
+        $result = $extractRequest->invoke($Data, $Request);
+        $this->assertArrayHasKey('url', $result);
+        $this->assertEquals('/v10/Accounts', $result['url']);
+        $this->assertArrayHasKey('method', $result);
+        $this->assertEquals("GET", $result['method']);
+        $this->assertArrayHasKey('headers', $result);
+        $this->assertEquals([
+            'Host: localhost',
+            "X-Sugar-Platform: foobar"
+        ],$result['headers']);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertEquals(null, $result['data']);
+
+        $Request = new Request("GET","");
+        $this->assertFalse($extractRequest->invoke($Data, $Request));
     }
 }

@@ -84,7 +84,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      * @param bool $reset
     * @return FilterData
      */
-    public function filter($reset = true) {
+    public function filter(bool $reset = false) {
         $this->setProperty(self::PROPERTY_HTTP_METHOD, "POST");
         if (empty($this->filter)) {
             $this->filter = new FilterData();
