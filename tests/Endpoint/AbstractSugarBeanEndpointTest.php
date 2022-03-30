@@ -370,7 +370,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
     // FIXME: Looks like Response handling has to be reviewed here and test needs to be re-written
     // TODO: Use MockResponse Handler and build out JSON Encoded responses
     /**
-     * @covers ::updateModel
+     * @covers ::parseResponse
      */
     // public function testUpdateModel(){
     //     $Bean = new Module();
@@ -439,6 +439,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => true,
+            'platform' => 'base',
             'oauth_token' => 'bar'
         ), $Bean->getData()->toArray());
     }

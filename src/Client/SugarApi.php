@@ -112,7 +112,6 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
         $Auth->setActionEndpoint('refresh', $this->oauth2Refresh());
         $Auth->setActionEndpoint('logout', $this->oauth2Logout());
         $Auth->setActionEndpoint('sudo', $this->oauth2Sudo());
-        $Auth->setStorageController(new SugarStaticStorage());
     }
 
     /**

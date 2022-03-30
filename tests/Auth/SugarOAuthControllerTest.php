@@ -7,11 +7,10 @@ namespace Sugarcrm\REST\Tests\Auth;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use MRussell\REST\Tests\Stubs\Endpoint\AuthEndpoint;
 use Psr\Log\Test\TestLogger;
-use Sugarcrm\REST\Auth\SugarOAuthController;
-use Sugarcrm\REST\Client\SugarApi;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
-use Sugarcrm\REST\Storage\SugarStaticStorage;
+use Sugarcrm\REST\Endpoint\OAuth2Token;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
@@ -19,7 +18,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
 /**
  * Class SugarOAuthControllerTest
  * @package Sugarcrm\REST\Tests\Auth
- * @coversDefaultClass Sugarcrm\REST\Auth\SugarOAuthController
+ * @coversDefaultClass \Sugarcrm\REST\Auth\SugarOAuthController
  * @group SugarOAuthControllerTest
  */
 class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
@@ -54,94 +53,6 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @covers ::setCredentials
-     * @covers ::reset
-     */
-    public function testSetCredentials() {
-        $Auth = new SugarOAuthController();
-        $Storage = new SugarStaticStorage();
-        $Auth->setStorageController($Storage);
-        $this->assertEquals($Auth, $Auth->setCredentials(array(
-            'username' => 'admin',
-            'password' => '',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'api'
-        )));
-        $this->assertEmpty($Auth->getToken());
-        $Storage->store($Auth->getCredentials(), array(
-            'access_token' => '1234',
-            'refresh_token' => '5678',
-        ));
-        $this->assertEquals($Auth, $Auth->setCredentials(array(
-            'username' => 'admin',
-            'password' => '',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'api'
-        )));
-        $this->assertEquals(array(
-            'access_token' => '1234',
-            'refresh_token' => '5678',
-        ), $Auth->getToken());
-        $creds = $Auth->getCredentials();
-        $this->assertEquals(array(
-            'username' => 'admin',
-            'password' => '',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'api'
-        ), $creds);
-        $Auth->reset();
-        $this->assertEquals([],$Auth->getCredentials());
-    }
-
-    /**
-     * @covers ::updateCredentials
-     */
-    public function testUpdateCredentials() {
-        $Auth = new SugarOAuthController();
-        $this->assertEquals(array(
-            'username' => '',
-            'password' => '',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'base'
-        ), $Auth->getCredentials());
-        $this->assertEquals($Auth, $Auth->updateCredentials(array(
-            'username' => 'admin'
-        )));
-        $this->assertEquals(array(
-            'username' => 'admin',
-            'password' => '',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'base'
-        ), $Auth->getCredentials());
-        $this->assertEquals($Auth, $Auth->updateCredentials(array(
-            'username' => 'system',
-            'password' => 'asdf'
-        )));
-        $this->assertEquals(array(
-            'username' => 'system',
-            'password' => 'asdf',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => 'base'
-        ), $Auth->getCredentials());
-        $this->assertEquals($Auth, $Auth->updateCredentials(array(
-            'platform' => ''
-        )));
-        $this->assertEquals(array(
-            'username' => 'system',
-            'password' => 'asdf',
-            'client_id' => 'sugar',
-            'client_secret' => '',
-            'platform' => ''
-        ), $Auth->getCredentials());
-    }
-
-    /**
      * @covers ::getAuthHeaderValue
      */
     public function testAuthHeader() {
@@ -152,9 +63,69 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * @covers ::getCacheKey
+     * @covers ::generateUniqueCacheString
+     */
+    public function testCacheKey()
+    {
+        $Auth = new SugarOAuthStub();
+        $Logger = new TestLogger();
+        $Auth->setLogger($Logger);
+        $Reflected = new \ReflectionClass($Auth);
+        $generateUniqueCacheString = $Reflected->getMethod('generateUniqueCacheString');
+        $generateUniqueCacheString->setAccessible(true);
+
+        $this->assertEquals("client_id_base_username",$generateUniqueCacheString->invoke($Auth,[
+            'client_id' => 'client_id',
+            'client_secret' => 'client_secret',
+            'password' => 'password',
+            'username' => 'username',
+            'platform' => 'base'
+        ]));
+        $this->assertTrue($Logger->hasInfoThatContains("Cannot use server in cache string."));
+        $Logger->reset();
+        $LoginEP = new OAuth2Token();
+        $LoginEP->setBaseUrl("http://localhost/api");
+        $Auth->setActionEndpoint($Auth::ACTION_AUTH,$LoginEP);
+        $this->assertEquals("http://localhost/api_client_id_base_username",$generateUniqueCacheString->invoke($Auth,[
+            'client_id' => 'client_id',
+            'client_secret' => 'client_secret',
+            'password' => 'password',
+            'username' => 'username',
+            'platform' => 'base'
+        ]));
+        $this->assertFalse($Logger->hasInfoThatContains("Cannot use server in cache string."));
+
+
+        $LoginEP = new OAuth2Token();
+        $LoginEP->setClient(self::$client);
+        $Auth->setActionEndpoint($Auth::ACTION_AUTH,$LoginEP);
+        $this->assertEquals("http://phpunit.tests_client_id_base_username_sudofoobar",$generateUniqueCacheString->invoke($Auth,[
+            'client_id' => 'client_id',
+            'client_secret' => 'client_secret',
+            'password' => 'password',
+            'username' => 'username',
+            'platform' => 'base',
+            'sudo' => 'foobar'
+        ]));
+        $this->assertFalse($Logger->hasInfoThatContains("Cannot use server in cache string."));
+
+        $Auth->setCredentials([
+            'client_id' => 'client_id',
+            'client_secret' => 'client_secret',
+            'password' => 'password',
+            'username' => 'username',
+            'platform' => 'base',
+            'sudo' => 'foobar'
+        ]);
+        $this->assertEquals(sha1("http://phpunit.tests_client_id_base_username_sudofoobar"),$Auth->getCacheKey());
+
+    }
+
+    /**
      * @covers ::sudo
      * @covers ::configureSudoEndpoint
-     * @covers Sugarcrm\REST\Client\SugarApi::sudo
+     * @covers \Sugarcrm\REST\Client\SugarApi::sudo
      */
     public function testSudo() {
         self::$client->container = [];

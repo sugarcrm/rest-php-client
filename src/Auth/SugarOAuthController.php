@@ -65,58 +65,47 @@ class SugarOAuthController extends AbstractOAuth2Controller
     }
 
     /**
-     * @inheritdoc
-     * Load Stored Token based on Credentials
+     * @inheritDoc
      */
-    public function setCredentials(array $credentials): AuthControllerInterface
+    public function getCacheKey(): string
     {
-        parent::setCredentials($credentials);
-        if (!empty($this->credentials)){
-            $token = $this->getStoredToken($this->credentials);
-            if ($token !== NULL){
-                $this->setToken($token);
+        if (!isset($this->cacheKey)){
+            $this->cacheKey = sha1($this->generateUniqueCacheString($this->getCredentials()));
+        }
+        return $this->cacheKey;
+    }
+
+    /**
+     * @param array $creds
+     * @return string
+     */
+    protected function generateUniqueCacheString(array $creds): string
+    {
+        $key = '';
+        try{
+            $ep = $this->getActionEndpoint(self::ACTION_AUTH);
+            if ($ep->getClient()){
+                $key = $ep->getClient()->getServer();
+            } else {
+                $key = $ep->getBaseUrl();
             }
+        }catch(\Exception $ex){
+            $this->getLogger()->info("Cannot use server in cache string.");
         }
-        return $this;
-    }
 
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function authenticate(): bool
-    {
-        $return = parent::authenticate();
-        if ($return){
-            $this->storeToken($this->getCredentials(),$this->getToken());
+        if (!empty($creds['client_id'])){
+            $key .= "_".$creds['client_id'];
         }
-        return $return;
-    }
-
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function logout(): bool
-    {
-        $return = parent::logout();
-        if ($return){
-            $this->removeStoredToken($this->getCredentials());
+        if (!empty($creds['platform'])){
+            $key .= "_".$creds['platform'];
         }
-        return $return;
-    }
-
-    /**
-     * @inheritdoc
-     * @codeCoverageIgnore
-     */
-    public function refresh(): bool
-    {
-        $return = parent::refresh();
-        if ($return){
-            $this->storeToken($this->getCredentials(),$this->getToken());
+        if (!empty($creds['username'])){
+            $key .= "_".$creds['username'];
         }
-        return $return;
+        if (!empty($creds['sudo'])){
+            $key .= "_"."sudo".$creds['sudo'];
+        }
+        return ltrim($key,"_");
     }
 
     /**
@@ -133,10 +122,10 @@ class SugarOAuthController extends AbstractOAuth2Controller
                 $Endpoint = $this->configureSudoEndpoint($this->getActionEndpoint(self::ACTION_SUGAR_SUDO), $user);
                 $response = $Endpoint->execute()->getResponse();
                 if ($response->getStatusCode() == 200) {
-                    $this->parseResponseToToken(self::ACTION_SUGAR_SUDO,$response);
                     $creds = $this->getCredentials();
                     $creds['sudo'] = $user;
-                    $this->storeToken($creds,$this->getToken());
+                    $this->setCredentials($creds);
+                    $this->parseResponseToToken(self::ACTION_SUGAR_SUDO,$response);
                     $return = true;
                 }
             } catch(\Exception $ex){

@@ -7,14 +7,13 @@
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 
+use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
-use MRussell\REST\Endpoint\Data\DataInterface;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use MRussell\REST\Endpoint\ModelEndpoint;
-use PHPUnit\Util\Filter;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
@@ -108,7 +107,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Whether or not a file upload is occurring
      * @var bool
      */
-    private $upload = true;
+    private $upload = false;
 
     /**
      * Files waiting to be attached to record
@@ -160,24 +159,29 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         return $this->module;
     }
 
-    //    /**
-    //     * Configure Uploads on Request
-    //     * @inheritdoc
-    //     * @codeCoverageIgnore
-    //     */
-    //    protected function configureRequest(Request $Request)
-    //    {
-    //        $Request = parent::configureRequest($Request);
-    //        return $this->configureUploads($Request);
-    //    }
-
     /**
-     * @TODO - Need to work out how to manage file uploads with Guzzle (Multipart data)
-     * Configure the Uploads Data on the Request Object
-     * @param Request $Request
-     * @return Request
+     * Configure Uploads on Request
+     * @inheritdoc
      */
-    protected function configureUploads(Request $Request) {
+    protected function configureRequest(Request $request,$data): Request
+    {
+        if ($this->upload && !empty($this->_files)){
+            $multiPartOptions = [];
+            foreach($this->_files as $name => $props){
+                if (file_exists($props['path'])){
+                    $fileProps = [
+                        'name' => $name,
+                        'contents' => Utils::streamFor(fopen($props['path'],'r',true)),
+                    ];
+                    if (isset($props['filename'])){
+                        $fileProps['filename'] = $props['filename'];
+                    }
+                    $multiPartOptions[] = $fileProps;
+                }
+            }
+            $data = new MultipartStream($multiPartOptions);
+        }
+        return parent::configureRequest($request,$data);
     }
 
     /**
@@ -187,17 +191,21 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      */
     public function parseResponse(Response $response): void {
         $this->resetUploads();
-        if ($this->response->getStatusCode() == "200") {
+        if ($this->response->getStatusCode() == 200) {
             switch ($this->getCurrentAction()) {
                 case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
                     $body = $this->getResponseBody();
                     if (isset($body['record'])) {
-                        $this->reset();
                         $this->update(array(
                             'filename_guid' => $body['record']['id'],
                             'filename' => $body['filename']['guid']
                         ));
                     }
+                    return;
+                case self::BEAN_ACTION_FAVORITE:
+                case self::BEAN_ACTION_UNFAVORITE:
+                    $this->reset();
+                    $this->syncFromApi($this->parseResponseBodyToArray($this->getResponseBody(),$this->getModelResponseProp()));
                     return;
             }
         }
@@ -211,7 +219,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         if ($this->upload) {
             $this->getData()->reset();
         }
-        $this->upload = true;
+        $this->upload = false;
         $this->_files = array();
     }
 
@@ -286,21 +294,6 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         }
         $this->setUrlArgs($options);
         parent::configureAction($action, $arguments);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function syncFromApi(array $model) {
-        switch ($this->action) {
-            case self::BEAN_ACTION_FAVORITE:
-            case self::BEAN_ACTION_UNFAVORITE:
-                $this->reset();
-                $this->update($model);
-                break;
-            default:
-                parent::syncFromApi($model);
-        }
     }
 
     /**
@@ -479,6 +472,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         if ($deleteOnFail) {
             $Client = $this->getClient();
             if ($Client){
+                $data['platform'] = $Client->getPlatform();
                 $token = $Client->getAuth()->getToken();
                 $data['oauth_token'] = $token['access_token'];
             }
@@ -494,7 +488,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @return $this
      */
     protected function addFile($name, array $properties): AbstractSugarBeanEndpoint {
-        if (isset($properties['path'])) {
+        if (isset($properties['path']) && file_exists($properties['path'])) {
             $this->upload = true;
             $this->_files[$name] = $properties;
         }

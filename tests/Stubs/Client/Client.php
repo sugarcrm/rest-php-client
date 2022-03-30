@@ -12,6 +12,9 @@ use GuzzleHttp\Middleware;
 use Sugarcrm\REST\Client\SugarApi;
 
 class Client extends SugarApi {
+
+    protected $server = 'http://phpunit.tests';
+
     /**
      * @var MockHandler
      */
