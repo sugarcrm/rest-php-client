@@ -6,6 +6,7 @@
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\REST\Endpoint\SmartEndpoint;
+use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
@@ -15,5 +16,5 @@ use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
  */
 class AbstractSmartSugarEndpoint extends SmartEndpoint implements SugarEndpointInterface
 {
-    use CompileRequestTrait;
+    use CompileRequestTrait, PsrLoggerTrait;
 }

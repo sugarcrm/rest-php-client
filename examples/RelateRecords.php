@@ -5,21 +5,21 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
 try{
     if ($SugarAPI->login()){
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
         $Account = $SugarAPI->module('Accounts')->set("name","Relate Records Test");
         echo "Creating Account: ";
-        pre($Account->asArray());
+        pre($Account->toArray());
         $Account->save();
         pre("Saved Account ID: {$Account['id']}");
         $Opportunity = $SugarAPI->module('Opportunities');
         $Opportunity['name'] = 'Test Opportunity';
         $Opportunity['description'] = 'This opportunity was created via the SugarCRM REST API Client v2 to test creating relationships.';
         echo "Creating Opportunity: ";
-        pre($Account->asArray());
+        pre($Account->toArray());
         $Opportunity->save();
         pre("Saved Opportunity ID: {$Opportunity['id']}");
 

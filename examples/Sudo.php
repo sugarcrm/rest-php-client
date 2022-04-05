@@ -5,7 +5,7 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
 try{
     if ($SugarAPI->login()){
         echo "Logged In: ";
@@ -16,7 +16,7 @@ try{
             pre($SugarAPI->getAuth()->getToken());
             echo "User:";
             $Me = $SugarAPI->me();
-            pre($Me->asArray());
+            pre($Me->toArray());
         }
     } else {
         echo "Could not login.";

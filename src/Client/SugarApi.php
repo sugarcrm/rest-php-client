@@ -28,6 +28,7 @@ use Sugarcrm\REST\Storage\SugarStaticStorage;
  * @method \Sugarcrm\REST\Endpoint\OAuth2Refresh    oauth2Refresh() - Use refresh()
  * @method \Sugarcrm\REST\Endpoint\OAuth2Logout     oauth2Logout() - Use logout()
  * @method \Sugarcrm\REST\Endpoint\OAuth2Sudo       oauth2Sudo() - Use sudo()
+ * @method \Sugarcrm\REST\Endpoint\Note             Note() -
  */
 class SugarApi extends AbstractClient implements PlatformAwareInterface {
     use PlatformAwareTrait {
@@ -88,6 +89,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
     protected function init(): void {
         $self = $this;
         $this->getHandlerStack()->push(Middleware::mapRequest(function (Request $request)  use ($self) {
+            $request = $request->withHeader('User-Agent','SugarCRM-REST-PHP-Client');
             return $request->withHeader('X-Sugar-Platform', $self->getPlatform());
         }), 'sugarPlatformHeader');
         $this->initEndpointProvider();

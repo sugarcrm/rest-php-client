@@ -69,7 +69,7 @@ class SugarOAuthController extends AbstractOAuth2Controller
      */
     public function getCacheKey(): string
     {
-        if (!isset($this->cacheKey)){
+        if (empty($this->cacheKey)){
             $this->cacheKey = sha1($this->generateUniqueCacheString($this->getCredentials()));
         }
         return $this->cacheKey;

@@ -14,6 +14,7 @@ use GuzzleHttp\Psr7\Utils;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use MRussell\REST\Endpoint\ModelEndpoint;
+use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
@@ -35,7 +36,8 @@ use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
  * @method $this    downloadFile(string $field)
  */
 abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface {
-    use CompileRequestTrait;
+    use CompileRequestTrait, PsrLoggerTrait;
+
     const MODEL_ACTION_VAR = 'action';
 
     const BEAN_ACTION_RELATE = 'link';
@@ -101,22 +103,22 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Current Module
      * @var string
      */
-    protected $module = "";
+    protected $_beanName = "";
 
     /**
      * Whether or not a file upload is occurring
      * @var bool
      */
-    private $upload = false;
+    private $_upload = false;
 
     /**
      * Files waiting to be attached to record
      * @var array
      */
-    private $_files = array();
+    private $_file = [];
 
-    public function __construct(array $options = array(), array $properties = array()) {
-        parent::__construct($options, $properties);
+    public function __construct(array $urlArgs = array(), array $properties = array()) {
+        parent::__construct($urlArgs, $properties);
         foreach (static::$_DEFAULT_SUGAR_BEAN_ACTIONS as $action => $method) {
             $this->actions[$action] = $method;
         }
@@ -130,7 +132,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     public function setUrlArgs(array $args): EndpointInterface {
         if (isset($args[0])) {
             $this->setModule($args[0]);
-            $args[self::BEAN_MODULE_VAR] = $this->module;
+            $args[self::BEAN_MODULE_VAR] = $this->_beanName;
             unset($args[0]);
         }
         if (isset($args[1])) {
@@ -147,7 +149,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @return $this
      */
     public function setModule($module): AbstractSugarBeanEndpoint {
-        $this->module = $module;
+        $this->_beanName = $module;
         return $this;
     }
 
@@ -156,7 +158,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @return string
      */
     public function getModule(): string {
-        return $this->module;
+        return $this->_beanName;
     }
 
     /**
@@ -165,21 +167,24 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      */
     protected function configureRequest(Request $request,$data): Request
     {
-        if ($this->upload && !empty($this->_files)){
+        if ($this->_upload && !empty($this->_file['name']) && $this->_file['path']){
+            $uri = $request->getUri();
+            $request = $request->withUri($uri->withQuery(\http_build_query($this->getData()->toArray())));
             $multiPartOptions = [];
-            foreach($this->_files as $name => $props){
-                if (file_exists($props['path'])){
-                    $fileProps = [
-                        'name' => $name,
-                        'contents' => Utils::streamFor(fopen($props['path'],'r',true)),
-                    ];
-                    if (isset($props['filename'])){
-                        $fileProps['filename'] = $props['filename'];
-                    }
-                    $multiPartOptions[] = $fileProps;
+            if (file_exists($this->_file['path'])){
+                $fileProps = [
+                    'name' => $this->_file['name'],
+                    'contents' => Utils::streamFor(fopen($this->_file['path'],'r',true)),
+                ];
+                if (isset($this->_file['filename'])){
+                    $fileProps['filename'] = $this->_file['filename'];
                 }
+                $multiPartOptions[] = $fileProps;
             }
             $data = new MultipartStream($multiPartOptions);
+            $request = $request->withBody($data);
+            $request = $request->withHeader('Content-Type','multipart/form-data; boundary=' . $data->getBoundary());
+            $data = null;
         }
         return parent::configureRequest($request,$data);
     }
@@ -196,7 +201,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                 case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
                     $body = $this->getResponseBody();
                     if (isset($body['record'])) {
-                        $this->update(array(
+                        $this->set(array(
                             'filename_guid' => $body['record']['id'],
                             'filename' => $body['filename']['guid']
                         ));
@@ -216,18 +221,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Reset the Upload Settings back to defaults
      */
     protected function resetUploads() {
-        if ($this->upload) {
+        if ($this->_upload) {
             $this->getData()->reset();
         }
-        $this->upload = false;
-        $this->_files = array();
+        $this->_upload = false;
+        $this->_file = [];
     }
 
     /**
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
-    protected function configureURL(array $options): string {
+    protected function configureURL(array $urlArgs): string {
         $action = $this->getCurrentAction();
         switch ($action) {
             case self::BEAN_ACTION_CREATE_RELATED:
@@ -250,13 +255,14 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                 break;
         }
         if ($action !== NULL) {
-            $options[self::MODEL_ACTION_VAR] = $action;
+            $urlArgs[self::MODEL_ACTION_VAR] = $action;
         } else {
-            if (isset($options[self::MODEL_ACTION_VAR])) {
-                unset($options[self::MODEL_ACTION_VAR]);
+            if (isset($urlArgs[self::MODEL_ACTION_VAR])) {
+                unset($urlArgs[self::MODEL_ACTION_VAR]);
             }
         }
-        return parent::configureURL($options);
+        $urlArgs[self::BEAN_MODULE_VAR] = $this->getModule();
+        return parent::configureURL($urlArgs);
     }
 
     /**
@@ -275,7 +281,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
                     break;
                 case self::BEAN_ACTION_TEMP_FILE_UPLOAD:
                 case self::BEAN_ACTION_ATTACH_FILE:
-                    $this->upload = true;
+                    $this->_upload = true;
                 case self::BEAN_ACTION_RELATE:
                 case self::BEAN_ACTION_DOWNLOAD_FILE:
                 case self::BEAN_ACTION_UNLINK:
@@ -397,13 +403,12 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         string $fileField,
         string $filePath,
         bool $deleteOnFail = false,
-        string $mimeType = '',
-        string $uploadName = ''
+        string $uploadName = '',
+        string $mimeType = ''
     ): AbstractSugarBeanEndpoint {
         $this->setCurrentAction(self::BEAN_ACTION_ATTACH_FILE, array($fileField));
         $this->configureFileUploadData($deleteOnFail);
-        $this->addFile($fileField, array(
-            'path' => $filePath,
+        $this->setFile($fileField,$filePath,array(
             'mimeType' => $mimeType,
             'filename' => $uploadName
         ));
@@ -423,24 +428,26 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     public function tempFile(
         string $fileField,
         string $filePath,
-        bool $deleteOnFail = false,
-        string $mimeType = '',
-        string $uploadName = ''
+        bool $deleteOnFail = true,
+        string $uploadName = '',
+        string $mimeType = ''
     ): AbstractSugarBeanEndpoint {
-        $model = $this->toArray();
         $idKey = $this->modelIdKey();
-        if (isset($model[$idKey])) {
-            $this->reset();
-        }
+        $oldId = $this->get($idKey);
         $this->set($idKey, 'temp');
         $this->setCurrentAction(self::BEAN_ACTION_TEMP_FILE_UPLOAD, array($fileField));
         $this->configureFileUploadData($deleteOnFail);
-        $this->addFile($fileField, array(
-            'path' => $filePath,
+        $this->setFile($fileField,$filePath,array(
             'mimeType' => $mimeType,
             'filename' => $uploadName
         ));
-        return $this->execute();
+        $this->execute();
+        if (!empty($oldId)){
+            $this->set($idKey, $oldId);
+        } else {
+            $this->offsetUnset($idKey);
+        }
+        return $this;
     }
 
     /**
@@ -473,8 +480,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             $Client = $this->getClient();
             if ($Client){
                 $data['platform'] = $Client->getPlatform();
-                $token = $Client->getAuth()->getToken();
-                $data['oauth_token'] = $token['access_token'];
+                $data['oauth_token'] = $Client->getAuth()->getTokenProp('access_token');
             }
 
         }
@@ -484,13 +490,17 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     /**
      * Add a file to the internal Files array to be added to the Request
      * @param $name
+     * @param $path,
      * @param array $properties
      * @return $this
      */
-    protected function addFile($name, array $properties): AbstractSugarBeanEndpoint {
-        if (isset($properties['path']) && file_exists($properties['path'])) {
-            $this->upload = true;
-            $this->_files[$name] = $properties;
+    protected function setFile(string $name,string $path, array $properties = []): AbstractSugarBeanEndpoint {
+        if (file_exists($path)) {
+            $this->_upload = true;
+            $this->_file = array_replace($properties,[
+                'name' => $name,
+                'path' => $path
+            ]);
         }
         return $this;
     }

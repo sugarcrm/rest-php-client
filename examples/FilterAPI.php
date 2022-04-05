@@ -25,10 +25,8 @@ try {
         pre($Accounts->getResponse()->getBody());
         echo "Running Filter Request: ";
         $Accounts->filter()->execute();
-        echo "Request: ";
-        pre($Accounts->getRequest());
         echo "Accounts: ";
-        pre($Accounts->asArray());
+        pre($Accounts->toArray());
         $Accounts->clear();
         $Accounts->filter(true);
         echo "Filtering Accounts that are created between dates, or in the last 7 days: ";
@@ -41,10 +39,8 @@ try {
             ->endOr();
         pre($Accounts->filter()->compile());
         $Accounts->filter()->execute();
-        echo "Request: ";
-        pre($Accounts->getRequest());
         echo "Accounts: ";
-        pre($Accounts->asArray());
+        pre($Accounts->toArray());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

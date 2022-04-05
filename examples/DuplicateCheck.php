@@ -5,7 +5,7 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
 
 try{
     if ($SugarAPI->login()){
@@ -14,7 +14,7 @@ try{
         $Account = $SugarAPI->module('Accounts')->set("name","DuplicateCheck Test");
         $Account->save();
         pre("Account Created: {$Account['id']}");
-        $a = $Account->asArray();
+        $a = $Account->toArray();
         unset($a['id']);
         echo "Running duplicateCheck for Account: ";
         pre($a);

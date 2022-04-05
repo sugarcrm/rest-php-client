@@ -5,7 +5,7 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
 
 try{
     if ($SugarAPI->login()){

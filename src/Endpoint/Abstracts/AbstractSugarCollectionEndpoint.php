@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\CollectionEndpoint;
+use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 
@@ -17,7 +18,7 @@ use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
  */
 abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
-    use CompileRequestTrait;
+    use CompileRequestTrait, PsrLoggerTrait;
 
     const SUGAR_OFFSET_PROPERTY = 'offset';
 

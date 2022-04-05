@@ -5,7 +5,7 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\Sugar7API($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarAPI($server,$credentials);
 try{
     if ($SugarAPI->login()){
         echo "Logged In: ";
@@ -18,7 +18,7 @@ try{
         $Account['assigned_user_id'] = 'seed_max_id';
         $Account->save();
         echo "Account Updated:";
-        pre($Account->asArray());
+        pre($Account->toArray());
         $Account->audit();
         echo "Audit Log: ";
         pre($Account->getResponse()->getBody());

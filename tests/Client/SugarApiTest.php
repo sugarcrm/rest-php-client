@@ -7,6 +7,7 @@
 namespace Sugarcrm\REST\Tests\Client;
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Log\Test\TestLogger;
 use Sugarcrm\REST\Client\SugarApi;
 use Sugarcrm\REST\Endpoint\Metadata;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
@@ -171,13 +172,79 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @covers ::logout
+     * @covers ::isAuthenticated
+     * @covers ::refreshToken
      */
-    public function testLogout() {
-        $Client = new SugarApi('localhost');
-        $Auth = new SugarOAuthStub();
-        $Client->setAuth($Auth);
-        $this->assertEquals(true, $Client->logout());
+    public function testIsAuthenticated() {
+        $Client = new Client('localhost');
+        $testLogger = new TestLogger();
+        $Client->getAuth()->setLogger($testLogger);
+        $Client->getAuth()->updateCredentials([
+            'username' => 'test',
+            'password' => 'test',
+        ]);
+        $Client->getAuth()->setToken([
+            'access_token' => '12345',
+            'refresh_token' => '67890',
+            'expiration' => time()-10,
+        ]);
+
+        //Text expired token, and automatic refresh
+        $Client->mockResponses->append(new Response(200,[],json_encode([
+            'access_token' => '123456',
+            'refresh_token' => '678901',
+            'expires_in' => 3600,
+        ])));
+        $this->assertEquals(true, $Client->isAuthenticated());
+        $this->assertEquals("/rest/v10/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);
+        $this->assertEquals("67890",$body['refresh_token']);
+        $this->assertEquals(json_decode(json_encode([
+            'access_token' => '123456',
+            'refresh_token' => '678901',
+            'expires_in' => 3600,
+            'expiration' => time()+3600-30
+        ])),$Client->getAuth()->getToken());
+        $Client->container = [];
+        $Client->mockResponses->reset();
+
+        //Test expired token, and expired refresh_token
+        $Client->mockResponses->append(new Response(401,[],json_encode([
+            'error' => 'invalid_token',
+        ])));
+        $Client->mockResponses->append(new Response(200,[],json_encode([
+            'access_token' => '123456',
+            'refresh_token' => '678901',
+            'expires_in' => 3600,
+        ])));
+        $Client->getAuth()->updateCredentials([
+            'username' => 'test',
+            'password' => 'test',
+        ]);
+        $Client->getAuth()->setToken([
+            'access_token' => '12345',
+            'refresh_token' => '67890',
+            'expiration' => time()-10,
+        ]);
+        $this->assertEquals(true, $Client->isAuthenticated());
+        $this->assertEquals("/rest/v10/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertTrue($testLogger->hasErrorThatContains("[REST] OAuth Refresh Exception"));
+        $this->assertEquals(2,count($Client->container));
+        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);
+        $this->assertEquals([
+            'username' => 'test',
+            'password' => 'test',
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'base',
+            'grant_type' => 'password'
+        ],$body);
+        $this->assertEquals(json_decode(json_encode([
+            'access_token' => '123456',
+            'refresh_token' => '678901',
+            'expires_in' => 3600,
+            'expiration' => time()+3600-30
+        ])),$Client->getAuth()->getToken());
     }
 
     /**

@@ -60,8 +60,8 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
         self::USER_ACTION_FOLLOWING => "GET"
     );
 
-    public function __construct(array $options = [], array $properties = []) {
-        parent::__construct($options, $properties);
+    public function __construct(array $urlArgs = [], array $properties = []) {
+        parent::__construct($urlArgs, $properties);
         foreach (static::$_DEFAULT_SUGAR_USER_ACTIONS as $action => $method) {
             $this->actions[$action] = $method;
         }
@@ -71,7 +71,7 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
      * Redefine some Actions to another Action, for use in URL
      * @inheritdoc
      */
-    protected function configureURL(array $options): string {
+    protected function configureURL(array $urlArgs): string {
         $action = $this->getCurrentAction();
         switch ($action) {
             case self::USER_ACTION_SAVE_PREFERENCES:
@@ -90,13 +90,13 @@ class Me extends ModelEndpoint implements SugarEndpointInterface {
                 break;
         }
         if ($action !== NULL) {
-            $options[self::MODEL_ACTION_VAR] = $action;
+            $urlArgs[self::MODEL_ACTION_VAR] = $action;
         } else {
-            if (isset($options[self::MODEL_ACTION_VAR])) {
-                unset($options[self::MODEL_ACTION_VAR]);
+            if (isset($urlArgs[self::MODEL_ACTION_VAR])) {
+                unset($urlArgs[self::MODEL_ACTION_VAR]);
             }
         }
-        return parent::configureURL($options);
+        return parent::configureURL($urlArgs);
     }
 
     /**

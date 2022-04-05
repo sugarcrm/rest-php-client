@@ -16,27 +16,21 @@ if (file_exists($file) && is_readable($file)) {
         if ($SugarAPI->login()){
             echo "Logged In: ";
             pre($SugarAPI->getAuth()->getToken());
-            $Note = $SugarAPI->module('Notes')->set("name", "Test");
-            echo "Creating Note: ";
-            pre($Note->toArray());
-            $Note->save();
+            $Note = $SugarAPI->Note()->set("name", "Test");
+            echo "Creating Note with multiple attachments: ";
+            $Note->multiAttach([
+                $file,
+                [
+                    'path' => $file,
+                    'name' => 'foobar.txt'
+                ],
+                [
+                    'path' => $file,
+                    'name' => 'another.txt'
+                ]
+            ]);
             echo "Saved Note ID: {$Note['id']}<br>";
-            echo "Attempting to attach $file...";
-            $Note->attachFile('filename', $file,true,'testtest.txt');
-            $response = $Note->getResponseBody();
-            //echo "<pre>" . print_r($Note->getRequest(), true) . "</pre>";
-            echo "File uploaded: ";
-            pre($response);
-
-            $Note = $SugarAPI->module('Notes');
-            echo "Uploading temp file for new note...";
-            $Note->tempFile('filename',$file);
-            $response = $Note->getResponseBody();
-            echo "File uploaded: ";
-            pre($response);
-            $Note->set('name','This is a test');
-            $Note->save();
-            echo "Note ID: {$Note['id']}<br>";
+            pre($Note->attachment_list);
         } else {
             echo "Could not login.";
             pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
