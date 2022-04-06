@@ -23,7 +23,8 @@ use Sugarcrm\REST\Endpoint\Data\FilterData;
  * @package Sugarcrm\REST\Endpoint
  */
 class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
-    const COUNT_OPTION = 'count';
+    const ARG_COUNT = 'count';
+    const ARG_LEAN_COUNT = 'leancount';
 
     protected static $_ENDPOINT_URL = '$module/filter/$:count';
 
@@ -50,7 +51,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     public function setUrlArgs(array $args): EndpointInterface {
         if (isset($args[1])) {
             unset($args[1]);
-            $args[self::COUNT_OPTION] = self::COUNT_OPTION;
+            $args[self::ARG_COUNT] = self::ARG_COUNT;
         }
         return parent::setUrlArgs($args);
     }
@@ -110,7 +111,17 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      * Configure the Request to use Count Endpoint
      */
     public function count() {
-        $this->setUrlArgs(array($this->getModule(), self::COUNT_OPTION));
+        $this->setUrlArgs(array($this->getModule(), self::ARG_COUNT));
+        $this->execute();
+        $this->setUrlArgs(array($this->getModule()));
+        return $this;
+    }
+
+    /**
+     * Configure the Request to use Lean Count Endpoint
+     */
+    public function leanCount() {
+        $this->setUrlArgs(array($this->getModule(), self::ARG_LEAN_COUNT));
         $this->execute();
         $this->setUrlArgs(array($this->getModule()));
         return $this;

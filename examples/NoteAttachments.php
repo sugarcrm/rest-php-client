@@ -30,6 +30,8 @@ if (file_exists($file) && is_readable($file)) {
                 ]
             ]);
             echo "Saved Note ID: {$Note['id']}<br>";
+            $Note->addField('attachment_list');
+            $Note->retrieve();
             pre($Note->attachment_list);
         } else {
             echo "Could not login.";

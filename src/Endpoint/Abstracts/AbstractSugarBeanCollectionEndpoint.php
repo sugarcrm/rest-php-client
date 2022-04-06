@@ -7,6 +7,8 @@ namespace Sugarcrm\REST\Endpoint\Abstracts;
 
 use MRussell\REST\Endpoint\Abstracts\AbstractModelEndpoint;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
+use Sugarcrm\REST\Endpoint\Traits\FieldsDataTrait;
+use Sugarcrm\REST\Endpoint\Traits\ModuleAwareTrait;
 
 /**
  * Abstract implementation of SugarBean Collections for Sugar 7 REST Api
@@ -17,9 +19,13 @@ use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
  */
 abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollectionEndpoint
 {
-    const SUGAR_ORDERBY_PROPERTY = 'order_by';
+    use FieldsDataTrait, ModuleAwareTrait;
 
-    const SUGAR_FIELDS_PROPERTY = 'fields';
+    const SUGAR_ORDERBY_DATA_PROPERTY = 'order_by';
+
+    const SUGAR_FIELDS_DATA_PROPERTY = 'fields';
+
+    const SUGAR_VIEW_DATA_PROPERTY = 'view';
 
     protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
 
@@ -31,46 +37,10 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
      */
     protected $orderBy = '';
 
-    /**
-     * Fields requested
-     * @var array
-     */
-    protected $fields = array();
-
-    /**
-     * The SugarCRM Module being used
-     * @var string
-     */
-    protected $module;
-
     public function setUrlArgs(array $args): EndpointInterface
     {
-        if (isset($args[0])) {
-            $args['module'] = $args[0];
-            $this->setModule($args['module']);
-            unset($args[0]);
-        }
+        $this->configureModuleArg($args);
         return parent::setUrlArgs($args);
-    }
-
-    /**
-     * Set the Sugar Module currently being used
-     * @param $module
-     * @return $this
-     */
-    public function setModule($module)
-    {
-        $this->module = $module;
-        return $this;
-    }
-
-    /**
-     * Get the Sugar Module currently configured
-     * @return mixed
-     */
-    public function getModule()
-    {
-        return $this->module;
     }
 
     /**
@@ -94,39 +64,6 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     }
 
     /**
-     * Get the fields that are being requested via API
-     * @return array
-     */
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    /**
-     * Set the fields array property
-     * @param array $fields
-     * @return $this
-     */
-    public function setFields(array $fields)
-    {
-        $this->fields = $fields;
-        return $this;
-    }
-
-    /**
-     * Add a fields to the fields array
-     * @param $field
-     * @return $this
-     */
-    public function addField($field)
-    {
-        if (!in_array($field,$this->fields)){
-            $this->fields[] = $field;
-        }
-        return $this;
-    }
-
-    /**
      * Add orderBy based on Endpoint Property
      * Add fields based on Endpoint property
      * @inheritdoc
@@ -135,12 +72,9 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     {
         $data = parent::configurePayload();
         if ($this->getOrderBy() !== ''){
-            $data[self::SUGAR_ORDERBY_PROPERTY] = $this->getOrderBy();
+            $data[self::SUGAR_ORDERBY_DATA_PROPERTY] = $this->getOrderBy();
         }
-        $fields = $this->getFields();
-        if (!empty($fields)){
-            $data[self::SUGAR_FIELDS_PROPERTY] = implode(',',$this->getFields());
-        }
+        $data = $this->configureFieldsDataProps($data);
         return $data;
     }
 
@@ -150,7 +84,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
      */
     protected function configureURL(array $urlArgs): string
     {
-        $urlArgs['module'] = $this->module;
+        $urlArgs['module'] = $this->getModule();
         return parent::configureURL($urlArgs);
     }
 
@@ -160,11 +94,13 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     protected function buildModel(array $data = array()): AbstractModelEndpoint
     {
         $Model = parent::buildModel($data);
-        $module = $this->getModule();
-        if (!empty($module) && $module !== '') {
-            $Model->setModule($this->module);
-        } else if (isset($Model['_module'])) {
-            $Model->setModule($Model['_module']);
+        if ($Model instanceof AbstractSugarBeanEndpoint){
+            $module = $this->getModule();
+            if (!empty($module) && $module !== '') {
+                $Model->setModule($this->getModule());
+            } else if (isset($Model['_module'])) {
+                $Model->setModule($Model['_module']);
+            }
         }
         return $Model;
     }
