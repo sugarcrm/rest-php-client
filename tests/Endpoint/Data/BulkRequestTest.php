@@ -33,7 +33,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
                 'Host: localhost',
                 'Content-Type: application/json'
             ),
-            'data' => '{"offset":0,"max_num":20,"filter":[{"foo":{"$equals":"bar"}}]}'
+            'data' => '{"offset":0,"max_num":50,"filter":[{"foo":{"$equals":"bar"}}]}'
         ),
     );
 

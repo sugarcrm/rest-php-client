@@ -4,7 +4,6 @@ namespace Sugarcrm\REST\Endpoint;
 
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Response;
-use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 
 class Note extends Module
@@ -34,16 +33,16 @@ class Note extends Module
      * @return string
      */
     protected function configureURL(array $urlArgs): string {
-        $multiAttach = false;
-        //Change action to Temp File, so that URL is setup correct
-        //Set ID Var to 'temp' during upload
+
         if ($this->getCurrentAction() == self::NOTE_ACTION_MULTI_ATTACH){
+            //Set ID Var to temp - :module/temp
             $urlArgs[self::MODEL_ID_VAR] = 'temp';
+            //Set action to file - :module/temp/file
             $urlArgs[self::MODEL_ACTION_VAR] = self::BEAN_ACTION_FILE;
+            //Set action arg1 to filename - :module/temp/file/filename
             $urlArgs[self::BEAN_ACTION_ARG1_VAR] = self::NOTES_FILE_FIELD;
         }
-        $url = parent::configureURL($urlArgs);
-        return $url;
+        return parent::configureURL($urlArgs);
     }
 
     /**
