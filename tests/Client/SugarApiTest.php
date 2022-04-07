@@ -82,6 +82,9 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $Client->setVersion("11_4");
         $this->assertEquals("11_4", $Client->getVersion());
         $this->assertEquals('http://localhost/rest/v11_4/', $Client->getAPIUrl());
+
+        $Client = new Client();
+        $this->assertEquals('http://phpunit.tests/rest/v10/',$Client->getAPIUrl());
     }
 
     /**

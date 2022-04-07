@@ -53,6 +53,9 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(10, $Endpoint->getLimit());
     }
 
+    /**
+     * @covers ::configurePayload
+     */
     public function testConfigurePayload() {
         $Endpoint = new SugarCollectionEndpoint();
         $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint');
@@ -62,5 +65,17 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
             'offset' => 0,
             'max_num' => 20
         ), $configurePayload->invoke($Endpoint)->toArray());
+    }
+
+    /**
+     * @covers ::nextPage
+     * @covers ::prevPage
+     * @covers ::parseResponse
+     * @covers ::
+     * @return void
+     */
+    public function testPagination()
+    {
+
     }
 }

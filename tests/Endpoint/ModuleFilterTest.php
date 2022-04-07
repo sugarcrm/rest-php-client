@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Tests\Endpoint;
 
 use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Data\EndpointData;
+use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
@@ -37,44 +38,8 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function tearDown(): void {
+        self::$client->mockResponses->reset();
         parent::tearDown();
-    }
-
-    /**
-     * @covers ::setUrlArgs
-     */
-    public function testSetOptions() {
-        $ModuleFilter = new ModuleFilter();
-        $this->assertEquals($ModuleFilter, $ModuleFilter->setUrlArgs(array(
-            'Accounts',
-            'count'
-        )));
-        $this->assertEquals(array(
-            'module' => 'Accounts',
-            'count' => 'count'
-        ), $ModuleFilter->getUrlArgs());
-        $this->assertEquals($ModuleFilter, $ModuleFilter->setUrlArgs(array(
-            'Accounts',
-            true
-        )));
-        $this->assertEquals(array(
-            'module' => 'Accounts',
-            'count' => 'count'
-        ), $ModuleFilter->getUrlArgs());
-        $this->assertEquals($ModuleFilter, $ModuleFilter->setUrlArgs(array(
-            'Accounts',
-            0
-        )));
-        $this->assertEquals(array(
-            'module' => 'Accounts',
-            'count' => 'count'
-        ), $ModuleFilter->getUrlArgs());
-        $this->assertEquals($ModuleFilter, $ModuleFilter->setUrlArgs(array(
-            'Accounts'
-        )));
-        $this->assertEquals(array(
-            'module' => 'Accounts'
-        ), $ModuleFilter->getUrlArgs());
     }
 
     /**
@@ -185,15 +150,20 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::count
+     * @covers ::getTotalCount
+     * @covers ::parseResponse
+     * @covers ::configureUrl
      */
     public function testCount() {
-        self::$client->mockResponses->append(new Response(200));
+        self::$client->mockResponses->append(new Response(200,[],json_encode(['record_count' => 5000])));
         
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Accounts');
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10/');
         $this->assertEquals($ModuleFilter, $ModuleFilter->count());
         $this->assertEquals('/rest/v10/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals(5000, $ModuleFilter->getTotalCount());
     }
+
+
 }

@@ -29,9 +29,9 @@ trait ModuleAwareTrait
     /**
      * Alter the URL Args array to set the Module Var
      * @param array $urlArgs
-     * @void
+     * @return array
      */
-    public function configureModuleArg(array &$urlArgs): void
+    protected function configureModuleUrlArg(array $urlArgs): array
     {
         if (isset($urlArgs[0])){
             $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG] = $urlArgs[0];
@@ -43,6 +43,6 @@ trait ModuleAwareTrait
         if (!isset($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) && !empty($this->getModule())){
             $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG] = $this->getModule();
         }
-
+        return $urlArgs;
     }
 }

@@ -74,7 +74,10 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
     public function __construct($server = '', array $credentials = []) {
         parent::__construct();
         $this->init();
-        if ($server !== '' || !empty($server)) {
+        if (empty($server) && !empty($this->server)){
+            $server = $this->getServer();
+        }
+        if (!empty($server)) {
             $this->setServer($server);
         }
         $this->setPlatform(static::$_DEFAULT_PLATFORM);

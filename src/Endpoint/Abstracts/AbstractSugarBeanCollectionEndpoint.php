@@ -39,7 +39,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
 
     public function setUrlArgs(array $args): EndpointInterface
     {
-        $this->configureModuleArg($args);
+        $args = $this->configureModuleUrlArg($args);
         return parent::setUrlArgs($args);
     }
 
@@ -61,6 +61,17 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     {
         $this->orderBy = $orderBy;
         return $this;
+    }
+
+    /**
+     * Unset fields and view
+     * @inheritDoc
+     */
+    public function reset()
+    {
+        $this->_fields = [];
+        $this->_view = '';
+        return parent::reset();
     }
 
     /**

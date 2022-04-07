@@ -7,6 +7,7 @@
 namespace Sugarcrm\REST\Endpoint;
 
 use ArrayAccess;
+use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Abstracts\AbstractCollectionEndpoint;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\CollectionInterface;
@@ -24,7 +25,6 @@ use Sugarcrm\REST\Endpoint\Data\FilterData;
  */
 class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     const ARG_COUNT = 'count';
-    const ARG_LEAN_COUNT = 'leancount';
 
     protected static $_ENDPOINT_URL = '$module/filter/$:count';
 
@@ -34,27 +34,14 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     protected $filter;
 
     /**
-     * @var EndpointData
+     * @var int
      */
-    protected $data;
+    protected $_totalCount;
 
     /**
-     * @var
+     * @var bool
      */
-    protected $totalCount;
-
-    /**
-     * Sanitize passed in options
-     * @param array $args
-     * @return $this|mixed
-     */
-    public function setUrlArgs(array $args): EndpointInterface {
-        if (isset($args[1])) {
-            unset($args[1]);
-            $args[self::ARG_COUNT] = self::ARG_COUNT;
-        }
-        return parent::setUrlArgs($args);
-    }
+    private $_count = false;
 
     /**
      * @inheritdoc
@@ -78,6 +65,18 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
             }
         }
         return $data;
+    }
+
+    /**
+     * @param array $urlArgs
+     * @return string
+     */
+    protected function configureURL(array $urlArgs): string
+    {
+        if ($this->_count){
+            $urlArgs[self::ARG_COUNT] = self::ARG_COUNT;
+        }
+        return parent::configureURL($urlArgs);
     }
 
     /**
@@ -105,26 +104,38 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
         }
         return $this->filter;
     }
-    
+
+    public function parseResponse(Response $response): void
+    {
+        if ($this->_count){
+            if ($response->getStatusCode() == 200){
+                $body = $this->getResponseBody();
+                if (isset($body['record_count'])){
+                    $this->_totalCount = intval($body['record_count']);
+                }
+            }
+            $this->_count = false;
+        }
+        parent::parseResponse($response);
+    }
+
 
     /**
      * Configure the Request to use Count Endpoint
      */
     public function count() {
-        $this->setUrlArgs(array($this->getModule(), self::ARG_COUNT));
+        $this->_count = true;
         $this->execute();
-        $this->setUrlArgs(array($this->getModule()));
         return $this;
     }
 
     /**
-     * Configure the Request to use Lean Count Endpoint
+     * Get the total count
+     * @return int
      */
-    public function leanCount() {
-        $this->setUrlArgs(array($this->getModule(), self::ARG_LEAN_COUNT));
-        $this->execute();
-        $this->setUrlArgs(array($this->getModule()));
-        return $this;
+    public function getTotalCount()
+    {
+        return $this->_totalCount;
     }
 
 }

@@ -5,6 +5,7 @@
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
+use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\CollectionEndpoint;
 use MRussell\REST\Traits\PsrLoggerTrait;
@@ -26,11 +27,29 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
 
     const SUGAR_COLLECTION_RESP_PROP = 'records';
 
+    const PROPERTY_SUGAR_DEFAULT_LIMIT = 'default_limit';
+
+    protected static $_DEFAULT_LIMIT = 50;
+
     protected static $_RESPONSE_PROP = self::SUGAR_COLLECTION_RESP_PROP;
 
-    protected $offset = 0;
+    /**
+     * Current record offset to query for
+     * @var int
+     */
+    protected $_offset = 0;
 
-    protected $max_num = 20;
+    /**
+     * Max number of records to return
+     * @var int
+     */
+    protected $_max_num;
+
+    /**
+     * Next offset to pass
+     * @var null
+     */
+    protected $_next_offset = 0;
 
     /**
      * @inehritdoc
@@ -42,6 +61,12 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
             AbstractEndpointData::DATA_PROPERTY_DEFAULTS => array()
         )
     );
+
+    public function __construct(array $urlArgs = array(), array $properties = array())
+    {
+        parent::__construct($urlArgs, $properties);
+        $this->_max_num = $this->defaultLimit();
+    }
 
     protected function configurePayload()
     {
@@ -56,8 +81,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @return int
      */
     public function getOffset(){
-
-        return $this->offset;
+        return $this->_offset;
     }
 
     /**
@@ -66,7 +90,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @return $this
      */
     public function setOffset($offset){
-        $this->offset = intval($offset);
+        $this->_offset = intval($offset);
         return $this;
     }
 
@@ -75,7 +99,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @return int
      */
     public function getLimit(){
-        return $this->max_num;
+        return $this->_max_num;
     }
 
     /**
@@ -84,7 +108,69 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @return $this
      */
     public function setLimit($limit){
-        $this->max_num = intval($limit);
+        $this->_max_num = intval($limit);
+        return $this;
+    }
+
+    protected function defaultLimit()
+    {
+        $limit = static::$_DEFAULT_LIMIT;
+        $properties = $this->getProperties();
+        if (isset($properties[self::PROPERTY_SUGAR_DEFAULT_LIMIT])){
+            $limit = $properties[self::PROPERTY_SUGAR_DEFAULT_LIMIT];
+        }
+        return $limit;
+    }
+
+    /**
+     * @return AbstractSugarCollectionEndpoint
+     */
+    public function reset()
+    {
+        $this->_next_offset = 0;
+        $this->_offset = 0;
+        $this->_max_num = $this->defaultLimit();
+        return parent::reset();
+    }
+
+    /**
+     * Parse next offset to next_offset property
+     * @inheritDoc
+     */
+    protected function parseResponse(Response $response): void
+    {
+        if ($response->getStatusCode() == 200){
+            $body = $this->getResponseBody();
+            if (isset($body['next_offset'])){
+                $this->_next_offset = intval($body['next_offset']);
+            }
+        }
+        parent::parseResponse($response);
+    }
+
+    /**
+     * @return $this
+     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     */
+    public function nextPage()
+    {
+        if ($this->_next_offset != -1){
+            $this->_offset += $this->_max_num;
+            $this->fetch();
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     */
+    public function previousPage()
+    {
+        if ($this->_next_offset != -1){
+            $this->_offset -= $this->_max_num;
+            $this->fetch();
+        }
         return $this;
     }
 }

@@ -79,6 +79,9 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
      * @covers ::addField
      * @covers ::getFields
      * @covers ::setFields
+     * @covers ::setView
+     * @covers ::getView
+     * @covers ::reset
      */
     public function testSetFields() {
         $fields = array(
@@ -95,6 +98,12 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
         $this->assertEquals(array('foo', 'bar'), $Endpoint->getFields());
         $this->assertEquals($Endpoint, $Endpoint->setFields($fields));
         $this->assertEquals($fields, $Endpoint->getFields());
+
+        $this->assertEquals($Endpoint, $Endpoint->setView('list'));
+        $this->assertEquals('list', $Endpoint->getView());
+        $this->assertEquals($Endpoint, $Endpoint->reset());
+        $this->assertEquals('', $Endpoint->getView());
+        $this->assertEquals([], $Endpoint->getFields());
     }
 
     /**

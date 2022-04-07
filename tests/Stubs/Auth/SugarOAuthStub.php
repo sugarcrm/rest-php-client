@@ -27,6 +27,7 @@ class SugarOAuthStub extends SugarOAuthController {
 
     public function logout(): bool
     {
+        $this->token = null;
         return true;
     }
 } 
