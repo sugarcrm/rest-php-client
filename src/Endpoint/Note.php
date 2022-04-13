@@ -63,7 +63,7 @@ class Note extends Module
                 if ($async){
                     $promises[] = $this->asyncExecute()->getPromise();
                 } else {
-                    $this->execute();
+                    $this->execute();  // @codeCoverageIgnore
                 }
             }
             if ($async){
@@ -88,15 +88,15 @@ class Note extends Module
                 $fileName = basename($filePath);
             }elseif (is_array($file)){
                 $filePath = $file['path'];
-                $fileName = $file['name'] ?? basename($filePath);
+                $fileName = $file['name'] ?? null;
             } elseif (is_object($file)) {
                 $filePath = $file->path;
-                $fileName = $file->name ?? basename($filePath);
+                $fileName = $file->name ?? null;
             }
             if (file_exists($filePath)){
                 $parsed[] = [
                     'path' => $filePath,
-                    'name' => $fileName
+                    'name' => $fileName ?? basename($filePath)
                 ];
             }
         }
@@ -113,7 +113,8 @@ class Note extends Module
     }
 
     /**
-     * @return void
+     * Reset the attachments link to default blank values
+     * @return $this
      */
     public function resetAttachments()
     {
@@ -123,6 +124,7 @@ class Note extends Module
             'create' => []
         ];
         $this->getData()->offsetUnset(self::NOTES_ATTACHMENTS_FIELD);
+        return $this;
     }
 
     /**
@@ -150,6 +152,7 @@ class Note extends Module
     }
 
     /**
+     * Add ID(s) of attachments to be deleted. Does not make the API call, call execute once ready
      * @param string|array $id
      * @return $this
      */
@@ -182,9 +185,10 @@ class Note extends Module
      */
     protected function configurePayload()
     {
+        $data = parent::configurePayload();
         if ($this->hasAttachmentsChanges()){
-            $this->getData()->set(self::NOTES_ATTACHMENTS_FIELD,$this->_attachments);
+            $data = $this->getData()->set(self::NOTES_ATTACHMENTS_FIELD,$this->_attachments)->toArray();
         }
-        return parent::configurePayload();
+        return $data;
     }
 }

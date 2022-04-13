@@ -16,7 +16,7 @@ try{
         $Account->save();
         echo "<pre> Account Created: {$Account['id']}</pre><br>";
         $Account->favorite();
-        echo "<pre> Account added to Favorites: <br>".print_r($Account,true)."</pre>";
+        echo "Account added to Favorites: ".($Account->my_favorite==1?"TRUE":"FALSE");
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

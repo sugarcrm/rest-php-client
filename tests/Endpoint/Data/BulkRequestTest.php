@@ -18,7 +18,7 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
 class BulkRequestTest extends \PHPUnit\Framework\TestCase {
     protected $bulkPayload = array(
         array(
-            'url' => '/v10/Accounts',
+            'url' => '/v11/Accounts',
             'method' => 'POST',
             'headers' => array(
                 'Host: localhost',
@@ -27,7 +27,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
             'data' => '{"foo":"bar"}'
         ),
         array(
-            'url' => '/v10/Contacts/filter',
+            'url' => '/v11/Contacts/filter',
             'method' => 'POST',
             'headers' => array(
                 'Host: localhost',
@@ -59,10 +59,10 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
     public function testAsArray() {
         $Data = new BulkRequest();
 
-        $Request = new Request("POST", 'http://localhost/rest/v10/Accounts', ['Content-Type' => 'application/json'], json_encode(['foo' => 'bar']));
+        $Request = new Request("POST", 'http://localhost/rest/v11/Accounts', ['Content-Type' => 'application/json'], json_encode(['foo' => 'bar']));
 
         $Filter = new ModuleFilter(['Contacts']);
-        $Filter->setBaseUrl('http://localhost/rest/v10');
+        $Filter->setBaseUrl('http://localhost/rest/v11');
         $Filter->filter()->equals('foo', 'bar');
         
         $payloadUncompiled = array(
@@ -98,10 +98,10 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $extractRequest = $ReflectedData->getMethod('extractRequest');
         $extractRequest->setAccessible(true);
         $testBodyData = json_encode(['foo' => 'bar']);
-        $Request = new Request("POST", "http://localhost/rest/v10/Accounts", [], $testBodyData);
+        $Request = new Request("POST", "http://localhost/rest/v11/Accounts", [], $testBodyData);
         $result = $extractRequest->invoke($Data, $Request);
         $this->assertArrayHasKey('url', $result);
-        $this->assertEquals('/v10/Accounts', $result['url']);
+        $this->assertEquals('/v11/Accounts', $result['url']);
         $this->assertArrayHasKey('method', $result);
         $this->assertEquals("POST", $result['method']);
         $this->assertArrayHasKey('headers', $result);
@@ -112,22 +112,22 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $ReflectedData = new \ReflectionClass('Sugarcrm\\REST\\Endpoint\\Data\\BulkRequest');
         $extractRequest = $ReflectedData->getMethod('extractRequest');
         $extractRequest->setAccessible(true);
-        $Request = new Request("GET", "http://localhost/rest/v10/Accounts");
+        $Request = new Request("GET", "http://localhost/rest/v11/Accounts");
         $result = $extractRequest->invoke($Data, $Request);
         $this->assertArrayHasKey('url', $result);
-        $this->assertEquals('/v10/Accounts', $result['url']);
+        $this->assertEquals('/v11/Accounts', $result['url']);
         $this->assertArrayHasKey('method', $result);
         $this->assertEquals("GET", $result['method']);
         $this->assertArrayHasKey('headers', $result);
         $this->assertArrayHasKey('data', $result);
         $this->assertEquals(null, $result['data']);
 
-        $Request = new Request("GET", "http://localhost/rest/v10/Accounts", [
+        $Request = new Request("GET", "http://localhost/rest/v11/Accounts", [
                 'X-Sugar-Platform' => "foobar"
             ]);
         $result = $extractRequest->invoke($Data, $Request);
         $this->assertArrayHasKey('url', $result);
-        $this->assertEquals('/v10/Accounts', $result['url']);
+        $this->assertEquals('/v11/Accounts', $result['url']);
         $this->assertArrayHasKey('method', $result);
         $this->assertEquals("GET", $result['method']);
         $this->assertArrayHasKey('headers', $result);

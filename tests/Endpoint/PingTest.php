@@ -44,8 +44,8 @@ class PingTest extends \PHPUnit\Framework\TestCase {
         self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Ping = new Ping();
         $Ping->setClient(self::$client);
-        $Ping->setBaseUrl('http://localhost/rest/v10');
+        $Ping->setBaseUrl('http://localhost/rest/v11');
         $Ping->whattimeisit();
-        $this->assertEquals('http://localhost/rest/v10/ping/whattimeisit', self::$client->mockResponses->getLastRequest()->getUri());
+        $this->assertEquals('http://localhost/rest/v11/ping/whattimeisit', self::$client->mockResponses->getLastRequest()->getUri());
     }
 }

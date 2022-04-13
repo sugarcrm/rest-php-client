@@ -36,7 +36,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface {
     }
 
     const PLATFORM_BASE = 'base';
-    const API_VERSION = "10";
+    const API_VERSION = "11";
     const API_URL = '/rest/v%s/';
 
     protected static $_DEFAULT_PLATFORM = self::PLATFORM_BASE;

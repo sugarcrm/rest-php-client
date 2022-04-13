@@ -50,15 +50,15 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $Client = new SugarApi();
         $this->assertNotEmpty($Client->getAuth());
         $this->assertNotEmpty($Client->getEndpointProvider());
-        $this->assertEquals(10, $Client->getVersion());
+        $this->assertEquals(11, $Client->getVersion());
         $this->assertEmpty($Client->getServer());
         $this->assertEmpty($Client->getAPIUrl());
         $Client = new SugarApi('localhost');
         $this->assertNotEmpty($Client->getAuth());
         $this->assertNotEmpty($Client->getEndpointProvider());
-        $this->assertEquals(10, $Client->getVersion());
+        $this->assertEquals(11, $Client->getVersion());
         $this->assertEquals('localhost', $Client->getServer());
-        $this->assertEquals('http://localhost/rest/v10/', $Client->getAPIUrl());
+        $this->assertEquals('http://localhost/rest/v11/', $Client->getAPIUrl());
         $Client = new SugarApi(
             'localhost',
             [
@@ -75,16 +75,16 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
              'platform' => 'base'
         ], $Client->getAuth()->getCredentials());
         $this->assertNotEmpty($Client->getEndpointProvider());
-        $this->assertEquals(10, $Client->getVersion());
+        $this->assertEquals(11, $Client->getVersion());
         $this->assertEquals('localhost', $Client->getServer());
-        $this->assertEquals('http://localhost/rest/v10/', $Client->getAPIUrl());
+        $this->assertEquals('http://localhost/rest/v11/', $Client->getAPIUrl());
 
         $Client->setVersion("11_4");
         $this->assertEquals("11_4", $Client->getVersion());
         $this->assertEquals('http://localhost/rest/v11_4/', $Client->getAPIUrl());
 
         $Client = new Client();
-        $this->assertEquals('http://phpunit.tests/rest/v10/',$Client->getAPIUrl());
+        $this->assertEquals('http://phpunit.tests/rest/v11/',$Client->getAPIUrl());
     }
 
     /**
@@ -199,7 +199,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
             'expires_in' => 3600,
         ])));
         $this->assertEquals(true, $Client->isAuthenticated());
-        $this->assertEquals("/rest/v10/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals("/rest/v11/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
         $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);
         $this->assertEquals("67890",$body['refresh_token']);
         $this->assertEquals(json_decode(json_encode([
@@ -230,7 +230,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
             'expiration' => time()-10,
         ]);
         $this->assertEquals(true, $Client->isAuthenticated());
-        $this->assertEquals("/rest/v10/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals("/rest/v11/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertTrue($testLogger->hasErrorThatContains("[REST] OAuth Refresh Exception"));
         $this->assertEquals(2,count($Client->container));
         $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);

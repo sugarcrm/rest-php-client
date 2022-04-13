@@ -8,6 +8,7 @@ require_once 'include.php';
 $SugarAPI = new \Sugarcrm\REST\Client\SugarAPI($server,$credentials);
 try{
     if ($SugarAPI->login()){
+        $SugarAPI->setVersion('11_11');
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
         $Account = $SugarAPI->module('Accounts')->set("name","Audit Log Test");
@@ -21,7 +22,7 @@ try{
         pre($Account->toArray());
         $Account->audit();
         echo "Audit Log: ";
-        pre($Account->getResponse()->getBody());
+        pre($Account->getResponseBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

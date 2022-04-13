@@ -47,14 +47,14 @@ class MetadataTest extends \PHPUnit\Framework\TestCase {
         $Metadata = new Metadata();
         $Metadata->setClient(self::$client);
         // $Metadata->setAuth(new SugarOAuthController());
-        $Metadata->setBaseUrl('http://localhost/rest/v10');
+        $Metadata->setBaseUrl('http://localhost/rest/v11');
         $Metadata->getHash();
         $this->assertEquals(array($Metadata::METADATA_TYPE_HASH), $Metadata->getUrlArgs());
-        $this->assertEquals('http://localhost/rest/v10/metadata/_hash', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/metadata/_hash', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         
         self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Metadata->getPublic();
         $this->assertEquals(array($Metadata::METADATA_TYPE_PUBLIC), $Metadata->getUrlArgs());
-        $this->assertEquals('http://localhost/rest/v10/metadata/public', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/metadata/public', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
     }
 }

@@ -144,11 +144,11 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase {
         ));
         $EP = new OAuth2Sudo();
         $EP->setClient(self::$client);
-        $EP->setBaseUrl('http://localhost/rest/v10');
+        $EP->setBaseUrl('http://localhost/rest/v11');
         $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO, $EP);
         $this->assertEquals(true,$Auth->sudo('max'));
         $request = current(self::$client->container)['request'];
-        $this->assertEquals('http://localhost/rest/v10/oauth2/sudo/max', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/oauth2/sudo/max', $request->getUri()->__toString());
         $this->assertEquals('{"platform":"api","client_id":"sugar"}', $request->getBody()->getContents());
         $this->assertEquals(false,$Auth->sudo('max'));
         $this->assertEquals(true,$logger->hasErrorThatContains("Exception Occurred sending SUDO request:"));

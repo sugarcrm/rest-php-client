@@ -47,11 +47,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
      */
     public function testCompileRequest() {
         $Bean = new Module();
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $Request = $Bean->compileRequest();
         $this->assertEquals("GET", $Request->getMethod());
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar', $Request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar', $Request->getUri()->__toString());
         $this->assertEmpty($Request->getBody()->getContents());
     }
 
@@ -158,11 +158,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         self::$client->mockResponses->append(new Response(200));
         $Bean = new Module();
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $this->assertEquals($Bean, $Bean->relate('baz', 'foz'));
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Foo/bar/link/baz/foz', $request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Foo/bar/link/baz/foz', $request->getUri()->getPath());
         $this->assertEquals('POST', $request->getMethod());
     }
 
@@ -173,11 +173,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean = new Module();
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $this->assertEquals($Bean, $Bean->files());
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Foo/bar/file', $request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Foo/bar/file', $request->getUri()->getPath());
         $this->assertEquals('GET', $request->getMethod());
     }
 
@@ -189,11 +189,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         self::$client->container = [];
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $this->assertEquals($Bean, $Bean->getFile('uploadfile'));
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/file/uploadfile', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/file/uploadfile', $request->getUri()->__toString());
         $this->assertEquals('GET', $request->getMethod());
     }
 
@@ -205,12 +205,12 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         self::$client->container = [];
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
 
         $this->assertEquals($Bean, $Bean->massRelate('baz', ['1234', '5678']));
         $request = current(self::$client->container)['request'];
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/link', $request->getUri()->__toString());
         $this->assertEquals('POST', $request->getMethod());
         
         $this->assertEquals('{"link_name":"baz","ids":["1234","5678"]}', $request->getBody()->getContents());
@@ -224,11 +224,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         self::$client->container = [];
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $Bean->follow();
         $request = current(self::$client->container)['request'];
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/subscribe', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/subscribe', $request->getUri()->__toString());
         $this->assertEquals('POST', $request->getMethod());
     }
 
@@ -240,11 +240,11 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         self::$client->container = [];
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $Bean->unfollow();
         $request = current(self::$client->container)['request'];
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/unsubscribe', $request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/unsubscribe', $request->getUri()->__toString());
         $this->assertEquals('DELETE', $request->getMethod());
     }
 
@@ -255,15 +255,15 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean = new Module();
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $this->assertEquals($Bean, $Bean->getRelated('test'));
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/link/test', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
         
         self::$client->mockResponses->append(new Response(200));
         $this->assertEquals($Bean, $Bean->getRelated('test', true));
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
     }
 
@@ -275,12 +275,12 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean = new Module();
         self::$client->mockResponses->append(new Response(200));
         $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs(['Foo', 'bar']);
         $Filter = $Bean->filterRelated('test');
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
         $this->assertEquals($Bean, $Filter->execute());
-        $this->assertEquals('http://localhost/rest/v10/Foo/bar/link/test', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Foo/bar/link/test', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
         $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
         
         self::$client->mockResponses->append(new Response(200));
@@ -288,7 +288,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Filter->equals('name','foobar');
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
         $this->assertEquals($Bean, $Filter->execute());
-        $this->assertEquals('/rest/v10/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Foo/bar/link/test/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
         parse_str(self::$client->mockResponses->getLastRequest()->getUri()->getQuery(),$query);
         $this->assertArrayHasKey('filter', $query);
@@ -300,7 +300,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
     public function testConfigureURL() {
         $options = ['Foo', 'bar'];
         $Bean = new Module();
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $Bean->setUrlArgs($options);
         $ReflectedBean = new \ReflectionClass('Sugarcrm\REST\Endpoint\Module');
         $configureUrl = $ReflectedBean->getMethod('configureURL');
@@ -358,7 +358,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
      */
     public function testConfigureAction() {
         $Bean = new Module();
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
         $ReflectedBean = new \ReflectionClass('Sugarcrm\REST\Endpoint\Module');
         $configureAction = $ReflectedBean->getMethod('configureAction');
         $configureAction->setAccessible(true);
@@ -433,14 +433,14 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean->setModule('Accounts');
         $this->assertEquals($Bean,$Bean->retrieve('12345'));
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Accounts/12345',$request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts/12345',$request->getUri()->getPath());
         $this->assertEquals($Bean,$Bean->setFields(['foo','baz']));
         $this->assertEquals(['foo','baz'],$Bean->getFields());
         $this->assertEquals($Bean,$Bean->setView('record'));
         $this->assertEquals('record',$Bean->getView());
         $this->assertEquals($Bean,$Bean->retrieve('12345'));
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Accounts/12345',$request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts/12345',$request->getUri()->getPath());
         $this->assertEquals(\http_build_query([
             'fields' => implode(",",["foo","baz"]),
             'view' => 'record'
@@ -465,14 +465,14 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('create',$Bean->getCurrentAction());
         $this->assertEquals('12345',$Bean['id']);
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Accounts',$request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts',$request->getUri()->getPath());
         $this->assertEquals('POST',$request->getMethod());
         $this->assertEquals(json_encode(['foo' => 'bar','baz' => 'foz']),$request->getBody()->getContents());
         $Bean->getData()['test'] = 'should not pass to api';
         $this->assertEquals($Bean,$Bean->save());
         $this->assertEquals('update',$Bean->getCurrentAction());
         $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('/rest/v10/Accounts/12345',$request->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts/12345',$request->getUri()->getPath());
         $this->assertEquals('PUT',$request->getMethod());
         $this->assertEquals(json_encode(['foo' => 'bar','baz' => 'foz','id' => '12345']),$request->getBody()->getContents());
     }
@@ -530,7 +530,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $Bean = new Module();
         $Bean->setClient(static::$client);
         static::$client->setAuth(new SugarOAuthStub());
-        $Bean->setBaseUrl('http://localhost/rest/v10/');
+        $Bean->setBaseUrl('http://localhost/rest/v11/');
 
         $ReflectedEndpoint = new \ReflectionClass(get_class($Bean));
         $deleteFileOnFail = $ReflectedEndpoint->getProperty('_deleteFileOnFail');
@@ -612,7 +612,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
              'format' => 'sugar-html-json',
              'delete_if_fails' => false
          ]),$request->getUri()->getQuery());
-         $this->assertEquals("/rest/v10/Accounts/12345a/file/uploadfile",$request->getUri()->getPath());
+         $this->assertEquals("/rest/v11/Accounts/12345a/file/uploadfile",$request->getUri()->getPath());
          $this->assertInstanceOf(MultipartStream::class,$request->getBody());
 
          self::$client->mockResponses->append(new Response(200, [], json_encode(['uploadfile' => 'foo'])));
@@ -628,7 +628,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
              'delete_if_fails' => true,
              'platform' => 'base'
          ]),$request->getUri()->getQuery());
-         $this->assertEquals("/rest/v10/Accounts/temp/file/uploadfile",$request->getUri()->getPath());
+         $this->assertEquals("/rest/v11/Accounts/temp/file/uploadfile",$request->getUri()->getPath());
          $this->assertInstanceOf(MultipartStream::class,$request->getBody());
 
          $Bean = new Module();
@@ -647,7 +647,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
              'delete_if_fails' => true,
              'platform' => 'base'
          ]),$request->getUri()->getQuery());
-         $this->assertEquals("/rest/v10/Accounts/temp/file/uploadfile",$request->getUri()->getPath());
+         $this->assertEquals("/rest/v11/Accounts/temp/file/uploadfile",$request->getUri()->getPath());
          $this->assertInstanceOf(MultipartStream::class,$request->getBody());
      }
 
@@ -670,7 +670,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
          $Bean->duplicateCheck();
          $request = self::$client->mockResponses->getLastRequest();
          $this->assertEquals('duplicateCheck',$Bean->getCurrentAction());
-         $this->assertEquals('/rest/v10/Accounts/duplicateCheck',$request->getUri()->getPath());
+         $this->assertEquals('/rest/v11/Accounts/duplicateCheck',$request->getUri()->getPath());
          $this->assertEquals(json_encode([
              'id' => '12345',
              'name' => 'foo',

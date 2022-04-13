@@ -10,10 +10,9 @@ try{
     if ($SugarAPI->login()){
         echo "Logged In:";
         pre($SugarAPI->getAuth()->getToken());
-        $Enum = $SugarAPI->enum('Accounts','account_type');
-        $response = $Enum->execute()->getResponse();
+        $Enum = $SugarAPI->enum('Accounts','account_type')->execute();
         echo "Account Type options: ";
-        pre($response->getBody());
+        pre($Enum->getResponseBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

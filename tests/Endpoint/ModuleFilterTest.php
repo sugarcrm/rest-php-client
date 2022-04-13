@@ -52,10 +52,10 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
 
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->fetch();
-        $this->assertEquals('/rest/v10/Accounts/filter', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts/filter', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $properties = $ModuleFilter->getProperties();
         $this->assertEquals("GET", $properties[$ModuleFilter::PROPERTY_HTTP_METHOD]);
         $ModuleFilter->filter();
@@ -78,14 +78,14 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $configurePayload = $Reflection->getMethod('configurePayload');
         $configurePayload->setAccessible(true);
 
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter();
         $data = $configurePayload->invoke($ModuleFilter, new EndpointData());
         $this->assertArrayNotHasKey('filter', $data);
 
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter()->contains('foo', 'bar');
         $data = $configurePayload->invoke($ModuleFilter, new EndpointData());
@@ -98,12 +98,12 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
      */
     public function testConfigureUrl() {
         $ModuleFilter = new ModuleFilter();
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->setProperty('httpMethod', "POST");
         $Request = $ModuleFilter->compileRequest();
         $this->assertEquals('POST', $Request->getMethod());
-        $this->assertEquals('http://localhost/rest/v10/Accounts/filter', $Request->getUri()->__toString());
+        $this->assertEquals('http://localhost/rest/v11/Accounts/filter', $Request->getUri()->__toString());
     }
 
     /**
@@ -120,7 +120,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Foo');
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $Filter = $ModuleFilter->filter();
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
         $this->assertEquals([], $Filter->toArray());
@@ -130,7 +130,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Foo');
-        $ModuleFilter->setBaseUrl('http://localhost/rest/v10');
+        $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setData($sampleData);
         $Filter = $ModuleFilter->filter();
         $this->assertEquals($sampleData['filter'], $Filter->toArray());
@@ -161,7 +161,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Accounts');
         $this->assertEquals($ModuleFilter, $ModuleFilter->count());
-        $this->assertEquals('/rest/v10/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals('/rest/v11/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertEquals(5000, $ModuleFilter->getTotalCount());
     }
 

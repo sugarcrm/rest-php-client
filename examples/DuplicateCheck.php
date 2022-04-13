@@ -15,11 +15,9 @@ try{
         $Account->save();
         pre("Account Created: {$Account['id']}");
         $a = $Account->toArray();
-        unset($a['id']);
         echo "Running duplicateCheck for Account: ";
-        pre($a);
         $Account->duplicateCheck();
-        pre($Account->getResponse()->getBody());
+        pre($Account->getResponseBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

@@ -27,7 +27,7 @@ try{
         pre($Account2->toArray());
         $Account2->delete();
         echo "Account Deleted. Response: ";
-        pre($Account2->getResponse());
+        pre($Account2->getResponseBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
