@@ -7,6 +7,9 @@ namespace Sugarcrm\REST\Endpoint\Provider;
 
 use MRussell\REST\Endpoint\Provider\DefaultEndpointProvider;
 
+/**
+ * @package Sugarcrm\REST\Endpoint\Provider
+ */
 class SugarEndpointProvider extends DefaultEndpointProvider
 {
     protected $registry = array(

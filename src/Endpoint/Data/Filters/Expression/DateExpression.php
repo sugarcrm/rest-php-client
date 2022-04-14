@@ -11,7 +11,7 @@ use Sugarcrm\REST\Exception\Filter\MissingFieldForDateExpression;
 use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
 
 /**
- * Class DateExpression
+ * Date Expression provides a wrapper for manging date field specific filters
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
  * @method $this                yesterday()
  * @method $this                today()
@@ -135,7 +135,10 @@ class DateExpression extends AbstractExpression
         throw new UnknownFilterOperator(array($name));
     }
 
-    public function compile()
+    /**
+     * @inheritDoc
+     */
+    public function compile(): array
     {
         if (isset($this->filters[0])){
             return $this->filters[0]->compile();

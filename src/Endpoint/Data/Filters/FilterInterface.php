@@ -5,11 +5,15 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters;
 
+/**
+ * Interface for FilterData which should compile down to the expected Filter Array for Sugar API
+ * @package Sugarcrm\REST\Endpoint\Data\Filters
+ */
 interface FilterInterface
 {
     /**
      * Compiles the Filter Object an array to be passed to Sugar Filter API
      * @return array
      */
-    public function compile();
+    public function compile(): array;
 }

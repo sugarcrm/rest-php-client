@@ -9,7 +9,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\FilterInterface;
 use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
 
 /**
- * Class AbstractExpression
+ * The default expression implementation provides an API for acess to all Sugar filter operators
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
  * @method AndExpression        and()
  * @method OrExpression         or()
@@ -121,7 +121,8 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
      * Gets the Parent Expression of current Expression
      * @return AbstractExpression
      */
-    public function getParentExpression(){
+    public function getParentExpression(): AbstractExpression
+    {
         return $this->parentExpression;
     }
 
@@ -129,7 +130,7 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
      * Compiles the Expression based on the stored Filters array
      * @return array
      */
-    public function compile()
+    public function compile(): array
     {
         $data = array();
         foreach($this->filters as $filter){
@@ -138,6 +139,9 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
         return $data;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function clear()
     {
         $this->filters = array();

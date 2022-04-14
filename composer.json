@@ -57,7 +57,7 @@
       "phpcs --standard=./ruleset.xml src/"
     ],
     "docs": [
-      "phpdoc -d ./src -t ./doc/"
+      "php ./tools/phpDocumentor -d ./src -t ./docs/"
     ]
   }
 }

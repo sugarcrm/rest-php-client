@@ -7,6 +7,9 @@ namespace Sugarcrm\REST\Exception\Filter;
 
 use MRussell\REST\Exception\Endpoint\EndpointException;
 
+/**
+ * @package Sugarcrm\REST\Exception\Filter
+ */
 class UnknownFilterOperator extends EndpointException
 {
     protected $message = 'Unknown Filter Operator: %s';

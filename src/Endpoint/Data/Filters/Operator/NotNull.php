@@ -5,6 +5,9 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 
+/**
+ * @package Sugarcrm\REST\Endpoint\Data\Filters\Operator
+ */
 class NotNull extends IsNull
 {
     const OPERATOR = '$not_null';

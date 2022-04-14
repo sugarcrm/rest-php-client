@@ -6,6 +6,10 @@ use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 
+/**
+ * Metadata Endpoint provides access to the defined Metadata of the system
+ * @package Sugarcrm\REST\Endpoint
+ */
 class Note extends Module
 {
     const NOTE_ACTION_MULTI_ATTACH = 'multiAttach';

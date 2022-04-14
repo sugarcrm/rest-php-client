@@ -6,7 +6,7 @@
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
 /**
- * Class OrExpression
+ * OrExpression provides the basic OR wrapper for filter data
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
  */
 class OrExpression extends AbstractExpression
@@ -16,7 +16,7 @@ class OrExpression extends AbstractExpression
     /**
      * @inheritdoc
      */
-    public function compile()
+    public function compile(): array
     {
         return array(
             self::OPERATOR => parent::compile()

@@ -5,6 +5,10 @@ namespace Sugarcrm\REST\Endpoint\Traits;
 use MRussell\REST\Endpoint\Data\DataInterface;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 
+/**
+ * Default setup for managing fields and view data on an Endpoint
+ * @package Sugarcrm\REST\Endpoint\Traits
+ */
 trait FieldsDataTrait
 {
     /**

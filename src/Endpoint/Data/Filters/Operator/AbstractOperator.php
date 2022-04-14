@@ -8,7 +8,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 use Sugarcrm\REST\Endpoint\Data\Filters\FilterInterface;
 
 /**
- * Class AbstractOperator
+ * The AbstractOperator provides the base API for managing filter operators associated with a field
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Operator
  */
 abstract class AbstractOperator implements FilterInterface
@@ -86,7 +86,8 @@ abstract class AbstractOperator implements FilterInterface
     /**
      * @inheritdoc
      */
-    public function compile(){
+    public function compile(): array
+    {
         return array(
             $this->getField() => array(
                 static::$_OPERATOR => $this->getValue()

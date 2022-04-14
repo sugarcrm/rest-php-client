@@ -10,6 +10,13 @@ use GuzzleHttp\Psr7\Request;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 
+/**
+ * Provides a DataInterface for managing the Bulk API request payload
+ *   - Compiles Endpoint Objects into Bulk request data
+ *   - Compiled Request objects into Bulk request data
+ *   - Allows for manual bulk request data
+ * @package Sugarcrm\REST\Endpoint\Data
+ */
 class BulkRequest extends AbstractEndpointData {
     const BULK_REQUEST_DATA_NAME = 'requests';
 
@@ -55,6 +62,7 @@ class BulkRequest extends AbstractEndpointData {
     }
 
     /**
+     * Extract a Guzzle Request object into Sugar bulk request payload
      * @param Request $Request
      * @return array
      */
@@ -72,6 +80,11 @@ class BulkRequest extends AbstractEndpointData {
         );
     }
 
+    /**
+     * Normalize the headers into standard array of strings `Header: Value`
+     * @param array $headers
+     * @return array
+     */
     private function normaliseHeaders(array $headers): array {
         $normalisedHeaders = [];
         foreach ($headers as $name => $values) { 

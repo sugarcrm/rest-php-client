@@ -6,3 +6,5 @@ coverage/
 docs/
 .phpunit*
 .DS_STORE
+/.phive/
+/tools/

@@ -5,7 +5,9 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
 
-
+/**
+ * @package Sugarcrm\REST\Endpoint\Data\Filters\Operator
+ */
 class Equals extends AbstractOperator
 {
     const OPERATOR = '$equals';

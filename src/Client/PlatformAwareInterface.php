@@ -7,6 +7,7 @@ namespace Sugarcrm\REST\Client;
 
 /**
  * Interface for an object to be Sugar platform aware
+ * @package Sugarcrm\Rest\Client
  */
 interface PlatformAwareInterface
 {

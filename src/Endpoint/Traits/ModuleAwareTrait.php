@@ -4,6 +4,10 @@ namespace Sugarcrm\REST\Endpoint\Traits;
 
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 
+/**
+ * Default implementation for managing the current module on a given endpoint
+ * @package Sugarcrm\REST\Endpoint\Traits
+ */
 trait ModuleAwareTrait
 {
     /**

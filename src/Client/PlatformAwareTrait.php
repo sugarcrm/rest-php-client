@@ -5,11 +5,22 @@
 
 namespace Sugarcrm\REST\Client;
 
+/**
+ * Default implementation for PlatformAwareInterface
+ * @package Sugarcrm\Rest\Client
+ * @implements PlatformAwareInterface
+ */
 trait PlatformAwareTrait
 {
+    /**
+     * The Sugar API Platform
+     * - Defaults to 'base'
+     * @var string
+     */
     protected $platform = 'base';
 
     /**
+     * Set the platform
      * @implements PlatformAwareInterface
      * @param string $platform
      * @return $this
@@ -21,6 +32,7 @@ trait PlatformAwareTrait
     }
 
     /**
+     * Get the platform
      * @implements PlatformAwareInterface
      * @return string
      */

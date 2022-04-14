@@ -6,7 +6,7 @@
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
 /**
- * Class AndExpression
+ * AndExpression provides the basic AND wrapper for filter data
  * @package Sugarcrm\REST\Endpoint\Data\Filters\Expression
  */
 class AndExpression extends AbstractExpression
@@ -16,7 +16,7 @@ class AndExpression extends AbstractExpression
     /**
      * @inheritdoc
      */
-    public function compile()
+    public function compile(): array
     {
         return array(
             self::OPERATOR => parent::compile()

@@ -8,6 +8,9 @@ namespace Sugarcrm\REST\Exception\Filter;
 
 use MRussell\REST\Exception\Endpoint\EndpointException;
 
+/**
+ * @package Sugarcrm\REST\Exception\Filter
+ */
 class MissingFieldForDateExpression extends EndpointException
 {
     protected $message = 'Field not configured on DateExpression';
