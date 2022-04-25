@@ -20,7 +20,7 @@ class IsNull extends AbstractOperator
         return $this;
     }
 
-    public function compile()
+    public function compile(): array
     {
         return array(
             $this->getField() => array(static::$_OPERATOR)
