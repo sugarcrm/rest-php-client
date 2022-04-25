@@ -153,7 +153,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Configure Uploads on Request
      * @inheritdoc
      */
-    public function configureRequest(Request $request,$data): Request
+    protected function configureRequest(Request $request,$data): Request
     {
         if ($this->_upload && !empty($this->_file['field']) && $this->_file['path']){
             $request = $this->configureFileUploadRequest($request);
