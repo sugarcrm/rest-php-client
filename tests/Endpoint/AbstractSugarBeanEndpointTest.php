@@ -524,9 +524,9 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
      }
 
     /**
-     * @covers ::configureFileUploadData
+     * @covers ::configureFileUploadQueryParams
      */
-    public function testConfigureFileUploadData() {
+    public function testConfigureFileUploadQueryParams() {
         $Bean = new Module();
         $Bean->setClient(static::$client);
         static::$client->setAuth(new SugarOAuthStub());
@@ -535,7 +535,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase {
         $ReflectedEndpoint = new \ReflectionClass(get_class($Bean));
         $deleteFileOnFail = $ReflectedEndpoint->getProperty('_deleteFileOnFail');
         $deleteFileOnFail->setAccessible(true);
-        $configureFileUploadData = $ReflectedEndpoint->getMethod('configureFileUploadData');
+        $configureFileUploadData = $ReflectedEndpoint->getMethod('configureFileUploadQueryParams');
         $configureFileUploadData->setAccessible(true);
         $data = $configureFileUploadData->invoke($Bean);
         $this->assertEquals(array(

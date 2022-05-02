@@ -14,6 +14,7 @@ use GuzzleHttp\Psr7\Utils;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use MRussell\REST\Endpoint\ModelEndpoint;
+use MRussell\REST\Endpoint\Traits\FileUploadsTrait;
 use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
@@ -42,7 +43,8 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     use CompileRequestTrait,
         PsrLoggerTrait,
         ModuleAwareTrait,
-        FieldsDataTrait;
+        FieldsDataTrait,
+        FileUploadsTrait;
 
     const MODEL_ACTION_VAR = 'action';
 
@@ -112,12 +114,6 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     protected $_beanName = "";
 
     /**
-     * Whether or not a file upload is occurring
-     * @var bool
-     */
-    protected $_upload = false;
-
-    /**
      * Files waiting to be attached to record
      * @var array
      */
@@ -156,7 +152,9 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     protected function configureRequest(Request $request,$data): Request
     {
         if ($this->_upload && !empty($this->_file['field']) && $this->_file['path']){
-            $request = $this->configureFileUploadRequest($request);
+            $request = $this->configureFileUploadRequest($request,[
+                $this->_file['field'] => $this->_file['path']
+            ]);
             $data = null;
         } else {
             if ($this->getCurrentAction() == self::MODEL_ACTION_RETRIEVE){
@@ -164,31 +162,6 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             }
         }
         return parent::configureRequest($request,$data);
-    }
-
-    /**
-     * Configure File Upload Request using Multipart Data
-     * @param Request $request
-     * @return Request
-     */
-    protected function configureFileUploadRequest(Request $request): Request {
-        $uri = $request->getUri();
-        $data = $this->configureFileUploadData();
-        $request = $request->withUri($uri->withQuery(\http_build_query($data)));
-        $multiPartOptions = [];
-        if (file_exists($this->_file['path'])){
-            $fileProps = [
-                'name' => $this->_file['field'],
-                'contents' => Utils::streamFor(fopen($this->_file['path'],'r',true)),
-            ];
-            if (isset($this->_file['filename'])){
-                $fileProps['filename'] = $this->_file['filename'];
-            }
-            $multiPartOptions[] = $fileProps;
-        }
-        $data = new MultipartStream($multiPartOptions);
-        $request = $request->withBody($data);
-        return $request->withHeader('Content-Type','multipart/form-data; boundary=' . $data->getBoundary());
     }
 
     /**
@@ -490,7 +463,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Setup the query params passed during File Uploads
      * @return array
      */
-    protected function configureFileUploadData(): array {
+    protected function configureFileUploadQueryParams(): array {
         $data = array(
             'format' => 'sugar-html-json',
             'delete_if_fails' => $this->_deleteFileOnFail,

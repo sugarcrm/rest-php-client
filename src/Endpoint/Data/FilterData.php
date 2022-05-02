@@ -91,9 +91,9 @@ class FilterData extends AbstractExpression implements DataInterface {
         if ($compile){
             $data = $this->compile();
             if (!empty($data)){
-                $this->attributes = array_replace_recursive($this->attributes,$data);
+                $this->_attributes = array_replace_recursive($this->_attributes,$data);
             }
         }
-        return $this->attributes;
+        return $this->_attributes;
     }
 }
