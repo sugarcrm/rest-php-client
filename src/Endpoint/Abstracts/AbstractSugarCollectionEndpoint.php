@@ -47,7 +47,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
 
     /**
      * Next offset to pass
-     * @var null
+     * @var int
      */
     protected $_next_offset = 0;
 
@@ -68,6 +68,10 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
         $this->_max_num = $this->defaultLimit();
     }
 
+    /**
+     * Append Offset and Limit to payload
+     * @inheritDoc
+     */
     protected function configurePayload()
     {
         $data = parent::configurePayload();
@@ -112,14 +116,13 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
         return $this;
     }
 
+    /**
+     * Get the default Limit set on COllection-
+     * @return int|mixed
+     */
     protected function defaultLimit()
     {
-        $limit = static::$_DEFAULT_LIMIT;
-        $properties = $this->getProperties();
-        if (isset($properties[self::PROPERTY_SUGAR_DEFAULT_LIMIT])){
-            $limit = $properties[self::PROPERTY_SUGAR_DEFAULT_LIMIT];
-        }
-        return $limit;
+        return $this->getProperty(self::PROPERTY_SUGAR_DEFAULT_LIMIT) ?? static::$_DEFAULT_LIMIT;
     }
 
     /**
@@ -167,10 +170,28 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function previousPage()
     {
-        if ($this->_next_offset != -1){
+        if ($this->_next_offset < 0){
             $this->_offset -= $this->_max_num;
             $this->fetch();
         }
         return $this;
+    }
+
+    /**
+     * Check if collection has more data to load
+     * @return bool
+     */
+    public function hasMore()
+    {
+        return $this->_next_offset < 0;
+    }
+
+    /**
+     * Get the next_offset in collection
+     * @return int
+     */
+    public function getNextOffset(): int
+    {
+        return $this->_next_offset;
     }
 }
