@@ -157,7 +157,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function nextPage()
     {
-        if ($this->_next_offset != -1){
+        if ($this->hasMore()){
             $this->_offset += $this->_max_num;
             $this->fetch();
         }
@@ -170,7 +170,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function previousPage()
     {
-        if ($this->_next_offset < 0){
+        if ($this->_next_offset > 0){
             $this->_offset -= $this->_max_num;
             $this->fetch();
         }
@@ -183,7 +183,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function hasMore()
     {
-        return $this->_next_offset < 0;
+        return $this->_next_offset > -1;
     }
 
     /**
