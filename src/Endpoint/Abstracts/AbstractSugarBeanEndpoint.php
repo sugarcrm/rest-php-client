@@ -14,6 +14,7 @@ use MRussell\REST\Endpoint\Data\EndpointData;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use MRussell\REST\Endpoint\ModelEndpoint;
 use MRussell\REST\Endpoint\Traits\FileUploadsTrait;
+use MRussell\REST\Exception\Endpoint\EndpointException;
 use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
@@ -35,7 +36,6 @@ use Sugarcrm\REST\Endpoint\Traits\ModuleAwareTrait;
  * @method $this    unsubscribe()
  * @method $this    audit()
  * @method $this    file()
- * @method $this    downloadFile(string $field)
  * @method $this    duplicateCheck()
  */
 abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarEndpointInterface
@@ -117,12 +117,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * Files waiting to be attached to record
      * @var array
      */
-    protected $_file = [];
+    protected array $_uploadFile = [];
+
+    /**
+     * The file path where downloaded file is located
+     * @var string
+     */
+    protected string $_downloadFile = '';
 
     /**
      * @var bool
      */
-    protected $_deleteFileOnFail = false;
+    protected bool $_deleteFileOnFail = false;
 
     public function __construct(array $urlArgs = array(), array $properties = array())
     {
@@ -153,9 +159,9 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      */
     protected function configureRequest(Request $request, $data): Request
     {
-        if ($this->_upload && !empty($this->_file['field']) && $this->_file['path']) {
+        if ($this->_upload && !empty($this->_uploadFile['field']) && $this->_uploadFile['path']) {
             $request = $this->configureFileUploadRequest($request, [
-                $this->_file['field'] => $this->_file['path']
+                $this->_uploadFile['field'] => $this->_uploadFile['path']
             ]);
             $data = null;
         } else {
@@ -245,7 +251,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             $this->getData()->reset();
         }
         $this->_upload = false;
-        $this->_file = [];
+        $this->_uploadFile = [];
         $this->_deleteFileOnFail = false;
     }
 
@@ -371,13 +377,33 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     }
 
     /**
-     * Human friendly overload for downloadFile action
-     * @param $field - Name of File Field
-     * @return self
+     * @param string $field
+     * @param string|null $destination
+     * @return AbstractSugarBeanEndpoint
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFile($field): AbstractSugarBeanEndpoint
+    public function downloadFile(string $field,string $destination = null): AbstractSugarBeanEndpoint
     {
-        return $this->downloadFile($field);
+        $id = $this->get('id');
+        if (empty($id) && empty($destination)){
+            throw new EndpointException("Download file only works when record ID is set or destination is passed.");
+        }
+        $this->setCurrentAction(self::BEAN_ACTION_DOWNLOAD_FILE, array($field));
+        if (empty($destination)){
+            $destination = tempnam(sys_get_temp_dir(), $id);
+        }
+        $this->_downloadFile = $destination;
+        $stream = Utils::streamFor(fopen($destination,"w+"));
+        return $this->execute(['sink' => $stream]);
+    }
+
+    /**
+     * Get the downloaded file
+     * @return string
+     */
+    public function getDownloadedFile(): string
+    {
+        return $this->_downloadFile;
     }
 
     /**
@@ -516,7 +542,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     protected function setFile(string $field, string $path, array $properties = []): AbstractSugarBeanEndpoint
     {
         if (file_exists($path)) {
-            $this->_file = array_replace($properties, [
+            $this->_uploadFile = array_replace($properties, [
                 'field' => $field,
                 'path' => $path
             ]);

@@ -8,6 +8,7 @@ namespace Sugarcrm\REST\Tests\Endpoint;
 
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use PhpParser\Node\Expr\AssignOp\Mod;
 use Sugarcrm\REST\Endpoint\Module;
 use Sugarcrm\REST\Tests\Stubs\Auth\SugarOAuthStub;
@@ -189,23 +190,6 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($Bean, $Bean->files());
         $request = self::$client->mockResponses->getLastRequest();
         $this->assertEquals('/rest/v11/Foo/bar/file', $request->getUri()->getPath());
-        $this->assertEquals('GET', $request->getMethod());
-    }
-
-    /**
-     * @covers ::getFile
-     */
-    public function testGetFile()
-    {
-        $Bean = new Module();
-        self::$client->container = [];
-        self::$client->mockResponses->append(new Response(200));
-        $Bean->setClient(self::$client);
-        $Bean->setBaseUrl('http://localhost/rest/v11/');
-        $Bean->setUrlArgs(['Foo', 'bar']);
-        $this->assertEquals($Bean, $Bean->getFile('uploadfile'));
-        $request = self::$client->mockResponses->getLastRequest();
-        $this->assertEquals('http://localhost/rest/v11/Foo/bar/file/uploadfile', $request->getUri()->__toString());
         $this->assertEquals('GET', $request->getMethod());
     }
 
@@ -599,7 +583,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
         $Reflection = new \ReflectionClass($Bean);
         $_upload = $Reflection->getProperty('_upload');
         $_upload->setAccessible(true);
-        $_file = $Reflection->getProperty('_file');
+        $_file = $Reflection->getProperty('_uploadFile');
         $_file->setAccessible(true);
         $setFileMethod = $Reflection->getMethod('setFile');
         $setFileMethod->setAccessible(true);
@@ -697,5 +681,29 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
              'name' => 'foo',
              'bar' => 'foz'
          ]), $request->getBody()->getContents());
+    }
+
+    /**
+     * @covers ::downloadFile
+     * @covers ::getDownloadedFile
+     * @return void
+     */
+    public function testDownloadFile()
+    {
+        $stream = Utils::streamFor("test");
+        self::$client->mockResponses->append(new Response(200,[],$stream));
+        $Bean = new Module();
+        $Bean->setClient(self::$client);
+        $Bean->setModule('Notes');
+        $Bean->set([
+            'id' => '12345',
+        ]);
+        $Bean->downloadFile('uploadfile');
+        $request = self::$client->mockResponses->getLastRequest();
+        $this->assertEquals('downloadFile', $Bean->getCurrentAction());
+        $this->assertEquals('/rest/v11/Notes/12345/file/uploadfile', $request->getUri()->getPath());
+        $this->assertStringStartsWith("12345",basename($Bean->getDownloadedFile()));
+        $this->assertEquals("test", file_get_contents($Bean->getDownloadedFile()));
+        unlink($Bean->getDownloadedFile());
     }
 }
