@@ -12,11 +12,11 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
  */
 class Note extends Module
 {
-    const NOTE_ACTION_MULTI_ATTACH = 'multiAttach';
+    public const NOTE_ACTION_MULTI_ATTACH = 'multiAttach';
 
-    const NOTES_FILE_FIELD = 'filename';
+    public const NOTES_FILE_FIELD = 'filename';
 
-    const NOTES_ATTACHMENTS_FIELD = 'attachments';
+    public const NOTES_ATTACHMENTS_FIELD = 'attachments';
 
     protected $actions = [
         self::NOTE_ACTION_MULTI_ATTACH => 'POST'
@@ -36,9 +36,9 @@ class Note extends Module
      * @param array $urlArgs
      * @return string
      */
-    protected function configureURL(array $urlArgs): string {
-
-        if ($this->getCurrentAction() == self::NOTE_ACTION_MULTI_ATTACH){
+    protected function configureURL(array $urlArgs): string
+    {
+        if ($this->getCurrentAction() == self::NOTE_ACTION_MULTI_ATTACH) {
             //Set ID Var to temp - :module/temp
             $urlArgs[self::MODEL_ID_VAR] = 'temp';
             //Set action to file - :module/temp/file
@@ -54,23 +54,24 @@ class Note extends Module
      * @param array $files
      * @return $this
      */
-    public function multiAttach(array $files,bool $async = true){
+    public function multiAttach(array $files, bool $async = true)
+    {
         $parsed = $this->parseFiles($files);
-        if (!empty($parsed)){
+        if (!empty($parsed)) {
             $this->setCurrentAction(self::NOTE_ACTION_MULTI_ATTACH);
             $promises = [];
-            foreach($parsed as $file){
-                $this->setFile(self::NOTES_FILE_FIELD,$file['path'],array(
+            foreach ($parsed as $file) {
+                $this->setFile(self::NOTES_FILE_FIELD, $file['path'], array(
                     'filename' => $file['name']
                 ));
                 $this->_upload = true;
-                if ($async){
+                if ($async) {
                     $promises[] = $this->asyncExecute()->getPromise();
                 } else {
                     $this->execute();  // @codeCoverageIgnore
                 }
             }
-            if ($async){
+            if ($async) {
                 $responses = Utils::unwrap($promises);
             }
             $this->save();
@@ -86,18 +87,18 @@ class Note extends Module
     protected function parseFiles(array $files)
     {
         $parsed = [];
-        foreach($files as $file){
-            if (is_string($file)){
+        foreach ($files as $file) {
+            if (is_string($file)) {
                 $filePath = $file;
                 $fileName = basename($filePath);
-            }elseif (is_array($file)){
+            } elseif (is_array($file)) {
                 $filePath = $file['path'];
                 $fileName = $file['name'] ?? null;
             } elseif (is_object($file)) {
                 $filePath = $file->path;
                 $fileName = $file->name ?? null;
             }
-            if (file_exists($filePath)){
+            if (file_exists($filePath)) {
                 $parsed[] = [
                     'path' => $filePath,
                     'name' => $fileName ?? basename($filePath)
@@ -135,17 +136,18 @@ class Note extends Module
      * @param Response $response
      * @return void
      */
-    public function parseResponse(Response $response): void{
+    public function parseResponse(Response $response): void
+    {
         parent::parseResponse($response);
-        if ($response->getStatusCode() == 200){
-            switch ($this->getCurrentAction()){
+        if ($response->getStatusCode() == 200) {
+            switch ($this->getCurrentAction()) {
                 case self::MODEL_ACTION_UPDATE:
                 case self::MODEL_ACTION_CREATE:
                     $this->resetAttachments();
                     break;
                 case self::NOTE_ACTION_MULTI_ATTACH:
                     $body = $this->getResponseBody();
-                    if (isset($body['record'])){
+                    if (isset($body['record'])) {
                         $note = $body['record'];
                         $note['filename_guid'] = $body['record']['id'];
                         $this->_attachments['create'][] = $note;
@@ -162,10 +164,10 @@ class Note extends Module
      */
     public function deleteAttachments($id)
     {
-        if (!is_array($id)){
+        if (!is_array($id)) {
             $id = [$id];
         }
-        array_push($this->_attachments['delete'],...$id);
+        array_push($this->_attachments['delete'], ...$id);
         return $this;
     }
 
@@ -174,9 +176,8 @@ class Note extends Module
      */
     protected function hasAttachmentsChanges()
     {
-        foreach($this->_attachments as $key => $values)
-        {
-            if (!empty($values)){
+        foreach ($this->_attachments as $key => $values) {
+            if (!empty($values)) {
                 return true;
             }
         }
@@ -190,8 +191,8 @@ class Note extends Module
     protected function configurePayload()
     {
         $data = parent::configurePayload();
-        if ($this->hasAttachmentsChanges()){
-            $data = $this->getData()->set(self::NOTES_ATTACHMENTS_FIELD,$this->_attachments)->toArray();
+        if ($this->hasAttachmentsChanges()) {
+            $data = $this->getData()->set(self::NOTES_ATTACHMENTS_FIELD, $this->_attachments)->toArray();
         }
         return $data;
     }

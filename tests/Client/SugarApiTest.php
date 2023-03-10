@@ -19,21 +19,25 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass \Sugarcrm\REST\Client\SugarApi
  * @group SugarApiTest
  */
-class SugarApiTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class SugarApiTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -46,7 +50,8 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
      * @covers ::configureApiUrl
      * @covers ::updateAuthCredentials
      */
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $Client = new SugarApi();
         $this->assertNotEmpty($Client->getAuth());
         $this->assertNotEmpty($Client->getEndpointProvider());
@@ -84,7 +89,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('http://localhost/rest/v11_4/', $Client->getAPIUrl());
 
         $Client = new Client();
-        $this->assertEquals('http://phpunit.tests/rest/v11/',$Client->getAPIUrl());
+        $this->assertEquals('http://phpunit.tests/rest/v11/', $Client->getAPIUrl());
     }
 
     /**
@@ -98,21 +103,22 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
     public function testPlatformAwareness()
     {
         $Client = new Client();
-        $this->assertEquals(SugarApi::PLATFORM_BASE,$Client->getPlatform());
-        $this->assertEquals($Client,$Client->setPlatform('api'));
-        $this->assertEquals('api',$Client->getAuth()->getCredentials()['platform']);
+        $this->assertEquals(SugarApi::PLATFORM_BASE, $Client->getPlatform());
+        $this->assertEquals($Client, $Client->setPlatform('api'));
+        $this->assertEquals('api', $Client->getAuth()->getCredentials()['platform']);
 
         $Client->mockResponses->append(new Response(200));
         $Client->ping()->execute();
         $headers = $Client->mockResponses->getLastRequest()->getHeaders();
-        $this->assertArrayHasKey('X-Sugar-Platform',$headers);
-        $this->assertEquals('api',$headers['X-Sugar-Platform'][0]);
+        $this->assertArrayHasKey('X-Sugar-Platform', $headers);
+        $this->assertEquals('api', $headers['X-Sugar-Platform'][0]);
     }
 
     /**
      * @covers ::login
      */
-    public function testLogin() {
+    public function testLogin()
+    {
         $Client = new SugarApi('localhost');
         $Auth = new SugarOAuthStub();
         $Client->setAuth($Auth);
@@ -132,7 +138,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
             'client_secret' => '',
             'platform' => 'base'
         ], $Client->getAuth()->getCredentials());
-        $this->assertEquals(true, $Client->login(NULL, 'abc123'));
+        $this->assertEquals(true, $Client->login(null, 'abc123'));
         $this->assertEquals([
             'username' => 'user1',
             'password' => 'abc123',
@@ -153,7 +159,8 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::refreshToken
      */
-    public function testRefreshToken() {
+    public function testRefreshToken()
+    {
         $Client = new SugarApi('localhost');
         $Auth = new SugarOAuthStub();
         $Auth->setCredentials([
@@ -178,7 +185,8 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
      * @covers ::isAuthenticated
      * @covers ::refreshToken
      */
-    public function testIsAuthenticated() {
+    public function testIsAuthenticated()
+    {
         $Client = new Client('localhost');
         $testLogger = new TestLogger();
         $Client->getAuth()->setLogger($testLogger);
@@ -193,29 +201,29 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
         ]);
 
         //Text expired token, and automatic refresh
-        $Client->mockResponses->append(new Response(200,[],json_encode([
+        $Client->mockResponses->append(new Response(200, [], json_encode([
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
         ])));
         $this->assertEquals(true, $Client->isAuthenticated());
-        $this->assertEquals("/rest/v11/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
-        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);
-        $this->assertEquals("67890",$body['refresh_token']);
+        $this->assertEquals("/rest/v11/oauth2/token", $Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(), true);
+        $this->assertEquals("67890", $body['refresh_token']);
         $this->assertEquals(json_decode(json_encode([
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
             'expiration' => time()+3600-30
-        ])),$Client->getAuth()->getToken());
+        ])), $Client->getAuth()->getToken());
         $Client->container = [];
         $Client->mockResponses->reset();
 
         //Test expired token, and expired refresh_token
-        $Client->mockResponses->append(new Response(401,[],json_encode([
+        $Client->mockResponses->append(new Response(401, [], json_encode([
             'error' => 'invalid_token',
         ])));
-        $Client->mockResponses->append(new Response(200,[],json_encode([
+        $Client->mockResponses->append(new Response(200, [], json_encode([
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
@@ -230,10 +238,10 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
             'expiration' => time()-10,
         ]);
         $this->assertEquals(true, $Client->isAuthenticated());
-        $this->assertEquals("/rest/v11/oauth2/token",$Client->mockResponses->getLastRequest()->getUri()->getPath());
+        $this->assertEquals("/rest/v11/oauth2/token", $Client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertTrue($testLogger->hasErrorThatContains("[REST] OAuth Refresh Exception"));
-        $this->assertEquals(2,count($Client->container));
-        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(),true);
+        $this->assertEquals(2, count($Client->container));
+        $body = json_decode($Client->mockResponses->getLastRequest()->getBody()->getContents(), true);
         $this->assertEquals([
             'username' => 'test',
             'password' => 'test',
@@ -241,13 +249,13 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
             'client_secret' => '',
             'platform' => 'base',
             'grant_type' => 'password'
-        ],$body);
+        ], $body);
         $this->assertEquals(json_decode(json_encode([
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
             'expiration' => time()+3600-30
-        ])),$Client->getAuth()->getToken());
+        ])), $Client->getAuth()->getToken());
     }
 
     /**
@@ -255,44 +263,45 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__call
      * @return void
      */
-     public function testEndpoints() {
-         $Client = new SugarApi('localhost');
-         $Auth = new SugarOAuthStub();
-         $Client->setAuth($Auth);
+    public function testEndpoints()
+    {
+        $Client = new SugarApi('localhost');
+        $Auth = new SugarOAuthStub();
+        $Client->setAuth($Auth);
 
-         $Endpoint = $Client->bulk();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Bulk', $Endpoint);
+        $Endpoint = $Client->bulk();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Bulk', $Endpoint);
 
-         $Endpoint = $Client->module();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Module', $Endpoint);
+        $Endpoint = $Client->module();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Module', $Endpoint);
 
-         $Endpoint = $Client->metadata();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Metadata', $Endpoint);
+        $Endpoint = $Client->metadata();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Metadata', $Endpoint);
 
-         $Endpoint = $Client->enum();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Enum', $Endpoint);
-         $Endpoint = $Client->me();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Me', $Endpoint);
+        $Endpoint = $Client->enum();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Enum', $Endpoint);
+        $Endpoint = $Client->me();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Me', $Endpoint);
 
-         $Endpoint = $Client->list();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleFilter', $Endpoint);
+        $Endpoint = $Client->list();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleFilter', $Endpoint);
 
-         $Endpoint = $Client->oauth2Logout();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Logout', $Endpoint);
+        $Endpoint = $Client->oauth2Logout();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Logout', $Endpoint);
 
-         $Endpoint = $Client->oauth2Refresh();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Refresh', $Endpoint);
+        $Endpoint = $Client->oauth2Refresh();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Refresh', $Endpoint);
 
-         $Endpoint = $Client->oauth2Sudo();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Sudo', $Endpoint);
+        $Endpoint = $Client->oauth2Sudo();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Sudo', $Endpoint);
 
-         $Endpoint = $Client->oauth2Token();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Token', $Endpoint);
+        $Endpoint = $Client->oauth2Token();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Token', $Endpoint);
 
-         $Endpoint = $Client->ping();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Ping', $Endpoint);
+        $Endpoint = $Client->ping();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Ping', $Endpoint);
 
-         $Endpoint = $Client->search();
-         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
-     }
+        $Endpoint = $Client->search();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
+    }
 }

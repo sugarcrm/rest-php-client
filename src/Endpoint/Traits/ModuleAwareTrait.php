@@ -37,14 +37,14 @@ trait ModuleAwareTrait
      */
     protected function configureModuleUrlArg(array $urlArgs): array
     {
-        if (isset($urlArgs[0])){
+        if (isset($urlArgs[0])) {
             $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG] = $urlArgs[0];
             unset($urlArgs[0]);
         }
-        if (isset($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) && $this->getModule() != $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]){
+        if (isset($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) && $this->getModule() != $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) {
             $this->setModule($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]);
         }
-        if (!isset($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) && !empty($this->getModule())){
+        if (!isset($urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG]) && !empty($this->getModule())) {
             $urlArgs[AbstractSugarBeanEndpoint::BEAN_MODULE_URL_ARG] = $this->getModule();
         }
         return $urlArgs;

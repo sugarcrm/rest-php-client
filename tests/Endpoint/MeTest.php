@@ -13,25 +13,30 @@ use Sugarcrm\REST\Endpoint\Me;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Me
  * @group MeTest
  */
-class MeTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class MeTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
-    public function testConstruct() {
+    public function testConstruct()
+    {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $actions = $Reflection->getProperty('actions');
@@ -44,7 +49,8 @@ class MeTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::configureURL
      */
-    public function testConfigureUrl() {
+    public function testConfigureUrl()
+    {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $configureUrl = $Reflection->getMethod('configureURL');
@@ -66,7 +72,8 @@ class MeTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::configureAction
      */
-    public function testConfigureAction() {
+    public function testConfigureAction()
+    {
         $Me = new Me();
         $Reflection = new \ReflectionClass(get_class($Me));
         $configureAction = $Reflection->getMethod('configureAction');

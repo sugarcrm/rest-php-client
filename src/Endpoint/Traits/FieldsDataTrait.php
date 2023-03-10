@@ -48,7 +48,7 @@ trait FieldsDataTrait
      */
     public function addField($field)
     {
-        if (!in_array($field,$this->_fields)){
+        if (!in_array($field, $this->_fields)) {
             $this->_fields[] = $field;
         }
         return $this;
@@ -69,7 +69,8 @@ trait FieldsDataTrait
      * Get the view configured
      * @return string
      */
-    public function getView(): string {
+    public function getView(): string
+    {
         return $this->_view;
     }
 
@@ -77,12 +78,13 @@ trait FieldsDataTrait
      * @param array|\ArrayAccess|DataInterface $data
      * @return void
      */
-    protected function configureFieldsDataProps($data){
+    protected function configureFieldsDataProps($data)
+    {
         $fields = $this->getFields();
-        if (!empty($fields)){
-            $data[AbstractSugarBeanCollectionEndpoint::SUGAR_FIELDS_DATA_PROPERTY] = implode(',',$this->getFields());
+        if (!empty($fields)) {
+            $data[AbstractSugarBeanCollectionEndpoint::SUGAR_FIELDS_DATA_PROPERTY] = implode(',', $this->getFields());
         }
-        if (!empty($this->getView())){
+        if (!empty($this->getView())) {
             $data[AbstractSugarBeanCollectionEndpoint::SUGAR_VIEW_DATA_PROPERTY] = $this->getView();
         }
         return $data;

@@ -1,5 +1,6 @@
 *.iml
 .idea/
+.php_cs.cache
 vendor/
 composer.lock
 coverage/

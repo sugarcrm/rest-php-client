@@ -5,7 +5,6 @@
 
 namespace Sugarcrm\REST\Tests\Stubs\Endpoint;
 
-
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 
 class SugarBeanCollectionEndpoint extends AbstractSugarBeanCollectionEndpoint

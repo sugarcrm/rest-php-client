@@ -19,15 +19,16 @@ use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
  */
 abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implements SugarEndpointInterface
 {
-    use CompileRequestTrait, PsrLoggerTrait;
+    use CompileRequestTrait;
+    use PsrLoggerTrait;
 
-    const SUGAR_OFFSET_PROPERTY = 'offset';
+    public const SUGAR_OFFSET_PROPERTY = 'offset';
 
-    const SUGAR_LIMIT_PROPERTY = 'max_num';
+    public const SUGAR_LIMIT_PROPERTY = 'max_num';
 
-    const SUGAR_COLLECTION_RESP_PROP = 'records';
+    public const SUGAR_COLLECTION_RESP_PROP = 'records';
 
-    const PROPERTY_SUGAR_DEFAULT_LIMIT = 'default_limit';
+    public const PROPERTY_SUGAR_DEFAULT_LIMIT = 'default_limit';
 
     protected static $_DEFAULT_LIMIT = 50;
 
@@ -84,7 +85,8 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * Get the configured offset
      * @return int
      */
-    public function getOffset(){
+    public function getOffset()
+    {
         return $this->_offset;
     }
 
@@ -93,7 +95,8 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @param $offset
      * @return $this
      */
-    public function setOffset($offset){
+    public function setOffset($offset)
+    {
         $this->_offset = intval($offset);
         return $this;
     }
@@ -102,7 +105,8 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * Get the Limit (max_num) property of the Collection
      * @return int
      */
-    public function getLimit(){
+    public function getLimit()
+    {
         return $this->_max_num;
     }
 
@@ -111,7 +115,8 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      * @param $limit
      * @return $this
      */
-    public function setLimit($limit){
+    public function setLimit($limit)
+    {
         $this->_max_num = intval($limit);
         return $this;
     }
@@ -142,9 +147,9 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     protected function parseResponse(Response $response): void
     {
-        if ($response->getStatusCode() == 200){
+        if ($response->getStatusCode() == 200) {
             $body = $this->getResponseBody();
-            if (isset($body['next_offset'])){
+            if (isset($body['next_offset'])) {
                 $this->_next_offset = intval($body['next_offset']);
             }
         }
@@ -157,7 +162,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function nextPage()
     {
-        if ($this->hasMore()){
+        if ($this->hasMore()) {
             $this->_offset += $this->_max_num;
             $this->fetch();
         }
@@ -170,7 +175,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
      */
     public function previousPage()
     {
-        if ($this->_next_offset > 0){
+        if ($this->_next_offset > 0) {
             $this->_offset -= $this->_max_num;
             $this->fetch();
         }

@@ -15,8 +15,8 @@ $credentials = array(
 function pre($message)
 {
     $msg = $message;
-    if (!is_string($message)){
-        $msg = print_r($message,true);
+    if (!is_string($message)) {
+        $msg = print_r($message, true);
     }
     echo "<pre>$msg</pre><br/>";
 }

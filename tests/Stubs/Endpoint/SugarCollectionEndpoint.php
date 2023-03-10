@@ -7,5 +7,6 @@ namespace Sugarcrm\REST\Tests\Stubs\Endpoint;
 
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarCollectionEndpoint;
 
-class SugarCollectionEndpoint extends AbstractSugarCollectionEndpoint {
+class SugarCollectionEndpoint extends AbstractSugarCollectionEndpoint
+{
 }

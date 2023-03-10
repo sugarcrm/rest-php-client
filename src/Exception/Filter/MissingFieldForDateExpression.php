@@ -5,7 +5,6 @@
 
 namespace Sugarcrm\REST\Exception\Filter;
 
-
 use MRussell\REST\Exception\Endpoint\EndpointException;
 
 /**

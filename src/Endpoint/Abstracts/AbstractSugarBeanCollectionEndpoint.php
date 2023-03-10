@@ -19,13 +19,14 @@ use Sugarcrm\REST\Endpoint\Traits\ModuleAwareTrait;
  */
 abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollectionEndpoint
 {
-    use FieldsDataTrait, ModuleAwareTrait;
+    use FieldsDataTrait;
+    use ModuleAwareTrait;
 
-    const SUGAR_ORDERBY_DATA_PROPERTY = 'order_by';
+    public const SUGAR_ORDERBY_DATA_PROPERTY = 'order_by';
 
-    const SUGAR_FIELDS_DATA_PROPERTY = 'fields';
+    public const SUGAR_FIELDS_DATA_PROPERTY = 'fields';
 
-    const SUGAR_VIEW_DATA_PROPERTY = 'view';
+    public const SUGAR_VIEW_DATA_PROPERTY = 'view';
 
     protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
 
@@ -82,7 +83,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     protected function configurePayload()
     {
         $data = parent::configurePayload();
-        if ($this->getOrderBy() !== ''){
+        if ($this->getOrderBy() !== '') {
             $data[self::SUGAR_ORDERBY_DATA_PROPERTY] = $this->getOrderBy();
         }
         $data = $this->configureFieldsDataProps($data);
@@ -105,11 +106,11 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     protected function buildModel(array $data = array()): AbstractModelEndpoint
     {
         $Model = parent::buildModel($data);
-        if ($Model instanceof AbstractSugarBeanEndpoint){
+        if ($Model instanceof AbstractSugarBeanEndpoint) {
             $module = $this->getModule();
             if (!empty($module) && $module !== '') {
                 $Model->setModule($this->getModule());
-            } else if (isset($Model['_module'])) {
+            } elseif (isset($Model['_module'])) {
                 $Model->setModule($Model['_module']);
             }
         }

@@ -15,7 +15,8 @@ use Sugarcrm\REST\Endpoint\ModuleFilter;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\BulkRequest
  * @group BulkRequestTest
  */
-class BulkRequestTest extends \PHPUnit\Framework\TestCase {
+class BulkRequestTest extends \PHPUnit\Framework\TestCase
+{
     protected $bulkPayload = array(
         array(
             'url' => '/v11/Accounts',
@@ -37,26 +38,31 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         ),
     );
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
     /**
      * @covers ::toArray
      */
-    public function testAsArray() {
+    public function testAsArray()
+    {
         $Data = new BulkRequest();
 
         $Request = new Request("POST", 'http://localhost/rest/v11/Accounts', ['Content-Type' => 'application/json'], json_encode(['foo' => 'bar']));
@@ -64,7 +70,7 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $Filter = new ModuleFilter(['Contacts']);
         $Filter->setBaseUrl('http://localhost/rest/v11');
         $Filter->filter()->equals('foo', 'bar');
-        
+
         $payloadUncompiled = array(
             $Request,
             $Filter
@@ -92,7 +98,8 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
      * @covers ::extractRequest
      * @covers ::normaliseHeaders
      */
-    public function testExtractRequest() {
+    public function testExtractRequest()
+    {
         $Data = new BulkRequest();
         $ReflectedData = new \ReflectionClass('Sugarcrm\\REST\\Endpoint\\Data\\BulkRequest');
         $extractRequest = $ReflectedData->getMethod('extractRequest');
@@ -134,11 +141,11 @@ class BulkRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals([
             'Host: localhost',
             "X-Sugar-Platform: foobar"
-        ],$result['headers']);
+        ], $result['headers']);
         $this->assertArrayHasKey('data', $result);
         $this->assertEquals(null, $result['data']);
 
-        $Request = new Request("GET","");
+        $Request = new Request("GET", "");
         $this->assertFalse($extractRequest->invoke($Data, $Request));
     }
 }

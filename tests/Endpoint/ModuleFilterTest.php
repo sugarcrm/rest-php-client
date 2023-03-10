@@ -18,26 +18,31 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\ModuleFilter
  * @group ModuleFilterTest
  */
-class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
+class ModuleFilterTest extends \PHPUnit\Framework\TestCase
+{
     /**
      * @var Client
      */
     protected static $client;
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
         self::$client = new Client();
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         self::$client->mockResponses->reset();
         parent::tearDown();
     }
@@ -45,10 +50,11 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::fetch
      */
-    public function testFetch() {
+    public function testFetch()
+    {
         self::$client->mockResponses->append(new Response(200));
         self::$client->mockResponses->append(new Response(200));
-        
+
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
 
@@ -69,7 +75,8 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::configurePayload
      */
-    public function testConfigurePayload() {
+    public function testConfigurePayload()
+    {
         self::$client->mockResponses->append(new Response(200));
 
         $ModuleFilter = new ModuleFilter();
@@ -96,7 +103,8 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::configureURL
      */
-    public function testConfigureUrl() {
+    public function testConfigureUrl()
+    {
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
@@ -110,7 +118,8 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
      * @covers ::filter
      * @covers Sugarcrm\REST\Endpoint\Data\FilterData
      */
-    public function testFilter() {
+    public function testFilter()
+    {
         $sampleData = [
             "filter" => [
                 [ 'foo' => [ '$equals' => 'bar' ] ]
@@ -145,7 +154,6 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array(), $Filter->toArray(true));
         $data = $ModuleFilter->getData();
         $this->assertEmpty($data['filter']);
-
     }
 
     /**
@@ -154,9 +162,10 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
      * @covers ::parseResponse
      * @covers ::configureUrl
      */
-    public function testCount() {
-        self::$client->mockResponses->append(new Response(200,[],json_encode(['record_count' => 5000])));
-        
+    public function testCount()
+    {
+        self::$client->mockResponses->append(new Response(200, [], json_encode(['record_count' => 5000])));
+
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Accounts');
@@ -164,6 +173,4 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('/rest/v11/Accounts/filter/count', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
         $this->assertEquals(5000, $ModuleFilter->getTotalCount());
     }
-
-
 }

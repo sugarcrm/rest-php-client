@@ -23,8 +23,9 @@ use Sugarcrm\REST\Endpoint\Data\FilterData;
  * - Tracks pagination
  * @package Sugarcrm\REST\Endpoint
  */
-class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
-    const ARG_COUNT = 'count';
+class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
+{
+    public const ARG_COUNT = 'count';
 
     protected static $_ENDPOINT_URL = '$module/filter/$:count';
 
@@ -46,7 +47,8 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     /**
      * @inheritdoc
      */
-    public function fetch(): AbstractCollectionEndpoint {
+    public function fetch(): AbstractCollectionEndpoint
+    {
         $this->setProperty(self::PROPERTY_HTTP_METHOD, "GET");
         return parent::fetch();
     }
@@ -55,11 +57,12 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      * If Filter Options is configured, use Filter Object to update Data
      * @inheritdoc
      */
-    protected function configurePayload() {
+    protected function configurePayload()
+    {
         $data = parent::configurePayload();
         if (is_object($this->filter)) {
             $compiledFilter = $this->filter->compile();
-            
+
             if (!empty($compiledFilter)) {
                 $data->set([FilterData::FILTER_PARAM => $compiledFilter]);
             }
@@ -73,7 +76,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      */
     protected function configureURL(array $urlArgs): string
     {
-        if ($this->_count){
+        if ($this->_count) {
             $urlArgs[self::ARG_COUNT] = self::ARG_COUNT;
         }
         return parent::configureURL($urlArgs);
@@ -84,7 +87,8 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
      * @param bool $reset
     * @return FilterData
      */
-    public function filter(bool $reset = false) {
+    public function filter(bool $reset = false)
+    {
         $this->setProperty(self::PROPERTY_HTTP_METHOD, "POST");
         if (empty($this->filter)) {
             $this->filter = new FilterData();
@@ -107,10 +111,10 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
 
     public function parseResponse(Response $response): void
     {
-        if ($this->_count){
-            if ($response->getStatusCode() == 200){
+        if ($this->_count) {
+            if ($response->getStatusCode() == 200) {
                 $body = $this->getResponseBody();
-                if (isset($body['record_count'])){
+                if (isset($body['record_count'])) {
                     $this->_totalCount = intval($body['record_count']);
                 }
             }
@@ -123,7 +127,8 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     /**
      * Configure the Request to use Count Endpoint
      */
-    public function count() {
+    public function count()
+    {
         $this->_count = true;
         $this->execute();
         return $this;
@@ -137,5 +142,4 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint {
     {
         return $this->_totalCount;
     }
-
 }

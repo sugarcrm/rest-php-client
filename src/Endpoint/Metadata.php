@@ -5,7 +5,6 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -14,9 +13,9 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
  */
 class Metadata extends AbstractSugarEndpoint
 {
-    const METADATA_TYPE_HASH = '_hash';
+    public const METADATA_TYPE_HASH = '_hash';
 
-    const METADATA_TYPE_PUBLIC = 'public';
+    public const METADATA_TYPE_PUBLIC = 'public';
 
     /**
      * @inheritdoc
@@ -36,7 +35,8 @@ class Metadata extends AbstractSugarEndpoint
      * @return $this
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function getHash(){
+    public function getHash()
+    {
         $this->setUrlArgs(array(self::METADATA_TYPE_HASH));
         return $this->execute();
     }
@@ -46,11 +46,12 @@ class Metadata extends AbstractSugarEndpoint
      * @return $this
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function getPublic(){
+    public function getPublic()
+    {
         $this->setUrlArgs(array(self::METADATA_TYPE_PUBLIC));
-        $this->setProperty('auth',true);
+        $this->setProperty('auth', true);
         $this->execute();
-        $this->setProperty('auth',true);
+        $this->setProperty('auth', true);
         return $this;
     }
 }

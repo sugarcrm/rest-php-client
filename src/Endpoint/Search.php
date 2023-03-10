@@ -32,8 +32,8 @@ class Search extends AbstractSugarCollectionEndpoint
     public function get($id)
     {
         $Model = parent::get($id);
-        if (is_object($Model)){
-            if (isset($Model['_module'])){
+        if (is_object($Model)) {
+            if (isset($Model['_module'])) {
                 $Model->setModule($Model['_module']);
             }
         }

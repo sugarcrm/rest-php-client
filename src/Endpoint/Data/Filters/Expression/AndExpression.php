@@ -11,7 +11,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
  */
 class AndExpression extends AbstractExpression
 {
-    const OPERATOR = '$and';
+    public const OPERATOR = '$and';
 
     /**
      * @inheritdoc
@@ -28,7 +28,8 @@ class AndExpression extends AbstractExpression
      * @return AbstractExpression
      * @codeCoverageIgnore
      */
-    public function endAnd(){
+    public function endAnd()
+    {
         return $this->getParentExpression();
     }
 }

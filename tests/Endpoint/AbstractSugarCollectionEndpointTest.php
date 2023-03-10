@@ -15,21 +15,25 @@ use Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarCollectionEndpoint
  * @group AbstractSugarCollectionEndpointTest
  */
-class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -37,7 +41,8 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
      * @covers ::setOffset
      * @covers ::getOffset
      */
-    public function testSetOffset() {
+    public function testSetOffset()
+    {
         $Endpoint = new SugarCollectionEndpoint();
         $this->assertEquals(0, $Endpoint->getOffset());
         $this->assertEquals($Endpoint, $Endpoint->setOffset(10));
@@ -49,10 +54,11 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
      * @covers ::getLimit
      * @covers ::defaultLimit
      */
-    public function testSetLimit() {
+    public function testSetLimit()
+    {
         $Endpoint = new SugarCollectionEndpoint();
         $this->assertEquals(50, $Endpoint->getLimit());
-        $Endpoint = new SugarCollectionEndpoint([],[SugarCollectionEndpoint::PROPERTY_SUGAR_DEFAULT_LIMIT => 100]);
+        $Endpoint = new SugarCollectionEndpoint([], [SugarCollectionEndpoint::PROPERTY_SUGAR_DEFAULT_LIMIT => 100]);
         $this->assertEquals(100, $Endpoint->getLimit());
         $this->assertEquals($Endpoint, $Endpoint->setLimit(10));
         $this->assertEquals(10, $Endpoint->getLimit());
@@ -61,7 +67,8 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::configurePayload
      */
-    public function testConfigurePayload() {
+    public function testConfigurePayload()
+    {
         $Endpoint = new SugarCollectionEndpoint();
         $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint');
         $configurePayload = $Reflection->getMethod('configurePayload');
@@ -89,45 +96,45 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
         $nextOffset = $Reflect->getProperty('_next_offset');
         $nextOffset->setAccessible(true);
 
-        $Client->mockResponses->append(new Response(200,[],\json_encode(['next_offset' => 50])));
-        $this->assertEquals($Endpoint,$Endpoint->fetch());
+        $Client->mockResponses->append(new Response(200, [], \json_encode(['next_offset' => 50])));
+        $this->assertEquals($Endpoint, $Endpoint->fetch());
         $request = $Client->mockResponses->getLastRequest();
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"max_num=50") !== FALSE);
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"offset=0") !== FALSE);
-        $this->assertEquals(50,$Endpoint->getLimit());
-        $this->assertEquals(0,$Endpoint->getOffset());
-        $this->assertEquals(50,$nextOffset->getValue($Endpoint));
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "max_num=50") !== false);
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "offset=0") !== false);
+        $this->assertEquals(50, $Endpoint->getLimit());
+        $this->assertEquals(0, $Endpoint->getOffset());
+        $this->assertEquals(50, $nextOffset->getValue($Endpoint));
 
-        $Client->mockResponses->append(new Response(200,[],\json_encode(['next_offset' => 100])));
-        $this->assertEquals($Endpoint,$Endpoint->nextPage());
+        $Client->mockResponses->append(new Response(200, [], \json_encode(['next_offset' => 100])));
+        $this->assertEquals($Endpoint, $Endpoint->nextPage());
         $request = $Client->mockResponses->getLastRequest();
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"max_num=50") !== FALSE);
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"offset=50") !== FALSE);
-        $this->assertEquals(50,$Endpoint->getLimit());
-        $this->assertEquals(50,$Endpoint->getOffset());
-        $this->assertEquals(100,$nextOffset->getValue($Endpoint));
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "max_num=50") !== false);
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "offset=50") !== false);
+        $this->assertEquals(50, $Endpoint->getLimit());
+        $this->assertEquals(50, $Endpoint->getOffset());
+        $this->assertEquals(100, $nextOffset->getValue($Endpoint));
 
-        $Client->mockResponses->append(new Response(200,[],\json_encode(['next_offset' => 150])));
-        $this->assertEquals($Endpoint,$Endpoint->nextPage());
+        $Client->mockResponses->append(new Response(200, [], \json_encode(['next_offset' => 150])));
+        $this->assertEquals($Endpoint, $Endpoint->nextPage());
         $request = $Client->mockResponses->getLastRequest();
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"max_num=50") !== FALSE);
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"offset=100") !== FALSE);
-        $this->assertEquals(50,$Endpoint->getLimit());
-        $this->assertEquals(100,$Endpoint->getOffset());
-        $this->assertEquals(150,$nextOffset->getValue($Endpoint));
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "max_num=50") !== false);
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "offset=100") !== false);
+        $this->assertEquals(50, $Endpoint->getLimit());
+        $this->assertEquals(100, $Endpoint->getOffset());
+        $this->assertEquals(150, $nextOffset->getValue($Endpoint));
 
         $Client->mockResponses->append(new Response(200));
-        $this->assertEquals($Endpoint,$Endpoint->previousPage());
+        $this->assertEquals($Endpoint, $Endpoint->previousPage());
         $request = $Client->mockResponses->getLastRequest();
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"max_num=50") !== FALSE);
-        $this->assertTrue(strpos($request->getUri()->getQuery(),"offset=50") !== FALSE);
-        $this->assertEquals(50,$Endpoint->getLimit());
-        $this->assertEquals(50,$Endpoint->getOffset());
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "max_num=50") !== false);
+        $this->assertTrue(strpos($request->getUri()->getQuery(), "offset=50") !== false);
+        $this->assertEquals(50, $Endpoint->getLimit());
+        $this->assertEquals(50, $Endpoint->getOffset());
         //not in response
-        $this->assertEquals(150,$nextOffset->getValue($Endpoint));
+        $this->assertEquals(150, $nextOffset->getValue($Endpoint));
         $Endpoint->reset();
-        $this->assertEquals(50,$Endpoint->getLimit());
-        $this->assertEquals(0,$Endpoint->getOffset());
-        $this->assertEquals(0,$nextOffset->getValue($Endpoint));
+        $this->assertEquals(50, $Endpoint->getLimit());
+        $this->assertEquals(0, $Endpoint->getOffset());
+        $this->assertEquals(0, $nextOffset->getValue($Endpoint));
     }
 }

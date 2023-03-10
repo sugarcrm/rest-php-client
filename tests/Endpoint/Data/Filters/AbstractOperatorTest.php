@@ -20,28 +20,31 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotIn;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotNull;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Starts;
 
-
 /**
  * Class AbstractOperatorTest
  * @package Sugarcrm\REST\Tests\Endpoint\Data\Filters
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Operator\AbstractOperator
  * @group AbstractOperatorTest
  */
-class AbstractOperatorTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -50,7 +53,8 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase {
      * @covers ::getValue
      * @covers ::getField
      */
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $Operator = new Contains();
         $this->assertEmpty($Operator->getField());
         $this->assertEmpty($Operator->getValue());
@@ -66,7 +70,8 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase {
      * @covers ::setField
      * @covers ::getField
      */
-    public function testSetField() {
+    public function testSetField()
+    {
         $Operator = new In();
         $this->assertEquals($Operator, $Operator->setField('foo'));
         $this->assertEquals('foo', $Operator->getField());
@@ -76,7 +81,8 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase {
      * @covers ::setValue
      * @covers ::getValue
      */
-    public function testSetValue() {
+    public function testSetValue()
+    {
         $Operator = new Starts();
         $this->assertEquals($Operator, $Operator->setValue('bar'));
         $this->assertEquals('bar', $Operator->getValue());
@@ -86,7 +92,8 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase {
      * @covers ::compile
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Operator\IsNull::compile
      */
-    public function testCompile() {
+    public function testCompile()
+    {
         $Contains = new Contains(array('foo', 'bar'));
         $this->assertEquals(array(
             'foo' => array(

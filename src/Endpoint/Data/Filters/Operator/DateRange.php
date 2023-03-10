@@ -10,8 +10,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
  */
 class DateRange extends AbstractOperator
 {
-    const OPERATOR = '$dateRange';
+    public const OPERATOR = '$dateRange';
 
     protected static $_OPERATOR = self::OPERATOR;
-
 }

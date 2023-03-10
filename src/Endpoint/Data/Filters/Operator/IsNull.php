@@ -10,13 +10,13 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
  */
 class IsNull extends AbstractOperator
 {
-    const OPERATOR = '$is_null';
+    public const OPERATOR = '$is_null';
 
     protected static $_OPERATOR = self::OPERATOR;
 
     public function setValue($value)
     {
-        $this->value = NULL;
+        $this->value = null;
         return $this;
     }
 
@@ -26,5 +26,4 @@ class IsNull extends AbstractOperator
             $this->getField() => array(static::$_OPERATOR)
         );
     }
-
 }

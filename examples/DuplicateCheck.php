@@ -5,13 +5,13 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server, $credentials);
 
-try{
-    if ($SugarAPI->login()){
+try {
+    if ($SugarAPI->login()) {
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
-        $Account = $SugarAPI->module('Accounts')->set("name","DuplicateCheck Test");
+        $Account = $SugarAPI->module('Accounts')->set("name", "DuplicateCheck Test");
         $Account->save();
         pre("Account Created: {$Account['id']}");
         $a = $Account->toArray();
@@ -22,7 +22,7 @@ try{
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
     }
-}catch (Exception $ex){
+} catch (Exception $ex) {
     echo "Error Occurred: ";
     pre($ex->getMessage());
 }

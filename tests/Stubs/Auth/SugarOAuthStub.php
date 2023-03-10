@@ -5,10 +5,10 @@
 
 namespace Sugarcrm\REST\Tests\Stubs\Auth;
 
-
 use Sugarcrm\REST\Auth\SugarOAuthController;
 
-class SugarOAuthStub extends SugarOAuthController {
+class SugarOAuthStub extends SugarOAuthController
+{
     protected $token = array(
         'access_token' => 'bar',
         'refresh_token' => 'foo',
@@ -30,4 +30,4 @@ class SugarOAuthStub extends SugarOAuthController {
         $this->token = null;
         return true;
     }
-} 
+}

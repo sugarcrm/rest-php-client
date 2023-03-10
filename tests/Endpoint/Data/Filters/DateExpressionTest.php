@@ -13,21 +13,25 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression
  * @group DateExpressionTest
  */
-class DateExpressionTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class DateExpressionTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -36,7 +40,8 @@ class DateExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers ::field
      * @throws \ReflectionException
      */
-    public function testField() {
+    public function testField()
+    {
         $Date = new DateExpression(array('test'));
         $Reflection = new \ReflectionClass(get_class($Date));
         $dateField = $Reflection->getProperty('dateField');
@@ -54,15 +59,16 @@ class DateExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__call
      * @covers ::compile
      */
-    public function testCall() {
+    public function testCall()
+    {
         $Expression = new DateExpression(array('foobar'));
-        $this->assertEquals([],$Expression->compile());
+        $this->assertEquals([], $Expression->compile());
         $this->assertEquals($Expression, $Expression->equals('bar'));
         $this->assertEquals([
             'foobar' => [
                 '$equals' => 'bar'
             ]
-        ],$Expression->compile());
+        ], $Expression->compile());
         $this->assertEquals($Expression, $Expression->notEquals('foo'));
         $this->assertEquals($Expression, $Expression->isNull());
         $this->assertEquals($Expression, $Expression->notNull());
@@ -95,7 +101,8 @@ class DateExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__call
      * @expectedException Sugarcrm\REST\Exception\Filter\UnknownFilterOperator
      */
-    public function testUnknownFilterOperatorException() {
+    public function testUnknownFilterOperatorException()
+    {
         $Expression = new DateExpression();
         $Expression->field("foo");
         $this->expectException(\Sugarcrm\REST\Exception\Filter\UnknownFilterOperator::class);
@@ -107,7 +114,8 @@ class DateExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers::__call
      * @expectedException Sugarcrm\REST\Exception\Filter\MissingFieldForDateExpression
      */
-    public function testMissingFieldException() {
+    public function testMissingFieldException()
+    {
         $Expression = new DateExpression();
         $this->expectException(\Sugarcrm\REST\Exception\Filter\MissingFieldForDateExpression::class);
         $this->expectExceptionMessage("Field not configured on DateExpression");

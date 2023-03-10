@@ -5,7 +5,6 @@
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
-
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateRange;
 use Sugarcrm\REST\Exception\Filter\MissingFieldForDateExpression;
 use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
@@ -43,7 +42,7 @@ use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
  */
 class DateExpression extends AbstractExpression
 {
-    const OPERATOR = '';
+    public const OPERATOR = '';
 
     protected $dateField = null;
 
@@ -96,7 +95,7 @@ class DateExpression extends AbstractExpression
      */
     public function __construct($arguments = array())
     {
-        if (isset($arguments[0])){
+        if (isset($arguments[0])) {
             $this->field($arguments[0]);
         }
     }
@@ -114,19 +113,19 @@ class DateExpression extends AbstractExpression
 
     public function __call($name, $arguments)
     {
-        if (empty($this->dateField)){
+        if (empty($this->dateField)) {
             throw new MissingFieldForDateExpression();
         }
         $args = array($this->dateField);
-        if (array_key_exists($name,$this->ranges)){
+        if (array_key_exists($name, $this->ranges)) {
             $range = $this->ranges[$name];
             $args[] = $range;
             $Op = new DateRange($args);
             $this->filters[0] = $Op;
             return $this;
         }
-        if (array_key_exists($name,$this->operators)){
-            $args = array_merge($args,$arguments);
+        if (array_key_exists($name, $this->operators)) {
+            $args = array_replace($args, $arguments);
             $Operator = $this->operators[$name];
             $O = new $Operator($args);
             $this->filters[0] = $O;
@@ -140,7 +139,7 @@ class DateExpression extends AbstractExpression
      */
     public function compile(): array
     {
-        if (isset($this->filters[0])){
+        if (isset($this->filters[0])) {
             return $this->filters[0]->compile();
         }
         return array();
@@ -151,7 +150,8 @@ class DateExpression extends AbstractExpression
      * @return AbstractExpression
      * @codeCoverageIgnore
      */
-    public function endDate(){
+    public function endDate()
+    {
         return $this->getParentExpression();
     }
 }

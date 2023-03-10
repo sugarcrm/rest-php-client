@@ -16,7 +16,8 @@ trait CompileRequestTrait
      * Public interface for building the Guzzle Request object for an Endpoint
      * @implements SugarEndpointInterface
      */
-    public function compileRequest() {
+    public function compileRequest()
+    {
         return $this->buildRequest();
     }
 }

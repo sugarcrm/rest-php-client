@@ -5,12 +5,12 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
-try{
-    if ($SugarAPI->login()){
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server, $credentials);
+try {
+    if ($SugarAPI->login()) {
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
-        $Account = $SugarAPI->module('Accounts')->set("name","Relate Records Test");
+        $Account = $SugarAPI->module('Accounts')->set("name", "Relate Records Test");
         echo "Creating Account: ";
         pre($Account->toArray());
         $Account->save();
@@ -24,15 +24,14 @@ try{
         pre("Saved Opportunity ID: {$Opportunity['id']}");
 
         echo "Relating Opportunity to Account: ";
-        $Account->relate('opportunities',$Opportunity['id']);
+        $Account->relate('opportunities', $Opportunity['id']);
         echo "Response: ";
         pre($Account->getResponseBody());
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
     }
-
-}catch (Exception $ex){
+} catch (Exception $ex) {
     echo "Error Occurred: ";
     pre($ex->getMessage());
     pre($ex->getTraceAsString());

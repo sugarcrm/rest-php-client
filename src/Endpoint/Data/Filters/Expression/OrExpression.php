@@ -11,7 +11,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
  */
 class OrExpression extends AbstractExpression
 {
-    const OPERATOR = '$or';
+    public const OPERATOR = '$or';
 
     /**
      * @inheritdoc
@@ -28,7 +28,8 @@ class OrExpression extends AbstractExpression
      * @return AbstractExpression
      * @codeCoverageIgnore
      */
-    public function endOr(){
+    public function endOr()
+    {
         return $this->getParentExpression();
     }
 }

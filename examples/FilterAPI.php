@@ -20,8 +20,7 @@ try {
             ->endAnd();
         echo "Filtering Accounts that are assigned to User Max, and that either start with an S or contain 'test' in the name: ";
         pre($Accounts->filter()->compile());
-        foreach($Accounts as $id => $account)
-        {
+        foreach ($Accounts as $id => $account) {
             $Account = $Accounts->get($id);
             $Account['jfdksafjsdf'] = '';
             $Account->save();

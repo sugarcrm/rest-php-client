@@ -11,9 +11,9 @@ $file = __DIR__.'/test.txt';
 if (file_exists($file) && is_readable($file)) {
     $SugarAPI = new \Sugarcrm\REST\Client\SugarAPI($server, $credentials);
     $history = [];
-    $SugarAPI->getHandlerStack()->push(Middleware::history($history),'history');
+    $SugarAPI->getHandlerStack()->push(Middleware::history($history), 'history');
     try {
-        if ($SugarAPI->login()){
+        if ($SugarAPI->login()) {
             echo "Logged In: ";
             pre($SugarAPI->getAuth()->getToken());
             $Note = $SugarAPI->Note()->set("name", "Test");
@@ -41,17 +41,17 @@ if (file_exists($file) && is_readable($file)) {
         echo "Error Occurred: ";
         pre($ex->getMessage());
     } finally {
-        foreach($history as $item){
-            if (isset($item['request'])){
+        foreach ($history as $item) {
+            if (isset($item['request'])) {
                 pre($item['request']->getBody()->getContents());
             }
         }
     }
 } else {
-    if (!file_exists($file)){
+    if (!file_exists($file)) {
         echo "Test file does not exist. Create/upload $file";
     }
-    if (!is_readable($file)){
+    if (!is_readable($file)) {
         echo "Test file is not readable for upload. Fix permissions and try again.";
     }
 }

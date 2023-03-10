@@ -9,28 +9,31 @@ namespace Sugarcrm\REST\Tests\Endpoint\Data\Filters;
 use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression;
 use Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression;
 
-
 /**
  * Class AbstractExpressionTest
  * @package Sugarcrm\REST\Tests\Endpoint\Data\Filters
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression
  * @group AbstractExpressionTest
  */
-class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class AbstractExpressionTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -38,7 +41,8 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers ::getParentExpression
      * @covers ::setParentExpression
      */
-    public function testGetParentExpression() {
+    public function testGetParentExpression()
+    {
         $And = new AndExpression();
         $Expression = new OrExpression();
         $this->assertEquals($Expression, $Expression->setParentExpression($And));
@@ -49,9 +53,10 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__call
      * @covers ::clear
      */
-    public function testCall() {
+    public function testCall()
+    {
         $Expression = new AndExpression();
-        $this->assertEquals([],$Expression->compile()['$and']);
+        $this->assertEquals([], $Expression->compile()['$and']);
         $this->assertEquals($Expression, $Expression->equals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->notEquals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->starts('foo', 'bar'));
@@ -74,11 +79,11 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression", $Expression->and());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression", $Expression->or());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression", $Expression->date('test'));
-        $this->assertEquals($Expression,$Expression->clear());
-        $this->assertEquals([],$Expression->compile()['$and']);
+        $this->assertEquals($Expression, $Expression->clear());
+        $this->assertEquals([], $Expression->compile()['$and']);
 
         $Expression = new OrExpression();
-        $this->assertEquals([],$Expression->compile()['$or']);
+        $this->assertEquals([], $Expression->compile()['$or']);
         $this->assertEquals($Expression, $Expression->equals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->notEquals('foo', 'bar'));
         $this->assertEquals($Expression, $Expression->starts('foo', 'bar'));
@@ -101,15 +106,16 @@ class AbstractExpressionTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\AndExpression", $Expression->and());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression", $Expression->or());
         $this->assertInstanceOf("Sugarcrm\REST\Endpoint\Data\Filters\Expression\DateExpression", $Expression->date('test'));
-        $this->assertEquals($Expression,$Expression->clear());
-        $this->assertEquals([],$Expression->compile()['$or']);
+        $this->assertEquals($Expression, $Expression->clear());
+        $this->assertEquals([], $Expression->compile()['$or']);
     }
 
     /**
      * @covers ::__call
      * @expectedException Sugarcrm\REST\Exception\Filter\UnknownFilterOperator
      */
-    public function testUnknownFilterOperatorException() {
+    public function testUnknownFilterOperatorException()
+    {
         $Expression = new AndExpression();
         $this->expectException(\Sugarcrm\REST\Exception\Filter\UnknownFilterOperator::class);
         $this->expectExceptionMessage("Unknown Filter Operator: foo");

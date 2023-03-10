@@ -5,12 +5,12 @@
 
 require_once 'include.php';
 
-$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server,$credentials);
-try{
-    if ($SugarAPI->login()){
+$SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server, $credentials);
+try {
+    if ($SugarAPI->login()) {
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
-        if ($SugarAPI->sudo('will')){
+        if ($SugarAPI->sudo('will')) {
             echo "Sudo'd to will:<br>";
             echo "Token:";
             pre($SugarAPI->getAuth()->getToken());
@@ -22,7 +22,7 @@ try{
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());
     }
-}catch (Exception $ex){
+} catch (Exception $ex) {
     echo "Error Occurred: ";
     pre($ex->getMessage());
     pre($ex->getTraceAsString());

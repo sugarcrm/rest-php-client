@@ -17,15 +17,17 @@ use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
  *   - Allows for manual bulk request data
  * @package Sugarcrm\REST\Endpoint\Data
  */
-class BulkRequest extends AbstractEndpointData {
-    const BULK_REQUEST_DATA_NAME = 'requests';
+class BulkRequest extends AbstractEndpointData
+{
+    public const BULK_REQUEST_DATA_NAME = 'requests';
 
     /**
      * Convert the Current Data Array to the Bulk Request
      * @param boolean $compile
      * @return array
      */
-    public function toArray($compile = true): array {
+    public function toArray($compile = true): array
+    {
         $data = parent::toArray(true);
         if ($compile) {
             $compiled = array(
@@ -66,7 +68,8 @@ class BulkRequest extends AbstractEndpointData {
      * @param Request $Request
      * @return array
      */
-    protected function extractRequest(Request $Request) {
+    protected function extractRequest(Request $Request)
+    {
         $url = $Request->getUri()->getPath();
         if (empty($url)) {
             return false;
@@ -85,14 +88,14 @@ class BulkRequest extends AbstractEndpointData {
      * @param array $headers
      * @return array
      */
-    private function normaliseHeaders(array $headers): array {
+    private function normaliseHeaders(array $headers): array
+    {
         $normalisedHeaders = [];
-        foreach ($headers as $name => $values) { 
-            foreach ($values as $value) { 
+        foreach ($headers as $name => $values) {
+            foreach ($values as $value) {
                 $normalisedHeaders[] = sprintf('%s: %s', $name, $value);
             }
         }
         return $normalisedHeaders;
     }
-    
 }

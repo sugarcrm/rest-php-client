@@ -5,8 +5,6 @@
 
 namespace Sugarcrm\REST\Endpoint;
 
-
-
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -16,7 +14,7 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
  */
 class Ping extends AbstractSugarEndpoint
 {
-    const SERVER_TIME = 'whattimeisit';
+    public const SERVER_TIME = 'whattimeisit';
 
     protected static $_ENDPOINT_URL = 'ping/$:whattimeisit';
 

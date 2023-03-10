@@ -34,14 +34,14 @@ abstract class AbstractOperator implements FilterInterface
 
     public function __construct(array $arguments = array())
     {
-        if (!empty($arguments)){
-            if (isset($arguments[0])){
+        if (!empty($arguments)) {
+            if (isset($arguments[0])) {
                 $this->setField($arguments[0]);
             }
-            if (isset($arguments[1])){
+            if (isset($arguments[1])) {
                 $this->setValue($arguments[1]);
             } else {
-                $this->setValue(NULL);
+                $this->setValue(null);
             }
         }
     }
@@ -61,7 +61,8 @@ abstract class AbstractOperator implements FilterInterface
      * Get the field configured on the Operator
      * @return string
      */
-    public function getField(){
+    public function getField()
+    {
         return $this->field;
     }
 
@@ -70,7 +71,8 @@ abstract class AbstractOperator implements FilterInterface
      * @param $value
      * @return $this
      */
-    public function setValue($value){
+    public function setValue($value)
+    {
         $this->value = $value;
         return $this;
     }
@@ -79,7 +81,8 @@ abstract class AbstractOperator implements FilterInterface
      * Get the value configure on the Operator
      * @return mixed
      */
-    public function getValue(){
+    public function getValue()
+    {
         return $this->value;
     }
 

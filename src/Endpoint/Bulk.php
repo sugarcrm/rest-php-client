@@ -38,5 +38,4 @@ class Bulk extends AbstractSmartSugarEndpoint
             EndpointData::DATA_PROPERTY_DEFAULTS => array()
         )
     );
-
 }

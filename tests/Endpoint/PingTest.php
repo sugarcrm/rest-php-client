@@ -14,33 +14,39 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Ping
  * @group PingTest
  */
-class PingTest extends \PHPUnit\Framework\TestCase {
+class PingTest extends \PHPUnit\Framework\TestCase
+{
     /**
      * @var Client
      */
     protected static $client;
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
         self::$client = new Client();
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
     /**
      * @covers ::whattimeisit
      */
-    public function testWhattimeisit() {
+    public function testWhattimeisit()
+    {
         self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
         $Ping = new Ping();
         $Ping->setClient(self::$client);

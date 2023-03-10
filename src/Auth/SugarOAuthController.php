@@ -22,9 +22,9 @@ use Sugarcrm\REST\Client\SugarApi;
  */
 class SugarOAuthController extends AbstractOAuth2Controller
 {
-    const ACTION_SUGAR_SUDO = 'sudo';
+    public const ACTION_SUGAR_SUDO = 'sudo';
 
-    const OAUTH_PROP_PLATFORM = 'platform';
+    public const OAUTH_PROP_PLATFORM = 'platform';
 
     protected static $_AUTH_HEADER = 'OAuth-Token';
 
@@ -69,7 +69,7 @@ class SugarOAuthController extends AbstractOAuth2Controller
      */
     public function getCacheKey(): string
     {
-        if (empty($this->cacheKey)){
+        if (empty($this->cacheKey)) {
             $this->cacheKey = sha1($this->generateUniqueCacheString($this->getCredentials()));
         }
         return $this->cacheKey;
@@ -82,30 +82,30 @@ class SugarOAuthController extends AbstractOAuth2Controller
     protected function generateUniqueCacheString(array $creds): string
     {
         $key = '';
-        try{
+        try {
             $ep = $this->getActionEndpoint(self::ACTION_AUTH);
-            if ($ep->getClient()){
+            if ($ep->getClient()) {
                 $key = $ep->getClient()->getServer();
             } else {
                 $key = $ep->getBaseUrl();
             }
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $this->getLogger()->info("Cannot use server in cache string.");
         }
 
-        if (!empty($creds['client_id'])){
+        if (!empty($creds['client_id'])) {
             $key .= "_".$creds['client_id'];
         }
-        if (!empty($creds['platform'])){
+        if (!empty($creds['platform'])) {
             $key .= "_".$creds['platform'];
         }
-        if (!empty($creds['username'])){
+        if (!empty($creds['username'])) {
             $key .= "_".$creds['username'];
         }
-        if (!empty($creds['sudo'])){
+        if (!empty($creds['sudo'])) {
             $key .= "_"."sudo".$creds['sudo'];
         }
-        return ltrim($key,"_");
+        return ltrim($key, "_");
     }
 
     /**
@@ -125,13 +125,12 @@ class SugarOAuthController extends AbstractOAuth2Controller
                     $creds = $this->getCredentials();
                     $creds['sudo'] = $user;
                     $this->setCredentials($creds);
-                    $this->parseResponseToToken(self::ACTION_SUGAR_SUDO,$response);
+                    $this->parseResponseToToken(self::ACTION_SUGAR_SUDO, $response);
                     $return = true;
                 }
-            } catch(\Exception $ex){
+            } catch (\Exception $ex) {
                 $this->getLogger()->error("Exception Occurred sending SUDO request: ".$ex->getMessage());
             }
-
         }
         return $return;
     }
@@ -142,7 +141,7 @@ class SugarOAuthController extends AbstractOAuth2Controller
      * @param $user
      * @return EndpointInterface
      */
-    protected function configureSudoEndpoint(EndpointInterface $Endpoint,$user): EndpointInterface
+    protected function configureSudoEndpoint(EndpointInterface $Endpoint, $user): EndpointInterface
     {
         $Endpoint->setUrlArgs(array($user));
         $data = array();

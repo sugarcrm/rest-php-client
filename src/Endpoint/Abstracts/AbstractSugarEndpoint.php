@@ -16,5 +16,6 @@ use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
  */
 abstract class AbstractSugarEndpoint extends Endpoint implements SugarEndpointInterface
 {
-    use CompileRequestTrait, PsrLoggerTrait;
+    use CompileRequestTrait;
+    use PsrLoggerTrait;
 }

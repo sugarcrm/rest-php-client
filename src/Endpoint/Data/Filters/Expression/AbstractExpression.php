@@ -91,13 +91,13 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
      */
     public function __call($name, $arguments)
     {
-        if (array_key_exists($name,$this->operators)){
+        if (array_key_exists($name, $this->operators)) {
             $Operator = $this->operators[$name];
             $Op = new $Operator($arguments);
             $this->filters[] = $Op;
             return $this;
         }
-        if (array_key_exists($name,$this->expressions)){
+        if (array_key_exists($name, $this->expressions)) {
             $Expression =  $this->expressions[$name];
             $Exp = new $Expression($arguments);
             $Exp->setParentExpression($this);
@@ -112,7 +112,8 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
      * @param AbstractExpression $Expression
      * @return $this
      */
-    public function setParentExpression(AbstractExpression $Expression){
+    public function setParentExpression(AbstractExpression $Expression)
+    {
         $this->parentExpression = $Expression;
         return $this;
     }
@@ -133,7 +134,7 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
     public function compile(): array
     {
         $data = array();
-        foreach($this->filters as $filter){
+        foreach ($this->filters as $filter) {
             $data[] = $filter->compile();
         }
         return $data;
@@ -147,5 +148,4 @@ abstract class AbstractExpression implements FilterInterface, ExpressionInterfac
         $this->filters = array();
         return $this;
     }
-
 }

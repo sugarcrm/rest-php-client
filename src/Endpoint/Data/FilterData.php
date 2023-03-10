@@ -20,13 +20,17 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression;
  * Class FilterData
  * @package Sugarcrm\REST\Endpoint\Data
  */
-class FilterData extends AbstractExpression implements DataInterface {
-    use PropertiesTrait, GetAttributesTrait, SetAttributesTrait, ClearAttributesTrait;
+class FilterData extends AbstractExpression implements DataInterface
+{
+    use PropertiesTrait;
+    use GetAttributesTrait;
+    use SetAttributesTrait;
+    use ClearAttributesTrait;
     use ArrayObjectAttributesTrait {
         toArray as protected attributesArray;
     }
 
-    const FILTER_PARAM = 'filter';
+    public const FILTER_PARAM = 'filter';
 
     /**
      * @var AbstractSmartEndpoint
@@ -35,8 +39,9 @@ class FilterData extends AbstractExpression implements DataInterface {
 
 
     //Overloads
-    public function __construct(AbstractSmartEndpoint $Endpoint = NULL) {
-        if ($Endpoint !== NULL) {
+    public function __construct(AbstractSmartEndpoint $Endpoint = null)
+    {
+        if ($Endpoint !== null) {
             $this->setEndpoint($Endpoint);
         }
     }
@@ -45,7 +50,8 @@ class FilterData extends AbstractExpression implements DataInterface {
      * Set Data back to Defaults and clear out data
      * @return AbstractEndpointData
      */
-    public function reset(): DataInterface {
+    public function reset(): DataInterface
+    {
         $this->filters = [];
         return $this->clear();
     }
@@ -55,7 +61,8 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @param AbstractSmartEndpoint $endpoint
      * @return self
      */
-    public function setEndpoint(AbstractSmartEndpoint $endpoint): FilterData {
+    public function setEndpoint(AbstractSmartEndpoint $endpoint): FilterData
+    {
         $this->endpoint = $endpoint;
         return $this;
     }
@@ -65,7 +72,8 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @return AbstractSmartEndpoint
      * @codeCoverageIgnore
      */
-    public function getEndpoint() {
+    public function getEndpoint()
+    {
         return $this->endpoint;
     }
 
@@ -73,7 +81,8 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @return AbstractSmartEndpoint|false
      * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
      */
-    public function execute() {
+    public function execute()
+    {
         $endpoint = $this->getEndpoint();
         if ($endpoint) {
             $endpoint->getData()->set([FilterData::FILTER_PARAM => $this->toArray()]);
@@ -87,11 +96,12 @@ class FilterData extends AbstractExpression implements DataInterface {
      * @param bool $compile - Whether or not to verify if Required Data is filled in
      * @return array
      */
-    public function toArray($compile = TRUE): array {
-        if ($compile){
+    public function toArray($compile = true): array
+    {
+        if ($compile) {
             $data = $this->compile();
-            if (!empty($data)){
-                $this->_attributes = array_replace_recursive($this->_attributes,$data);
+            if (!empty($data)) {
+                $this->_attributes = array_replace_recursive($this->_attributes, $data);
             }
         }
         return $this->_attributes;

@@ -14,51 +14,56 @@ use Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint
  * @group AbstractSugarBeanCollectionEndpointTest
  */
-class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCase {
-
-    public static function setUpBeforeClass(): void {
+class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCase
+{
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
     /**
      * @covers ::setUrlArgs
      */
-     public function testSetUrlArgs()
-     {
-         $Endpoint = new SugarBeanCollectionEndpoint();
-         $this->assertEquals($Endpoint,$Endpoint->setUrlArgs(array(
+    public function testSetUrlArgs()
+    {
+        $Endpoint = new SugarBeanCollectionEndpoint();
+        $this->assertEquals($Endpoint, $Endpoint->setUrlArgs(array(
              'Accounts'
          )));
-         $this->assertEquals(array(
+        $this->assertEquals(array(
              'module' => 'Accounts'
-         ),$Endpoint->getUrlArgs());
-         $this->assertEquals($Endpoint,$Endpoint->setUrlArgs(array(
+         ), $Endpoint->getUrlArgs());
+        $this->assertEquals($Endpoint, $Endpoint->setUrlArgs(array(
              'Accounts',
              'foo'
          )));
-         $this->assertEquals(array(
+        $this->assertEquals(array(
              'module' => 'Accounts',
              1 => 'foo'
-         ),$Endpoint->getUrlArgs());
-     }
+         ), $Endpoint->getUrlArgs());
+    }
 
     /**
      * @covers ::getModule
      * @covers ::setModule
      */
-    public function testSetModule() {
+    public function testSetModule()
+    {
         $Endpoint = new SugarBeanCollectionEndpoint();
         $this->assertEquals($Endpoint, $Endpoint->setModule('Accounts'));
         $this->assertEquals('Accounts', $Endpoint->getModule());
@@ -68,7 +73,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
      * @covers ::getOrderBy
      * @covers ::setOrderBy
      */
-    public function testSetOrderBy() {
+    public function testSetOrderBy()
+    {
         $Endpoint = new SugarBeanCollectionEndpoint();
         $this->assertEquals('', $Endpoint->getOrderBy());
         $this->assertEquals($Endpoint, $Endpoint->setOrderBy('foo:DESC'));
@@ -83,7 +89,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
      * @covers ::getView
      * @covers ::reset
      */
-    public function testSetFields() {
+    public function testSetFields()
+    {
         $fields = array(
             'foo',
             'bar',
@@ -109,7 +116,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
     /**
      * @covers ::configurePayload
      */
-    public function testConfigurePayload() {
+    public function testConfigurePayload()
+    {
         $Endpoint = new SugarBeanCollectionEndpoint();
         $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint');
         $configurePayload = $Reflection->getMethod('configurePayload');
@@ -127,7 +135,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
     /**
      * @covers ::configureURL
      */
-    public function testConfigureURL() {
+    public function testConfigureURL()
+    {
         $Endpoint = new SugarBeanCollectionEndpoint();
         $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarBeanCollectionEndpoint');
         $configureURL = $Reflection->getMethod('configureURL');
@@ -141,7 +150,8 @@ class AbstractSugarBeanCollectionEndpointTest extends \PHPUnit\Framework\TestCas
     /**
      * @covers ::buildModel
      */
-    public function testBuildModel() {
+    public function testBuildModel()
+    {
         $Endpoint = new SugarBeanCollectionEndpoint();
         $Reflection = new \ReflectionClass(get_class($Endpoint));
         $buildModel = $Reflection->getMethod('buildModel');

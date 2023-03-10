@@ -16,8 +16,8 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\FilterData
  * @group FilterDataTest
  */
-class FilterDataTest extends \PHPUnit\Framework\TestCase {
-
+class FilterDataTest extends \PHPUnit\Framework\TestCase
+{
     protected $data_simple = array(
         array(
             'name' => array(
@@ -62,19 +62,23 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
         )
     );
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         //Add Setup for static properties here
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 
@@ -82,7 +86,8 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__construct
      * @covers ::setEndpoint
      */
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $Filter = new FilterData();
         $ReflectedFilter = new \ReflectionClass('Sugarcrm\REST\Endpoint\Data\FilterData');
         $endpoint = $ReflectedFilter->getProperty('endpoint');
@@ -112,7 +117,8 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression::compile
      * @covers Sugarcrm\REST\Endpoint\Data\Filters\Expression\AbstractExpression::clear
      */
-    public function testDataAccess() {
+    public function testDataAccess()
+    {
         $Filter = new ModuleFilter();
         $Data = new FilterData($Filter);
         $Data->set($this->data_simple);
@@ -132,7 +138,7 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
         $Data['$foo'] = 'bar';
         $Data->reset();
         $this->assertEmpty($Data->toArray(true));
-        
+
         $Data->and()
             ->or()
             ->starts('name', 's')
@@ -147,7 +153,8 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
      * @covers ::getProperties
      * @covers ::setProperties
      */
-    public function testGetProperties() {
+    public function testGetProperties()
+    {
         $Filter = new ModuleFilter();
         $Data = new FilterData($Filter);
         $this->assertEmpty($Data->getProperties());
@@ -155,18 +162,19 @@ class FilterDataTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array('required_data' => 'filter'), $Data->getProperties());
     }
 
-     /**
-      * @covers ::execute
-      */
-     public function testExecute() {
-         $client = new Client();
-         $FilterData = new FilterData();
-         $this->assertEquals(false, $FilterData->execute());
-         $ModuleFilter = new ModuleFilter();
-         $ModuleFilter->setClient($client);
-         $ModuleFilter->setModule('test');
-         $FilterData->setEndpoint($ModuleFilter);
-         $client->mockResponses->append(new Response(200));
-         $this->assertEquals($ModuleFilter, $FilterData->execute());
-     }
+    /**
+     * @covers ::execute
+     */
+    public function testExecute()
+    {
+        $client = new Client();
+        $FilterData = new FilterData();
+        $this->assertEquals(false, $FilterData->execute());
+        $ModuleFilter = new ModuleFilter();
+        $ModuleFilter->setClient($client);
+        $ModuleFilter->setModule('test');
+        $FilterData->setEndpoint($ModuleFilter);
+        $client->mockResponses->append(new Response(200));
+        $this->assertEquals($ModuleFilter, $FilterData->execute());
+    }
 }

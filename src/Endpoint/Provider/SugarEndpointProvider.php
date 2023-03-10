@@ -66,5 +66,4 @@ class SugarEndpointProvider extends DefaultEndpointProvider
             'properties' => array()
         )
     );
-
 }

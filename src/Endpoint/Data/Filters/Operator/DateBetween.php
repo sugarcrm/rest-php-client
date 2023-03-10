@@ -10,8 +10,7 @@ namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
  */
 class DateBetween extends AbstractOperator
 {
-    const OPERATOR = '$dateBetween';
+    public const OPERATOR = '$dateBetween';
 
     protected static $_OPERATOR = self::OPERATOR;
-
 }
