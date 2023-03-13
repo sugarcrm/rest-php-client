@@ -691,7 +691,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
     public function testDownloadFile()
     {
         $stream = Utils::streamFor("test");
-        self::$client->mockResponses->append(new Response(200,[],$stream));
+        self::$client->mockResponses->append(new Response(200, [], $stream));
         $Bean = new Module();
         $Bean->setClient(self::$client);
         $Bean->setModule('Notes');
@@ -702,7 +702,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
         $request = self::$client->mockResponses->getLastRequest();
         $this->assertEquals('downloadFile', $Bean->getCurrentAction());
         $this->assertEquals('/rest/v11/Notes/12345/file/uploadfile', $request->getUri()->getPath());
-        $this->assertStringStartsWith("12345",basename($Bean->getDownloadedFile()));
+        $this->assertStringStartsWith("12345", basename($Bean->getDownloadedFile()));
         $this->assertEquals("test", file_get_contents($Bean->getDownloadedFile()));
         unlink($Bean->getDownloadedFile());
     }
