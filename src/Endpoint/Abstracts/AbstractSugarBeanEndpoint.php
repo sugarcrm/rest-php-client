@@ -382,18 +382,18 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
      * @return AbstractSugarBeanEndpoint
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function downloadFile(string $field,string $destination = null): AbstractSugarBeanEndpoint
+    public function downloadFile(string $field, string $destination = null): AbstractSugarBeanEndpoint
     {
         $id = $this->get('id');
-        if (empty($id) && empty($destination)){
+        if (empty($id) && empty($destination)) {
             throw new EndpointException("Download file only works when record ID is set or destination is passed.");
         }
         $this->setCurrentAction(self::BEAN_ACTION_DOWNLOAD_FILE, array($field));
-        if (empty($destination)){
+        if (empty($destination)) {
             $destination = tempnam(sys_get_temp_dir(), $id);
         }
         $this->_downloadFile = $destination;
-        $stream = Utils::streamFor(fopen($destination,"w+"));
+        $stream = Utils::streamFor(fopen($destination, "w+"));
         return $this->execute(['sink' => $stream]);
     }
 
