@@ -125,7 +125,7 @@ class DateExpression extends AbstractExpression
             return $this;
         }
         if (array_key_exists($name, $this->operators)) {
-            $args = array_replace($args, $arguments);
+            $args = array_merge($args, $arguments);
             $Operator = $this->operators[$name];
             $O = new $Operator($args);
             $this->filters[0] = $O;
