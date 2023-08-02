@@ -367,6 +367,14 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         return $this->link($linkName, $related_id);
     }
 
+    public function auditLog(): AbstractSugarBeanCollectionEndpoint
+    {
+        $client = $this->getClient();
+        $client->setVersion("11_12");
+        $auditCollection = $client->audit($this->_beanName, $this->get('id'));
+        return $auditCollection;
+    }
+
     /**
      * Another Human Friendly overload, file & files are the same action
      * @return self

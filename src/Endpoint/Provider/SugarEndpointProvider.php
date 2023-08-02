@@ -21,6 +21,10 @@ class SugarEndpointProvider extends DefaultEndpointProvider
             'class' => \Sugarcrm\REST\Endpoint\ModuleFilter::class,
             'properties' => array()
         ),
+        'audit' => array(
+            'class' => \Sugarcrm\REST\Endpoint\ModuleAudit::class,
+            'properties' => array()
+        ),
         'search' => array(
             'class' => \Sugarcrm\REST\Endpoint\Search::class,
             'properties' => array()
