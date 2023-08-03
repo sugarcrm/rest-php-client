@@ -16,24 +16,13 @@ use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 
 /**
- * Provides access to the Filter API for a given Module
- * - Also allows for retrieving counts of filters/records
+ * Provides access to the Audit API for a given Module
  * - Works with a single Module Bean type
- * - Provides access to the Filter API and Filter Query Builder
  * - Tracks pagination
  * @package Sugarcrm\REST\Endpoint
  */
 class ModuleAudit extends AbstractSugarBeanCollectionEndpoint
 {
     protected static $_ENDPOINT_URL = '$module/$id/audit';
-
-    /**
-     * @inheritdoc
-     */
-    public function fetch(): AbstractCollectionEndpoint
-    {
-        $this->setProperty(self::PROPERTY_HTTP_METHOD, "GET");
-        return parent::fetch();
-    }
 
 }

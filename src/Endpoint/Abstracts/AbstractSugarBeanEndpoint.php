@@ -367,11 +367,24 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
         return $this->link($linkName, $related_id);
     }
 
+    /**
+     * Fetch Audits as a Collection on Current Record
+     * @return AbstractSugarBeanCollectionEndpoint
+     */
     public function auditLog(): AbstractSugarBeanCollectionEndpoint
     {
+        $versionUpdated = false;
         $client = $this->getClient();
-        $client->setVersion("11_12");
+        $originalClientVersion = $client->getVersion();
+        // check if client version is older than 11_11
+        if (version_compare($originalClientVersion, "11_11", "<")) {
+            $client->setVersion("11_12");
+            $versionUpdated = true;
+        }
         $auditCollection = $client->audit($this->_beanName, $this->get('id'));
+        if ($versionUpdated) {
+            $client->setVersion($originalClientVersion);
+        }
         return $auditCollection;
     }
 
