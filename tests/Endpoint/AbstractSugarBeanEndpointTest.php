@@ -274,7 +274,7 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
     {
         $Bean = new Module();
         self::$client->mockResponses->append(new Response(200));
-        $Bean->setClient(self::$client);
+        //$Bean->setClient(self::$client);
         $Bean->setUrlArgs(['Foo', 'bar']);
         $Audit = $Bean->auditLog();
         $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\ModuleAudit', $Audit);
