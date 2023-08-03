@@ -303,5 +303,8 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
 
         $Endpoint = $Client->search();
         $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
+
+        $Endpoint = $Client->audit();
+        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleAudit', $Endpoint);
     }
 }
