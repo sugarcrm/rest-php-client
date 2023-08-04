@@ -376,13 +376,13 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     {
         $auditCollection = new ModuleAudit(['module' => $this->_beanName, 'id' => $this->get('id')]);
 
-        if($limit !== null) {
+        if ($limit !== null) {
             $auditCollection->setLimit($limit);
         }
 
         $versionUpdated = false;
         $client = $this->getClient();
-        if ($client){
+        if ($client) {
             $auditCollection->setClient($client);
             $originalClientVersion = $client->getVersion();
             // check if client version is older than 11_11
@@ -394,7 +394,7 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
             $auditCollection->setBaseUrl($this->getBaseUrl());
         }
 
-        $auditCollection->fetch(); 
+        $auditCollection->fetch();
 
         if ($versionUpdated) {
             $client->setVersion($originalClientVersion);

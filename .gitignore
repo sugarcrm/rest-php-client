@@ -9,3 +9,4 @@ docs/
 .DS_STORE
 /.phive/
 /tools/
+/.php-cs-fixer.cache

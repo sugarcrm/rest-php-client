@@ -24,5 +24,4 @@ use Sugarcrm\REST\Endpoint\Data\FilterData;
 class ModuleAudit extends AbstractSugarBeanCollectionEndpoint
 {
     protected static $_ENDPOINT_URL = '$module/$id/audit';
-
 }

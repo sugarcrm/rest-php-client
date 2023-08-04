@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "9.*",
-    "friendsofphp/php-cs-fixer": "^2"
+    "friendsofphp/php-cs-fixer": "^v3"
   },
   "autoload": {
     "psr-4": {
@@ -57,7 +57,7 @@
       "php vendor/bin/php-cs-fixer fix . --rules=@PSR12 --dry-run"
     ],
     "quality:fix": [
-      "php vendor/bin/php-cs-fixer fix . --rules=@PSR12 --"
+      "php vendor/bin/php-cs-fixer fix . --rules=@PSR12"
     ],
     "quality:diff": [
       "php vendor/bin/php-cs-fixer fix . --rules=@PSR12 --dry-run --diff"
