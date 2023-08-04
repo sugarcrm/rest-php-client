@@ -17,6 +17,7 @@ use MRussell\REST\Endpoint\Traits\FileUploadsTrait;
 use MRussell\REST\Exception\Endpoint\EndpointException;
 use MRussell\REST\Traits\PsrLoggerTrait;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
+use Sugarcrm\REST\Endpoint\ModuleAudit;
 use Sugarcrm\REST\Endpoint\SugarEndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\CompileRequestTrait;
 use Sugarcrm\REST\Endpoint\Traits\FieldsDataTrait;
@@ -365,6 +366,40 @@ abstract class AbstractSugarBeanEndpoint extends ModelEndpoint implements SugarE
     public function relate(string $linkName, string $related_id): AbstractSugarBeanEndpoint
     {
         return $this->link($linkName, $related_id);
+    }
+
+    /**
+     * Fetch Audits as a Collection on Current Record
+     * @return AbstractSugarBeanCollectionEndpoint
+     */
+    public function auditLog(?int $limit = null): AbstractSugarBeanCollectionEndpoint
+    {
+        $auditCollection = new ModuleAudit(['module' => $this->_beanName, 'id' => $this->get('id')]);
+
+        if($limit !== null) {
+            $auditCollection->setLimit($limit);
+        }
+
+        $versionUpdated = false;
+        $client = $this->getClient();
+        if ($client){
+            $auditCollection->setClient($client);
+            $originalClientVersion = $client->getVersion();
+            // check if client version is older than 11_11
+            if (version_compare($originalClientVersion, "11_11", "<")) {
+                $client->setVersion("11_11");
+                $versionUpdated = true;
+            }
+        } else {
+            $auditCollection->setBaseUrl($this->getBaseUrl());
+        }
+
+        $auditCollection->fetch(); 
+
+        if ($versionUpdated) {
+            $client->setVersion($originalClientVersion);
+        }
+        return $auditCollection;
     }
 
     /**

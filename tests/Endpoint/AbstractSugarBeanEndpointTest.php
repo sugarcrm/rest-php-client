@@ -268,6 +268,36 @@ class AbstractSugarBeanEndpointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers ::auditLog
+     */
+    public function testAuditLog()
+    {
+        $Bean = new Module();
+
+        $auditResponse = [
+            'records' => [
+                [
+                    'id' => '12345',
+                    'parent_id' => 'some_parent_id',
+               ]
+            ],
+        ];
+
+        self::$client->mockResponses->append(new Response(200, [], json_encode($auditResponse)));
+
+        $Bean->setClient(self::$client);
+        self::$client->setVersion("10");
+        $Bean->setUrlArgs(['Foo', 'bar']);
+        $Audit = $Bean->auditLog(100);
+        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\ModuleAudit', $Audit);
+        $this->assertEquals($auditResponse['records'], array_values($Audit->toArray()));
+        $this->assertEquals('/rest/v11_11/Foo/bar/audit', self::$client->mockResponses->getLastRequest()->getUri()->getPath());
+        parse_str(self::$client->mockResponses->getLastRequest()->getUri()->getQuery(), $query);
+        $this->assertEquals(100, $query['max_num']);
+        $this->assertEquals('GET', self::$client->mockResponses->getLastRequest()->getMethod());
+    }
+
+    /**
      * @covers ::filterRelated
      * @covers Sugarcrm\REST\Endpoint\Data\FilterData::execute
      */
