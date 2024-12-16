@@ -1,12 +1,13 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 use GuzzleHttp\Middleware;
 
 require_once 'include.php';
-$file = __DIR__.'/test.txt';
+$file = __DIR__ . '/test.txt';
 
 if (file_exists($file) && is_readable($file)) {
     $SugarAPI = new \Sugarcrm\REST\Client\SugarAPI($server, $credentials);

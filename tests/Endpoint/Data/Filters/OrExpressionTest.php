@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data\Filters;
 
+use PHPUnit\Framework\TestCase;
 use Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression;
 
 /**
@@ -13,7 +15,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Expression\OrExpression
  * @group OrExpressionTest
  */
-class OrExpressionTest extends \PHPUnit\Framework\TestCase
+class OrExpressionTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -25,12 +27,12 @@ class OrExpressionTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

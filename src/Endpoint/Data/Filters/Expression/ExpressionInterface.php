@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
@@ -13,7 +14,6 @@ interface ExpressionInterface
 {
     /**
      * Compiles the Filter Expression into an array to be passed to Sugar Filter API
-     * @return array
      */
     public function compile(): array;
 

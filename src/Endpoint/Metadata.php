@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
 
+use MRussell\REST\Exception\Endpoint\InvalidRequest;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -25,30 +27,30 @@ class Metadata extends AbstractSugarEndpoint
     /**
      * @inheritdoc
      */
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         'auth' => true,
-        'httpMethod' => "GET"
-    );
+        'httpMethod' => "GET",
+    ];
 
     /**
      * Gets the Metadata Hash
      * @return $this
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function getHash()
     {
-        $this->setUrlArgs(array(self::METADATA_TYPE_HASH));
+        $this->setUrlArgs([self::METADATA_TYPE_HASH]);
         return $this->execute();
     }
 
     /**
      * Gets the Public Metadata
      * @return $this
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function getPublic()
     {
-        $this->setUrlArgs(array(self::METADATA_TYPE_PUBLIC));
+        $this->setUrlArgs([self::METADATA_TYPE_PUBLIC]);
         $this->setProperty('auth', true);
         $this->execute();
         $this->setProperty('auth', true);

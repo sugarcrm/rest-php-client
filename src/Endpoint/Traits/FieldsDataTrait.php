@@ -23,7 +23,6 @@ trait FieldsDataTrait
 
     /**
      * Get the fields that are being requested via API
-     * @return array
      */
     public function getFields(): array
     {
@@ -32,7 +31,6 @@ trait FieldsDataTrait
 
     /**
      * Set the fields array property
-     * @param array $_fields
      * @return $this
      */
     public function setFields(array $_fields)
@@ -51,12 +49,12 @@ trait FieldsDataTrait
         if (!in_array($field, $this->_fields)) {
             $this->_fields[] = $field;
         }
+
         return $this;
     }
 
     /**
      * Set the view to send via data
-     * @param string $view
      * @return $this
      */
     public function setView(string $view)
@@ -67,7 +65,6 @@ trait FieldsDataTrait
 
     /**
      * Get the view configured
-     * @return string
      */
     public function getView(): string
     {
@@ -84,9 +81,11 @@ trait FieldsDataTrait
         if (!empty($fields)) {
             $data[AbstractSugarBeanCollectionEndpoint::SUGAR_FIELDS_DATA_PROPERTY] = implode(',', $this->getFields());
         }
+
         if (!empty($this->getView())) {
             $data[AbstractSugarBeanCollectionEndpoint::SUGAR_VIEW_DATA_PROPERTY] = $this->getView();
         }
+
         return $data;
     }
 }

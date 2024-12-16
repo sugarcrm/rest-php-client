@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use PHPUnit\Framework\TestCase;
 use Sugarcrm\REST\Endpoint\Me;
 
 /**
@@ -13,7 +15,7 @@ use Sugarcrm\REST\Endpoint\Me;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Me
  * @group MeTest
  */
-class MeTest extends \PHPUnit\Framework\TestCase
+class MeTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -25,12 +27,12 @@ class MeTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -42,7 +44,7 @@ class MeTest extends \PHPUnit\Framework\TestCase
         $actions = $Reflection->getProperty('actions');
         $actions->setAccessible(true);
         $this->assertNotEmpty(
-            $actions->getValue($Me)
+            $actions->getValue($Me),
         );
     }
 
@@ -55,6 +57,7 @@ class MeTest extends \PHPUnit\Framework\TestCase
         $Reflection = new \ReflectionClass(get_class($Me));
         $configureUrl = $Reflection->getMethod('configureURL');
         $configureUrl->setAccessible(true);
+
         $action = $Reflection->getProperty('action');
         $action->setAccessible(true);
 
@@ -66,7 +69,7 @@ class MeTest extends \PHPUnit\Framework\TestCase
         $action->setValue($Me, $Me::USER_ACTION_CREATE_PREFERENCE);
         $this->assertEquals('me/preference/pref1', $configureUrl->invoke($Me, ['actionArg1' => 'pref1']));
         $action->setValue($Me, $Me::MODEL_ACTION_DELETE);
-        $this->assertEquals('me', $configureUrl->invoke($Me, array('action' => 'preference')));
+        $this->assertEquals('me', $configureUrl->invoke($Me, ['action' => 'preference']));
     }
 
     /**
@@ -80,6 +83,7 @@ class MeTest extends \PHPUnit\Framework\TestCase
         $configureAction->setAccessible(true);
 
         $configureAction->invoke($Me, $Me::USER_ACTION_PREFERENCES);
+
         $properties = $Me->getProperties();
         $this->assertEquals("GET", $properties['httpMethod']);
 

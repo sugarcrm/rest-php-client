@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -17,7 +18,7 @@ class Search extends AbstractSugarCollectionEndpoint
     /**
      * @inheritdoc
      */
-    protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
+    protected static $_MODEL_CLASS = Module::class;
 
     /**
      * @inheritdoc
@@ -32,11 +33,10 @@ class Search extends AbstractSugarCollectionEndpoint
     public function get($id)
     {
         $Model = parent::get($id);
-        if (is_object($Model)) {
-            if (isset($Model['_module'])) {
-                $Model->setModule($Model['_module']);
-            }
+        if (is_object($Model) && isset($Model['_module'])) {
+            $Model->setModule($Model['_module']);
         }
+
         return $Model;
     }
 }

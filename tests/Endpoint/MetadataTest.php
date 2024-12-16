@@ -1,11 +1,13 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
-use Sugarcrm\REST\Auth\SugarOAuthController;
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Endpoint\Metadata;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
@@ -15,7 +17,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Metadata
  * @group MetadataTest
  */
-class MetadataTest extends \PHPUnit\Framework\TestCase
+class MetadataTest extends TestCase
 {
     /**
      * @var Client
@@ -33,12 +35,12 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -49,18 +51,18 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetMetadataTypes()
     {
-        self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
+        self::$client->mockResponses->append(new Response(200));
         $Metadata = new Metadata();
         $Metadata->setClient(self::$client);
         // $Metadata->setAuth(new SugarOAuthController());
         $Metadata->setBaseUrl('http://localhost/rest/v11');
         $Metadata->getHash();
-        $this->assertEquals(array($Metadata::METADATA_TYPE_HASH), $Metadata->getUrlArgs());
+        $this->assertEquals([$Metadata::METADATA_TYPE_HASH], $Metadata->getUrlArgs());
         $this->assertEquals('http://localhost/rest/v11/metadata/_hash', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
 
-        self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
+        self::$client->mockResponses->append(new Response(200));
         $Metadata->getPublic();
-        $this->assertEquals(array($Metadata::METADATA_TYPE_PUBLIC), $Metadata->getUrlArgs());
+        $this->assertEquals([$Metadata::METADATA_TYPE_PUBLIC], $Metadata->getUrlArgs());
         $this->assertEquals('http://localhost/rest/v11/metadata/public', self::$client->mockResponses->getLastRequest()->getUri()->__toString());
     }
 }

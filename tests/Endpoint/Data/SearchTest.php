@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data;
 
+use PHPUnit\Framework\TestCase;
 use Sugarcrm\REST\Endpoint\Search;
 
 /**
@@ -13,7 +15,7 @@ use Sugarcrm\REST\Endpoint\Search;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Search
  * @group SearchTest
  */
-class SearchTest extends \PHPUnit\Framework\TestCase
+class SearchTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -25,12 +27,12 @@ class SearchTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -38,15 +40,15 @@ class SearchTest extends \PHPUnit\Framework\TestCase
     public function testGet()
     {
         $Search = new Search();
-        $Search['12345'] = array(
+        $Search['12345'] = [
             'foo' => 'bar',
-            '_module' => 'Accounts'
-        );
+            '_module' => 'Accounts',
+        ];
         $Model = $Search->get('12345');
         $this->assertEquals('Accounts', $Model->getModule());
-        $Search['12345'] = array(
-            'foo' => 'bar'
-        );
+        $Search['12345'] = [
+            'foo' => 'bar',
+        ];
         $Model = $Search->get('12345');
         $this->assertEmpty($Model->getModule());
     }

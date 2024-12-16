@@ -1,11 +1,12 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data;
 
+use MRussell\REST\Exception\Endpoint\InvalidRequest;
 use MRussell\REST\Endpoint\Abstracts\AbstractSmartEndpoint;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\Data\DataInterface;
@@ -41,7 +42,7 @@ class FilterData extends AbstractExpression implements DataInterface
     //Overloads
     public function __construct(AbstractSmartEndpoint $Endpoint = null)
     {
-        if ($Endpoint !== null) {
+        if ($Endpoint instanceof AbstractSmartEndpoint) {
             $this->setEndpoint($Endpoint);
         }
     }
@@ -58,8 +59,6 @@ class FilterData extends AbstractExpression implements DataInterface
 
     /**
      * Set the Endpoint using the Filter Data
-     * @param AbstractSmartEndpoint $endpoint
-     * @return self
      */
     public function setEndpoint(AbstractSmartEndpoint $endpoint): FilterData
     {
@@ -79,7 +78,7 @@ class FilterData extends AbstractExpression implements DataInterface
 
     /**
      * @return AbstractSmartEndpoint|false
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function execute()
     {
@@ -88,13 +87,13 @@ class FilterData extends AbstractExpression implements DataInterface
             $endpoint->getData()->set([FilterData::FILTER_PARAM => $this->toArray()]);
             return $endpoint->execute();
         }
+
         return false;
     }
 
     /**
      * Return the entire Data array
      * @param bool $compile - Whether or not to verify if Required Data is filled in
-     * @return array
      */
     public function toArray($compile = true): array
     {
@@ -104,6 +103,7 @@ class FilterData extends AbstractExpression implements DataInterface
                 $this->_attributes = array_replace_recursive($this->_attributes, $data);
             }
         }
+
         return $this->_attributes;
     }
 }

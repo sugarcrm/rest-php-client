@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
+use Sugarcrm\REST\Endpoint\Module;
 use MRussell\REST\Endpoint\Abstracts\AbstractModelEndpoint;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Endpoint\Traits\FieldsDataTrait;
@@ -28,7 +30,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
 
     public const SUGAR_VIEW_DATA_PROPERTY = 'view';
 
-    protected static $_MODEL_CLASS = 'Sugarcrm\\REST\\Endpoint\\Module';
+    protected static $_MODEL_CLASS = Module::class;
 
     protected static $_RESPONSE_PROP = 'records';
 
@@ -86,8 +88,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
         if ($this->getOrderBy() !== '') {
             $data[self::SUGAR_ORDERBY_DATA_PROPERTY] = $this->getOrderBy();
         }
-        $data = $this->configureFieldsDataProps($data);
-        return $data;
+        return $this->configureFieldsDataProps($data);
     }
 
     /**
@@ -103,7 +104,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
     /**
      * @inheritdoc
      */
-    protected function buildModel(array $data = array()): AbstractModelEndpoint
+    protected function buildModel(array $data = []): AbstractModelEndpoint
     {
         $Model = parent::buildModel($data);
         if ($Model instanceof AbstractSugarBeanEndpoint) {
@@ -114,6 +115,7 @@ abstract class AbstractSugarBeanCollectionEndpoint extends AbstractSugarCollecti
                 $Model->setModule($Model['_module']);
             }
         }
+
         return $Model;
     }
 }

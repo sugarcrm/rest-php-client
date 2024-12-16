@@ -1,15 +1,13 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Auth;
 
 use MRussell\REST\Auth\Abstracts\AbstractOAuth2Controller;
-use MRussell\REST\Auth\AuthControllerInterface;
 use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
-use Sugarcrm\REST\Client\PlatformAwareInterface;
-use Sugarcrm\REST\Client\PlatformAwareTrait;
 use Sugarcrm\REST\Client\SugarApi;
 
 /**
@@ -30,20 +28,20 @@ class SugarOAuthController extends AbstractOAuth2Controller
 
     protected static $_DEFAULT_GRANT_TYPE = self::OAUTH_RESOURCE_OWNER_GRANT;
 
-    protected static $_DEFAULT_SUGAR_AUTH_ACTIONS = array(
-        self::ACTION_SUGAR_SUDO
-    );
+    protected static $_DEFAULT_SUGAR_AUTH_ACTIONS = [
+        self::ACTION_SUGAR_SUDO,
+    ];
 
     /**
      * @inheritdoc
      */
-    protected $credentials = array(
+    protected $credentials = [
         'username' => '',
         'password' => '',
         'client_id' => 'sugar',
         'client_secret' => '',
-        self::OAUTH_PROP_PLATFORM => SugarApi::PLATFORM_BASE
-    );
+        self::OAUTH_PROP_PLATFORM => SugarApi::PLATFORM_BASE,
+    ];
 
     /**
      * @inheritdoc
@@ -72,46 +70,42 @@ class SugarOAuthController extends AbstractOAuth2Controller
         if (empty($this->cacheKey)) {
             $this->cacheKey = sha1($this->generateUniqueCacheString($this->getCredentials()));
         }
+
         return $this->cacheKey;
     }
 
-    /**
-     * @param array $creds
-     * @return string
-     */
     protected function generateUniqueCacheString(array $creds): string
     {
         $key = '';
         try {
             $ep = $this->getActionEndpoint(self::ACTION_AUTH);
-            if ($ep->getClient()) {
-                $key = $ep->getClient()->getServer();
-            } else {
-                $key = $ep->getBaseUrl();
-            }
-        } catch (\Exception $ex) {
+            $key = $ep->getClient() ? $ep->getClient()->getServer() : $ep->getBaseUrl();
+        } catch (\Exception $exception) {
             $this->getLogger()->info("Cannot use server in cache string.");
         }
 
         if (!empty($creds['client_id'])) {
-            $key .= "_".$creds['client_id'];
+            $key .= "_" . $creds['client_id'];
         }
+
         if (!empty($creds['platform'])) {
-            $key .= "_".$creds['platform'];
+            $key .= "_" . $creds['platform'];
         }
+
         if (!empty($creds['username'])) {
-            $key .= "_".$creds['username'];
+            $key .= "_" . $creds['username'];
         }
+
         if (!empty($creds['sudo'])) {
-            $key .= "_"."sudo".$creds['sudo'];
+            $key .= '_sudo' . $creds['sudo'];
         }
+
         return ltrim($key, "_");
     }
 
     /**
      * Refreshes the OAuth 2 Token
      * @param $user string
-     * @return bool
      */
     public function sudo($user): bool
     {
@@ -129,22 +123,21 @@ class SugarOAuthController extends AbstractOAuth2Controller
                     $return = true;
                 }
             } catch (\Exception $ex) {
-                $this->getLogger()->error("Exception Occurred sending SUDO request: ".$ex->getMessage());
+                $this->getLogger()->error("Exception Occurred sending SUDO request: " . $ex->getMessage());
             }
         }
+
         return $return;
     }
 
     /**
      * Configure the Sudo Endpoint
-     * @param EndpointInterface $Endpoint
      * @param $user
-     * @return EndpointInterface
      */
     protected function configureSudoEndpoint(EndpointInterface $Endpoint, $user): EndpointInterface
     {
-        $Endpoint->setUrlArgs(array($user));
-        $data = array();
+        $Endpoint->setUrlArgs([$user]);
+        $data = [];
         $creds = $this->getCredentials();
         $data['platform'] = $creds['platform'];
         $data['client_id'] = $creds['client_id'];

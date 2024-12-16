@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data;
@@ -24,32 +24,31 @@ class BulkRequest extends AbstractEndpointData
     /**
      * Convert the Current Data Array to the Bulk Request
      * @param boolean $compile
-     * @return array
      */
     public function toArray($compile = true): array
     {
         $data = parent::toArray(true);
         if ($compile) {
-            $compiled = array(
-                self::BULK_REQUEST_DATA_NAME => array()
-            );
+            $compiled = [
+                self::BULK_REQUEST_DATA_NAME => [],
+            ];
             if (isset($data[self::BULK_REQUEST_DATA_NAME])) {
                 $compiled[self::BULK_REQUEST_DATA_NAME] = $data[self::BULK_REQUEST_DATA_NAME];
             }
+
             foreach ($data as $key => $value) {
                 if ($key === self::BULK_REQUEST_DATA_NAME) {
                     continue;
                 }
+
                 if (is_array($value)) {
                     $compiled[self::BULK_REQUEST_DATA_NAME][] = $value;
                     continue;
                 }
+
                 if (is_object($value)) {
-                    if ($value instanceof SugarEndpointInterface) {
-                        $request = $value->compileRequest();
-                    } else {
-                        $request = $value;
-                    }
+                    $request = $value instanceof SugarEndpointInterface ? $value->compileRequest() : $value;
+
                     if ($request instanceof Request) {
                         $request = $this->extractRequest($request);
                         if ($request) {
@@ -58,14 +57,15 @@ class BulkRequest extends AbstractEndpointData
                     }
                 }
             }
+
             return $compiled;
         }
+
         return $data;
     }
 
     /**
      * Extract a Guzzle Request object into Sugar bulk request payload
-     * @param Request $Request
      * @return array
      */
     protected function extractRequest(Request $Request)
@@ -74,19 +74,18 @@ class BulkRequest extends AbstractEndpointData
         if (empty($url)) {
             return false;
         }
+
         $urlArray = explode("/rest/", $url);
-        return array(
+        return [
             'url' => "/" . $urlArray[1],
             'method' => $Request->getMethod(),
             'headers' => $this->normaliseHeaders($Request->getHeaders()),
-            'data' => $Request->getBody()->getContents()
-        );
+            'data' => $Request->getBody()->getContents(),
+        ];
     }
 
     /**
      * Normalize the headers into standard array of strings `Header: Value`
-     * @param array $headers
-     * @return array
      */
     private function normaliseHeaders(array $headers): array
     {
@@ -96,6 +95,7 @@ class BulkRequest extends AbstractEndpointData
                 $normalisedHeaders[] = sprintf('%s: %s', $name, $value);
             }
         }
+
         return $normalisedHeaders;
     }
 }

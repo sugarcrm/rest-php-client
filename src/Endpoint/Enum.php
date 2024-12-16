@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -15,8 +16,8 @@ class Enum extends AbstractSugarEndpoint
 {
     protected static $_ENDPOINT_URL = '$module/enum/$field';
 
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => "GET"
-    );
+        self::PROPERTY_HTTP_METHOD => "GET",
+    ];
 }

@@ -1,13 +1,14 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Auth;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use MRussell\REST\Tests\Stubs\Endpoint\AuthEndpoint;
 use ColinODell\PsrTestLogger\TestLogger;
 use Sugarcrm\REST\Endpoint\OAuth2Sudo;
 use Sugarcrm\REST\Endpoint\OAuth2Token;
@@ -20,7 +21,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass \Sugarcrm\REST\Auth\SugarOAuthController
  * @group SugarOAuthControllerTest
  */
-class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
+class SugarOAuthControllerTest extends TestCase
 {
     /**
      * @var Client
@@ -38,12 +39,12 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -86,25 +87,27 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
             'client_secret' => 'client_secret',
             'password' => 'password',
             'username' => 'username',
-            'platform' => 'base'
+            'platform' => 'base',
         ]));
         $this->assertTrue($Logger->hasInfoThatContains("Cannot use server in cache string."));
         $Logger->reset();
         $LoginEP = new OAuth2Token();
         $LoginEP->setBaseUrl("http://localhost/api");
+
         $Auth->setActionEndpoint($Auth::ACTION_AUTH, $LoginEP);
         $this->assertEquals("http://localhost/api_client_id_base_username", $generateUniqueCacheString->invoke($Auth, [
             'client_id' => 'client_id',
             'client_secret' => 'client_secret',
             'password' => 'password',
             'username' => 'username',
-            'platform' => 'base'
+            'platform' => 'base',
         ]));
         $this->assertFalse($Logger->hasInfoThatContains("Cannot use server in cache string."));
 
 
         $LoginEP = new OAuth2Token();
         $LoginEP->setClient(self::$client);
+
         $Auth->setActionEndpoint($Auth::ACTION_AUTH, $LoginEP);
         $this->assertEquals("http://phpunit.tests_client_id_base_username_sudofoobar", $generateUniqueCacheString->invoke($Auth, [
             'client_id' => 'client_id',
@@ -112,7 +115,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
             'password' => 'password',
             'username' => 'username',
             'platform' => 'base',
-            'sudo' => 'foobar'
+            'sudo' => 'foobar',
         ]));
         $this->assertFalse($Logger->hasInfoThatContains("Cannot use server in cache string."));
 
@@ -122,7 +125,7 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
             'password' => 'password',
             'username' => 'username',
             'platform' => 'base',
-            'sudo' => 'foobar'
+            'sudo' => 'foobar',
         ]);
         $this->assertEquals(sha1("http://phpunit.tests_client_id_base_username_sudofoobar"), $Auth->getCacheKey());
     }
@@ -141,16 +144,17 @@ class SugarOAuthControllerTest extends \PHPUnit\Framework\TestCase
         $Auth = new SugarOAuthStub();
         $logger = new TestLogger();
         $Auth->setLogger($logger);
-        $Auth->setCredentials(array(
+        $Auth->setCredentials([
             'username' => 'system',
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
-        ));
+            'platform' => 'api',
+        ]);
         $EP = new OAuth2Sudo();
         $EP->setClient(self::$client);
         $EP->setBaseUrl('http://localhost/rest/v11');
+
         $Auth->setActionEndpoint($Auth::ACTION_SUGAR_SUDO, $EP);
         $this->assertEquals(true, $Auth->sudo('max'));
         $request = current(self::$client->container)['request'];

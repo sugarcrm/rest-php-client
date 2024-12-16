@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -30,17 +30,23 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
     public const MODEL_ACTION_VAR = 'action';
 
     public const USER_ACTION_PREFERENCES = 'preferences';
+
     public const USER_ACTION_SAVE_PREFERENCES = 'savePreferences';
+
     public const USER_ACTION_GET_PREFERENCE = 'preference';
+
     public const USER_ACTION_CREATE_PREFERENCE = 'createPreference';
+
     public const USER_ACTION_UPDATE_PREFERENCE = 'updatePreference';
+
     public const USER_ACTION_DELETE_PREFERENCE = 'deletePreference';
+
     public const USER_ACTION_FOLLOWING = 'following';
 
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => "GET"
-    );
+        self::PROPERTY_HTTP_METHOD => "GET",
+    ];
 
     /**
      * @inheritdoc
@@ -50,15 +56,15 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
     /**
      * @inheritdoc
      */
-    protected static $_DEFAULT_SUGAR_USER_ACTIONS = array(
+    protected static $_DEFAULT_SUGAR_USER_ACTIONS = [
         self::USER_ACTION_PREFERENCES => "GET",
         self::USER_ACTION_SAVE_PREFERENCES => "PUT",
         self::USER_ACTION_GET_PREFERENCE => "GET",
         self::USER_ACTION_UPDATE_PREFERENCE => "PUT",
         self::USER_ACTION_CREATE_PREFERENCE => "POST",
         self::USER_ACTION_DELETE_PREFERENCE => "DELETE",
-        self::USER_ACTION_FOLLOWING => "GET"
-    );
+        self::USER_ACTION_FOLLOWING => "GET",
+    ];
 
     public function __construct(array $urlArgs = [], array $properties = [])
     {
@@ -91,13 +97,13 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
                 $action = null;
                 break;
         }
+
         if ($action !== null) {
             $urlArgs[self::MODEL_ACTION_VAR] = $action;
-        } else {
-            if (isset($urlArgs[self::MODEL_ACTION_VAR])) {
-                unset($urlArgs[self::MODEL_ACTION_VAR]);
-            }
+        } elseif (isset($urlArgs[self::MODEL_ACTION_VAR])) {
+            unset($urlArgs[self::MODEL_ACTION_VAR]);
         }
+
         return parent::configureURL($urlArgs);
     }
 
@@ -117,6 +123,7 @@ class Me extends ModelEndpoint implements SugarEndpointInterface
                     }
             }
         }
+
         parent::configureAction($action);
     }
 }

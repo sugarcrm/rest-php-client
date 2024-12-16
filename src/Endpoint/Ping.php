@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
 
+use MRussell\REST\Exception\Endpoint\InvalidRequest;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarEndpoint;
 
 /**
@@ -18,21 +20,21 @@ class Ping extends AbstractSugarEndpoint
 
     protected static $_ENDPOINT_URL = 'ping/$:whattimeisit';
 
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_HTTP_METHOD => "GET"
-    );
+        self::PROPERTY_HTTP_METHOD => "GET",
+    ];
 
     /**
      * Submit the ping/whattimeisit API Request
      * @return $this|mixed
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function whattimeisit()
     {
-        $this->setUrlArgs(array(self::SERVER_TIME));
+        $this->setUrlArgs([self::SERVER_TIME]);
         $this->execute();
-        return $this->setUrlArgs(array());
+        return $this->setUrlArgs([]);
     }
 
     /**

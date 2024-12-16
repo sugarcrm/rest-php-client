@@ -1,34 +1,46 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Client;
 
+use Sugarcrm\REST\Endpoint\Ping;
+use Sugarcrm\REST\Endpoint\Module;
+use Sugarcrm\REST\Endpoint\ModuleFilter;
+use Sugarcrm\REST\Endpoint\Search;
+use Sugarcrm\REST\Endpoint\Metadata;
+use Sugarcrm\REST\Endpoint\Me;
+use Sugarcrm\REST\Endpoint\Enum;
+use Sugarcrm\REST\Endpoint\Bulk;
+use Sugarcrm\REST\Endpoint\OAuth2Token;
+use Sugarcrm\REST\Endpoint\OAuth2Refresh;
+use Sugarcrm\REST\Endpoint\OAuth2Logout;
+use Sugarcrm\REST\Endpoint\OAuth2Sudo;
+use Sugarcrm\REST\Endpoint\Note;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use MRussell\REST\Client\AbstractClient;
 use Sugarcrm\REST\Auth\SugarOAuthController;
 use Sugarcrm\REST\Endpoint\Provider\SugarEndpointProvider;
-use Sugarcrm\REST\Storage\SugarStaticStorage;
 
 /**
  * The default Sugar 7 REST v10 API implementation
  * @package Sugarcrm\REST\Client\Abstracts\AbstractClient
- * @method \Sugarcrm\REST\Endpoint\Ping             ping()
- * @method \Sugarcrm\REST\Endpoint\Module           module(string $module = '',string $record_id = '')
- * @method \Sugarcrm\REST\Endpoint\ModuleFilter     list(string $module = '')
- * @method \Sugarcrm\REST\Endpoint\Search           search()
- * @method \Sugarcrm\REST\Endpoint\Metadata         metadata(string $module = '')
- * @method \Sugarcrm\REST\Endpoint\Me               me()
- * @method \Sugarcrm\REST\Endpoint\Enum             enum(string $module = '',string $field = '')
- * @method \Sugarcrm\REST\Endpoint\Bulk             bulk()
- * @method \Sugarcrm\REST\Endpoint\OAuth2Token      oauth2Token() - Use login()
- * @method \Sugarcrm\REST\Endpoint\OAuth2Refresh    oauth2Refresh() - Use refresh()
- * @method \Sugarcrm\REST\Endpoint\OAuth2Logout     oauth2Logout() - Use logout()
- * @method \Sugarcrm\REST\Endpoint\OAuth2Sudo       oauth2Sudo() - Use sudo()
- * @method \Sugarcrm\REST\Endpoint\Note             Note() -
+ * @method Ping ping()
+ * @method Module module(string $module = '', string $record_id = '')
+ * @method ModuleFilter list(string $module = '')
+ * @method Search search()
+ * @method Metadata metadata(string $module = '')
+ * @method Me me()
+ * @method Enum enum(string $module = '', string $field = '')
+ * @method Bulk bulk()
+ * @method OAuth2Token oauth2Token() - Use login()
+ * @method OAuth2Refresh oauth2Refresh() - Use refresh()
+ * @method OAuth2Logout oauth2Logout() - Use logout()
+ * @method OAuth2Sudo oauth2Sudo() - Use sudo()
+ * @method Note Note() -
  */
 class SugarApi extends AbstractClient implements PlatformAwareInterface
 {
@@ -37,7 +49,9 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     }
 
     public const PLATFORM_BASE = 'base';
+
     public const API_VERSION = "11";
+
     public const API_URL = '/rest/v%s/';
 
     protected static $_DEFAULT_PLATFORM = self::PLATFORM_BASE;
@@ -59,7 +73,6 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
      * Given a sugarcrm server/instance generate the Rest/v10 API Url
      * @param $instance
      * @param int $version
-     * @return string
      */
     public static function configureApiUrl($instance, $version = null): string
     {
@@ -70,6 +83,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         if (preg_match('/^(http|https):\/\//i', $url) === 0) {
             $url = "http://" . $url;
         }
+
         return $url;
     }
 
@@ -80,9 +94,11 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         if (empty($server) && !empty($this->server)) {
             $server = $this->getServer();
         }
+
         if (!empty($server)) {
             $this->setServer($server);
         }
+
         $this->setPlatform(static::$_DEFAULT_PLATFORM);
         if (!empty($credentials)) {
             $this->updateAuthCredentials($credentials);
@@ -103,17 +119,11 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         $this->initAuthProvider();
     }
 
-    /**
-     * @return void
-     */
     protected function initEndpointProvider(): void
     {
         $this->setEndpointProvider(new SugarEndpointProvider());
     }
 
-    /**
-     * @return void
-     */
     protected function initAuthProvider(): void
     {
         $this->setAuth(new SugarOAuthController());
@@ -139,7 +149,6 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     }
 
     /**
-     * @param string $platform
      * @return mixed|SugarApi
      */
     public function setPlatform(string $platform)
@@ -151,21 +160,19 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
 
     /**
      * Method to update credentials on Auth controller, with current platform
-     * @param array $creds
      * @return void
      */
-    protected function updateAuthCredentials(array $creds = array())
+    protected function updateAuthCredentials(array $creds = [])
     {
         if (!isset($creds[SugarOAuthController::OAUTH_PROP_PLATFORM])) {
             $creds[SugarOAuthController::OAUTH_PROP_PLATFORM] = $this->getPlatform();
         }
+
         $this->getAuth()->updateCredentials($creds);
     }
 
     /**
      * Helper Method to Login to Sugar Instance
-     * @param null $username
-     * @param null $password
      * @return bool
      */
     public function login($username = null, $password = null)
@@ -174,9 +181,11 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         if ($username !== null) {
             $creds['username'] = $username;
         }
+
         if ($password !== null) {
             $creds['password'] = $password;
         }
+
         $this->updateAuthCredentials($creds);
         return $this->getAuth()->authenticate();
     }
@@ -191,6 +200,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         if (isset($creds['client_id']) && isset($creds['client_secret'])) {
             return $this->getAuth()->refresh();
         }
+
         return false;
     }
 
@@ -207,7 +217,6 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
     /**
      * Helper method to Sudo to new user
      * @param $user string
-     * @return bool
      * @codeCoverageIgnore
      */
     public function sudo($user): bool
@@ -226,6 +235,7 @@ class SugarApi extends AbstractClient implements PlatformAwareInterface
         if (!$Auth->isAuthenticated() && !$this->refreshToken()) {
             $ret = $this->login();
         }
+
         return $ret;
     }
 }

@@ -1,17 +1,13 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
 
-use ArrayAccess;
 use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Abstracts\AbstractCollectionEndpoint;
-use MRussell\REST\Endpoint\Data\EndpointData;
-use MRussell\REST\Endpoint\Interfaces\CollectionInterface;
-use MRussell\REST\Endpoint\Interfaces\EndpointInterface;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanCollectionEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 
@@ -67,25 +63,22 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
                 $data->set([FilterData::FILTER_PARAM => $compiledFilter]);
             }
         }
+
         return $data;
     }
 
-    /**
-     * @param array $urlArgs
-     * @return string
-     */
     protected function configureURL(array $urlArgs): string
     {
         if ($this->_count) {
             $urlArgs[self::ARG_COUNT] = self::ARG_COUNT;
         }
+
         return parent::configureURL($urlArgs);
     }
 
     /**
      * Configure the Filter Parameters for the Filter API
-     * @param bool $reset
-    * @return FilterData
+     * @return FilterData
      */
     public function filter(bool $reset = false)
     {
@@ -98,6 +91,7 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
                 $this->filter->set($data[FilterData::FILTER_PARAM]);
             }
         }
+
         if ($reset) {
             $this->filter->reset();
             $data = $this->getData()->toArray();
@@ -106,10 +100,11 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
                 $this->setData($data);
             }
         }
+
         return $this->filter;
     }
 
-    public function parseResponse(Response $response): void
+    protected function parseResponse(Response $response): void
     {
         if ($this->_count) {
             if ($response->getStatusCode() == 200) {
@@ -118,8 +113,10 @@ class ModuleFilter extends AbstractSugarBeanCollectionEndpoint
                     $this->_totalCount = intval($body['record_count']);
                 }
             }
+
             $this->_count = false;
         }
+
         parent::parseResponse($response);
     }
 
