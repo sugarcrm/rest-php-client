@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 require_once 'include.php';
@@ -15,11 +16,11 @@ try {
         $Accounts->fetch();
         $Account = $Accounts->at(1);
         $Account->getRelated('contacts', true);
-        echo "<pre> Response:".print_r($Account->getResponseBody(), true)."</pre><br>";
+        echo "<pre> Response:" . print_r($Account->getResponseBody(), true) . "</pre><br>";
         $Filter = $Account->filterRelated('contacts')->contains('first_name', 's');
-        echo "<pre> Filter Contacts related to Account {$Account['id']} where first_name contains an 's': ".print_r($Filter->compile(), true)."</pre><br>";
+        echo "<pre> Filter Contacts related to Account {$Account['id']} where first_name contains an 's': " . print_r($Filter->compile(), true) . "</pre><br>";
         $Filter->execute();
-        echo "<pre> Response:".print_r($Account->getResponseBody(), true)."</pre><br>";
+        echo "<pre> Response:" . print_r($Account->getResponseBody(), true) . "</pre><br>";
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

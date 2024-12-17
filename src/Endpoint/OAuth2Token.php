@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
@@ -23,24 +24,24 @@ class OAuth2Token extends AbstractSmartSugarEndpoint
     /**
      * @inheritdoc
      */
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
         self::PROPERTY_HTTP_METHOD => "POST",
-        self::PROPERTY_DATA => array(
-            EndpointData::DATA_PROPERTY_REQUIRED => array(
+        self::PROPERTY_DATA => [
+            EndpointData::DATA_PROPERTY_REQUIRED => [
                 'grant_type' => 'string',
                 'client_id' => 'string',
                 'client_secret' => 'string',
                 'platform' => 'string',
                 'username' => 'string',
-                'password' => 'string'
-            ),
-            EndpointData::DATA_PROPERTY_DEFAULTS => array(
+                'password' => 'string',
+            ],
+            EndpointData::DATA_PROPERTY_DEFAULTS => [
                 'grant_type' => SugarOAuthController::OAUTH_RESOURCE_OWNER_GRANT,
                 'client_id' => 'sugar',
                 'client_secret' => '',
-                'platform' => 'base'
-            )
-        )
-    );
+                'platform' => 'base',
+            ],
+        ],
+    ];
 }

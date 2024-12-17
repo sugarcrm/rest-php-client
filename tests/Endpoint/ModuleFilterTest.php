@@ -1,13 +1,14 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Data\EndpointData;
-use Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarBeanEndpoint;
 use Sugarcrm\REST\Endpoint\Data\FilterData;
 use Sugarcrm\REST\Endpoint\ModuleFilter;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
@@ -18,7 +19,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\ModuleFilter
  * @group ModuleFilterTest
  */
-class ModuleFilterTest extends \PHPUnit\Framework\TestCase
+class ModuleFilterTest extends TestCase
 {
     /**
      * @var Client
@@ -36,12 +37,12 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         self::$client->mockResponses->reset();
         parent::tearDown();
@@ -81,6 +82,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
 
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
+
         $Reflection = new \ReflectionClass(get_class($ModuleFilter));
         $configurePayload = $Reflection->getMethod('configurePayload');
         $configurePayload->setAccessible(true);
@@ -88,6 +90,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
         $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->filter();
+
         $data = $configurePayload->invoke($ModuleFilter, new EndpointData());
         $this->assertArrayNotHasKey('filter', $data);
 
@@ -109,6 +112,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
         $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setModule('Accounts');
         $ModuleFilter->setProperty('httpMethod', "POST");
+
         $Request = $ModuleFilter->compileRequest();
         $this->assertEquals('POST', $Request->getMethod());
         $this->assertEquals('http://localhost/rest/v11/Accounts/filter', $Request->getUri()->__toString());
@@ -122,16 +126,17 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
     {
         $sampleData = [
             "filter" => [
-                [ 'foo' => [ '$equals' => 'bar' ] ]
-            ]
+                [ 'foo' => [ '$equals' => 'bar' ] ],
+            ],
         ];
 
         $ModuleFilter = new ModuleFilter();
         $ModuleFilter->setClient(self::$client);
         $ModuleFilter->setModule('Foo');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
+
         $Filter = $ModuleFilter->filter();
-        $this->assertInstanceOf('Sugarcrm\\REST\\Endpoint\\Data\\FilterData', $Filter);
+        $this->assertInstanceOf(FilterData::class, $Filter);
         $this->assertEquals([], $Filter->toArray());
         $Filter->equals('foo', 'bar');
         $this->assertEquals($sampleData['filter'], $Filter->compile());
@@ -141,6 +146,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
         $ModuleFilter->setModule('Foo');
         $ModuleFilter->setBaseUrl('http://localhost/rest/v11');
         $ModuleFilter->setData($sampleData);
+
         $Filter = $ModuleFilter->filter();
         $this->assertEquals($sampleData['filter'], $Filter->toArray());
 
@@ -151,7 +157,7 @@ class ModuleFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($Filter, $ModuleFilter->filter());
 
         $this->assertEquals($Filter, $ModuleFilter->filter(true));
-        $this->assertEquals(array(), $Filter->toArray(true));
+        $this->assertEquals([], $Filter->toArray(true));
         $data = $ModuleFilter->getData();
         $this->assertEmpty($data['filter']);
     }

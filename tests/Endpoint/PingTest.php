@@ -1,10 +1,13 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Endpoint\Ping;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
 
@@ -14,7 +17,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Ping
  * @group PingTest
  */
-class PingTest extends \PHPUnit\Framework\TestCase
+class PingTest extends TestCase
 {
     /**
      * @var Client
@@ -32,12 +35,12 @@ class PingTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -47,7 +50,7 @@ class PingTest extends \PHPUnit\Framework\TestCase
      */
     public function testWhattimeisit()
     {
-        self::$client->mockResponses->append(new \GuzzleHttp\Psr7\Response(200));
+        self::$client->mockResponses->append(new Response(200));
         $Ping = new Ping();
         $Ping->setClient(self::$client);
         $Ping->setBaseUrl('http://localhost/rest/v11');

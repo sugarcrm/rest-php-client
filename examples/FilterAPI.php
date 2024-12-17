@@ -1,13 +1,14 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 require_once 'include.php';
 
 $SugarAPI = new \Sugarcrm\REST\Client\SugarApi($server, $credentials);
 try {
-    if ($SugarAPI->login()) {
+    if ($SugarAPI->isAuthenticated()) {
         echo "Logged In: ";
         pre($SugarAPI->getAuth()->getToken());
         $Accounts = $SugarAPI->list('Accounts');
@@ -36,7 +37,7 @@ try {
         $Accounts->filter(true);
         echo "Filtering Accounts that are created between dates, or in the last 7 days: ";
         $Accounts->filter()->or()->date('date_entered')
-            ->between(array("2019-01-01", "2019-02-01"))
+            ->between(["2019-01-01", "2019-02-01"])
             ->endDate()
             ->date('date_entered')
             ->last7Days()

@@ -1,12 +1,13 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 use GuzzleHttp\Middleware;
 
 require_once 'include.php';
-$file = __DIR__.'/test.txt';
+$file = __DIR__ . '/test.txt';
 
 if (file_exists($file) && is_readable($file)) {
     $SugarAPI = new \Sugarcrm\REST\Client\SugarAPI($server, $credentials);
@@ -22,12 +23,12 @@ if (file_exists($file) && is_readable($file)) {
                 $file,
                 [
                     'path' => $file,
-                    'name' => 'foobar.txt'
+                    'name' => 'foobar.txt',
                 ],
                 [
                     'path' => $file,
-                    'name' => 'another.txt'
-                ]
+                    'name' => 'another.txt',
+                ],
             ]);
             echo "Saved Note ID: {$Note['id']}<br>";
             $Note->addField('attachment_list');

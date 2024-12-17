@@ -1,10 +1,25 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Provider;
 
+use Sugarcrm\REST\Endpoint\Module;
+use Sugarcrm\REST\Endpoint\ModuleFilter;
+use Sugarcrm\REST\Endpoint\ModuleAudit;
+use Sugarcrm\REST\Endpoint\Search;
+use Sugarcrm\REST\Endpoint\Metadata;
+use Sugarcrm\REST\Endpoint\OAuth2Token;
+use Sugarcrm\REST\Endpoint\OAuth2Refresh;
+use Sugarcrm\REST\Endpoint\OAuth2Logout;
+use Sugarcrm\REST\Endpoint\OAuth2Sudo;
+use Sugarcrm\REST\Endpoint\Me;
+use Sugarcrm\REST\Endpoint\Bulk;
+use Sugarcrm\REST\Endpoint\Enum;
+use Sugarcrm\REST\Endpoint\Ping;
+use Sugarcrm\REST\Endpoint\Note;
 use MRussell\REST\Endpoint\Provider\DefaultEndpointProvider;
 
 /**
@@ -12,62 +27,62 @@ use MRussell\REST\Endpoint\Provider\DefaultEndpointProvider;
  */
 class SugarEndpointProvider extends DefaultEndpointProvider
 {
-    protected $registry = array(
-        'module' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Module::class,
-            'properties' => array()
-        ),
-        'list' => array(
-            'class' => \Sugarcrm\REST\Endpoint\ModuleFilter::class,
-            'properties' => array()
-        ),
-        'audit' => array(
-            'class' => \Sugarcrm\REST\Endpoint\ModuleAudit::class,
-            'properties' => array()
-        ),
-        'search' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Search::class,
-            'properties' => array()
-        ),
-        'metadata' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Metadata::class,
-            'properties' => array()
-        ),
-        'oauth2Token' => array(
-            'class' => \Sugarcrm\REST\Endpoint\OAuth2Token::class,
-            'properties' => array()
-        ),
-        'oauth2Refresh' => array(
-            'class' => \Sugarcrm\REST\Endpoint\OAuth2Refresh::class,
-            'properties' => array()
-        ),
-        'oauth2Logout' => array(
-            'class' => \Sugarcrm\REST\Endpoint\OAuth2Logout::class,
-            'properties' => array()
-        ),
-        'oauth2Sudo' => array(
-            'class' => \Sugarcrm\REST\Endpoint\OAuth2Sudo::class,
-            'properties' => array()
-        ),
-        'me' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Me::class,
-            'properties' => array()
-        ),
-        'bulk' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Bulk::class,
-            'properties' => array()
-        ),
-        'enum' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Enum::class,
-            'properties' => array()
-        ),
-        'ping' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Ping::class,
-            'properties' => array()
-        ),
-        'Note' => array(
-            'class' => \Sugarcrm\REST\Endpoint\Note::class,
-            'properties' => array()
-        )
-    );
+    protected $registry = [
+        'module' => [
+            'class' => Module::class,
+            'properties' => [],
+        ],
+        'list' => [
+            'class' => ModuleFilter::class,
+            'properties' => [],
+        ],
+        'audit' => [
+            'class' => ModuleAudit::class,
+            'properties' => [],
+        ],
+        'search' => [
+            'class' => Search::class,
+            'properties' => [],
+        ],
+        'metadata' => [
+            'class' => Metadata::class,
+            'properties' => [],
+        ],
+        'oauth2Token' => [
+            'class' => OAuth2Token::class,
+            'properties' => [],
+        ],
+        'oauth2Refresh' => [
+            'class' => OAuth2Refresh::class,
+            'properties' => [],
+        ],
+        'oauth2Logout' => [
+            'class' => OAuth2Logout::class,
+            'properties' => [],
+        ],
+        'oauth2Sudo' => [
+            'class' => OAuth2Sudo::class,
+            'properties' => [],
+        ],
+        'me' => [
+            'class' => Me::class,
+            'properties' => [],
+        ],
+        'bulk' => [
+            'class' => Bulk::class,
+            'properties' => [],
+        ],
+        'enum' => [
+            'class' => Enum::class,
+            'properties' => [],
+        ],
+        'ping' => [
+            'class' => Ping::class,
+            'properties' => [],
+        ],
+        'Note' => [
+            'class' => Note::class,
+            'properties' => [],
+        ],
+    ];
 }

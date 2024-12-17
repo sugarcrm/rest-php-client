@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Client;
@@ -22,7 +23,6 @@ trait PlatformAwareTrait
     /**
      * Set the platform
      * @implements PlatformAwareInterface
-     * @param string $platform
      * @return $this
      */
     public function setPlatform(string $platform)
@@ -34,7 +34,6 @@ trait PlatformAwareTrait
     /**
      * Get the platform
      * @implements PlatformAwareInterface
-     * @return string
      */
     public function getPlatform(): string
     {

@@ -1,11 +1,12 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint\Data\Filters;
 
+use PHPUnit\Framework\TestCase;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Contains;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Ends;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Equals;
@@ -26,7 +27,7 @@ use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Starts;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Data\Filters\Operator\AbstractOperator
  * @group AbstractOperatorTest
  */
-class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
+class AbstractOperatorTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -38,12 +39,12 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -58,10 +59,10 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
         $Operator = new Contains();
         $this->assertEmpty($Operator->getField());
         $this->assertEmpty($Operator->getValue());
-        $Operator = new Contains(array('foo'));
+        $Operator = new Contains(['foo']);
         $this->assertEquals('foo', $Operator->getField());
         $this->assertEmpty($Operator->getValue());
-        $Operator = new Contains(array('foo', 'bar'));
+        $Operator = new Contains(['foo', 'bar']);
         $this->assertEquals('foo', $Operator->getField());
         $this->assertEquals('bar', $Operator->getValue());
     }
@@ -94,95 +95,95 @@ class AbstractOperatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCompile()
     {
-        $Contains = new Contains(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                Contains::OPERATOR => 'bar'
-            )
-        ), $Contains->compile());
+        $Contains = new Contains(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                Contains::OPERATOR => 'bar',
+            ],
+        ], $Contains->compile());
 
-        $Ends = new Ends(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                Ends::OPERATOR => 'bar'
-            )
-        ), $Ends->compile());
+        $Ends = new Ends(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                Ends::OPERATOR => 'bar',
+            ],
+        ], $Ends->compile());
 
-        $Equals = new Equals(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                Equals::OPERATOR => 'bar'
-            )
-        ), $Equals->compile());
+        $Equals = new Equals(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                Equals::OPERATOR => 'bar',
+            ],
+        ], $Equals->compile());
 
-        $GreaterThan = new GreaterThan(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                GreaterThan::OPERATOR => 'bar'
-            )
-        ), $GreaterThan->compile());
+        $GreaterThan = new GreaterThan(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                GreaterThan::OPERATOR => 'bar',
+            ],
+        ], $GreaterThan->compile());
 
-        $GreaterThanOrEqual = new GreaterThanOrEqual(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                GreaterThanOrEqual::OPERATOR => 'bar'
-            )
-        ), $GreaterThanOrEqual->compile());
+        $GreaterThanOrEqual = new GreaterThanOrEqual(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                GreaterThanOrEqual::OPERATOR => 'bar',
+            ],
+        ], $GreaterThanOrEqual->compile());
 
-        $In = new In(array('foo', array('1234')));
-        $this->assertEquals(array(
-            'foo' => array(
-                In::OPERATOR => array('1234')
-            )
-        ), $In->compile());
+        $In = new In(['foo', ['1234']]);
+        $this->assertEquals([
+            'foo' => [
+                In::OPERATOR => ['1234'],
+            ],
+        ], $In->compile());
 
-        $IsNull = new IsNull(array('foo', array('1234')));
-        $this->assertEquals(array(
-            'foo' => array(
-                IsNull::OPERATOR
-            )
-        ), $IsNull->compile());
+        $IsNull = new IsNull(['foo', ['1234']]);
+        $this->assertEquals([
+            'foo' => [
+                IsNull::OPERATOR,
+            ],
+        ], $IsNull->compile());
 
-        $LessThan = new LessThan(array('foo', '1234'));
-        $this->assertEquals(array(
-            'foo' => array(
-                LessThan::OPERATOR => '1234'
-            )
-        ), $LessThan->compile());
+        $LessThan = new LessThan(['foo', '1234']);
+        $this->assertEquals([
+            'foo' => [
+                LessThan::OPERATOR => '1234',
+            ],
+        ], $LessThan->compile());
 
-        $LessThanOrEqual = new LessThanOrEqual(array('foo', '1234'));
-        $this->assertEquals(array(
-            'foo' => array(
-                LessThanOrEqual::OPERATOR => '1234'
-            )
-        ), $LessThanOrEqual->compile());
+        $LessThanOrEqual = new LessThanOrEqual(['foo', '1234']);
+        $this->assertEquals([
+            'foo' => [
+                LessThanOrEqual::OPERATOR => '1234',
+            ],
+        ], $LessThanOrEqual->compile());
 
-        $NotEquals = new NotEquals(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                NotEquals::OPERATOR => 'bar'
-            )
-        ), $NotEquals->compile());
+        $NotEquals = new NotEquals(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                NotEquals::OPERATOR => 'bar',
+            ],
+        ], $NotEquals->compile());
 
-        $NotIn = new NotIn(array('foo', array('1234')));
-        $this->assertEquals(array(
-            'foo' => array(
-                NotIn::OPERATOR => array('1234')
-            )
-        ), $NotIn->compile());
+        $NotIn = new NotIn(['foo', ['1234']]);
+        $this->assertEquals([
+            'foo' => [
+                NotIn::OPERATOR => ['1234'],
+            ],
+        ], $NotIn->compile());
 
-        $NotNull = new NotNull(array('foo', array('1234')));
-        $this->assertEquals(array(
-            'foo' => array(
-                NotNull::OPERATOR
-            )
-        ), $NotNull->compile());
+        $NotNull = new NotNull(['foo', ['1234']]);
+        $this->assertEquals([
+            'foo' => [
+                NotNull::OPERATOR,
+            ],
+        ], $NotNull->compile());
 
-        $Starts = new Starts(array('foo', 'bar'));
-        $this->assertEquals(array(
-            'foo' => array(
-                Starts::OPERATOR => 'bar'
-            )
-        ), $Starts->compile());
+        $Starts = new Starts(['foo', 'bar']);
+        $this->assertEquals([
+            'foo' => [
+                Starts::OPERATOR => 'bar',
+            ],
+        ], $Starts->compile());
     }
 }

@@ -1,11 +1,24 @@
 <?php
 
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Client;
 
+use PHPUnit\Framework\TestCase;
+use Sugarcrm\REST\Endpoint\Bulk;
+use Sugarcrm\REST\Endpoint\Module;
+use Sugarcrm\REST\Endpoint\Enum;
+use Sugarcrm\REST\Endpoint\Me;
+use Sugarcrm\REST\Endpoint\ModuleFilter;
+use Sugarcrm\REST\Endpoint\OAuth2Logout;
+use Sugarcrm\REST\Endpoint\OAuth2Refresh;
+use Sugarcrm\REST\Endpoint\OAuth2Sudo;
+use Sugarcrm\REST\Endpoint\OAuth2Token;
+use Sugarcrm\REST\Endpoint\Ping;
+use Sugarcrm\REST\Endpoint\Search;
+use Sugarcrm\REST\Endpoint\ModuleAudit;
 use GuzzleHttp\Psr7\Response;
 use ColinODell\PsrTestLogger\TestLogger;
 use Sugarcrm\REST\Client\SugarApi;
@@ -19,7 +32,7 @@ use Sugarcrm\REST\Tests\Stubs\Client\Client;
  * @coversDefaultClass \Sugarcrm\REST\Client\SugarApi
  * @group SugarApiTest
  */
-class SugarApiTest extends \PHPUnit\Framework\TestCase
+class SugarApiTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -31,12 +44,12 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -68,16 +81,16 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'localhost',
             [
                 'username' => 'admin',
-                'password' => 'asdf'
-            ]
+                'password' => 'asdf',
+            ],
         );
         $this->assertNotEmpty($Client->getAuth());
         $this->assertEquals([
             'username' => 'admin',
             'password' => 'asdf',
-             'client_id' => 'sugar',
-             'client_secret' => '',
-             'platform' => 'base'
+            'client_id' => 'sugar',
+            'client_secret' => '',
+            'platform' => 'base',
         ], $Client->getAuth()->getCredentials());
         $this->assertNotEmpty($Client->getEndpointProvider());
         $this->assertEquals(11, $Client->getVersion());
@@ -128,7 +141,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'base'
+            'platform' => 'base',
         ], $Client->getAuth()->getCredentials());
         $this->assertEquals(true, $Client->login('user1', 'asdf'));
         $this->assertEquals([
@@ -136,7 +149,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'password' => 'asdf',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'base'
+            'platform' => 'base',
         ], $Client->getAuth()->getCredentials());
         $this->assertEquals(true, $Client->login(null, 'abc123'));
         $this->assertEquals([
@@ -144,7 +157,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'password' => 'abc123',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'base'
+            'platform' => 'base',
         ], $Client->getAuth()->getCredentials());
         $this->assertEquals(true, $Client->login());
         $this->assertEquals([
@@ -152,7 +165,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'password' => 'abc123',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'base'
+            'platform' => 'base',
         ], $Client->getAuth()->getCredentials());
     }
 
@@ -167,7 +180,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'username' => '',
             'password' => '',
             'client_id' => 'sugar',
-            'platform' => 'api'
+            'platform' => 'api',
         ]);
         $Client->setAuth($Auth);
         $this->assertEquals(false, $Client->refreshToken());
@@ -176,7 +189,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'password' => '',
             'client_id' => 'sugar',
             'client_secret' => '',
-            'platform' => 'api'
+            'platform' => 'api',
         ]);
         $this->assertEquals(true, $Client->refreshToken());
     }
@@ -214,7 +227,7 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
-            'expiration' => time() + 3600 - 30
+            'expiration' => time() + 3600 - 30,
         ])), $Client->getAuth()->getToken());
         $Client->container = [];
         $Client->mockResponses->reset();
@@ -248,13 +261,13 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
             'client_id' => 'sugar',
             'client_secret' => '',
             'platform' => 'base',
-            'grant_type' => 'password'
+            'grant_type' => 'password',
         ], $body);
         $this->assertEquals(json_decode(json_encode([
             'access_token' => '123456',
             'refresh_token' => '678901',
             'expires_in' => 3600,
-            'expiration' => time() + 3600 - 30
+            'expiration' => time() + 3600 - 30,
         ])), $Client->getAuth()->getToken());
     }
 
@@ -270,41 +283,41 @@ class SugarApiTest extends \PHPUnit\Framework\TestCase
         $Client->setAuth($Auth);
 
         $Endpoint = $Client->bulk();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Bulk', $Endpoint);
+        $this->assertInstanceOf(Bulk::class, $Endpoint);
 
         $Endpoint = $Client->module();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Module', $Endpoint);
+        $this->assertInstanceOf(Module::class, $Endpoint);
 
         $Endpoint = $Client->metadata();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Metadata', $Endpoint);
+        $this->assertInstanceOf(Metadata::class, $Endpoint);
 
         $Endpoint = $Client->enum();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Enum', $Endpoint);
+        $this->assertInstanceOf(Enum::class, $Endpoint);
         $Endpoint = $Client->me();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Me', $Endpoint);
+        $this->assertInstanceOf(Me::class, $Endpoint);
 
         $Endpoint = $Client->list();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleFilter', $Endpoint);
+        $this->assertInstanceOf(ModuleFilter::class, $Endpoint);
 
         $Endpoint = $Client->oauth2Logout();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Logout', $Endpoint);
+        $this->assertInstanceOf(OAuth2Logout::class, $Endpoint);
 
         $Endpoint = $Client->oauth2Refresh();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Refresh', $Endpoint);
+        $this->assertInstanceOf(OAuth2Refresh::class, $Endpoint);
 
         $Endpoint = $Client->oauth2Sudo();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Sudo', $Endpoint);
+        $this->assertInstanceOf(OAuth2Sudo::class, $Endpoint);
 
         $Endpoint = $Client->oauth2Token();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\OAuth2Token', $Endpoint);
+        $this->assertInstanceOf(OAuth2Token::class, $Endpoint);
 
         $Endpoint = $Client->ping();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Ping', $Endpoint);
+        $this->assertInstanceOf(Ping::class, $Endpoint);
 
         $Endpoint = $Client->search();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\Search', $Endpoint);
+        $this->assertInstanceOf(Search::class, $Endpoint);
 
         $Endpoint = $Client->audit();
-        $this->assertInstanceOf('\Sugarcrm\REST\Endpoint\ModuleAudit', $Endpoint);
+        $this->assertInstanceOf(ModuleAudit::class, $Endpoint);
     }
 }

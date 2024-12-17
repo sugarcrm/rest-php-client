@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 require_once 'include.php';
@@ -16,7 +17,7 @@ try {
         $Account->save();
         echo "<pre> Account Created: {$Account['id']}</pre><br>";
         $Account->favorite();
-        echo "Account added to Favorites: ".($Account->my_favorite == 1 ? "TRUE" : "FALSE");
+        echo "Account added to Favorites: " . ($Account->my_favorite == 1 ? "TRUE" : "FALSE");
     } else {
         echo "Could not login.";
         pre($SugarAPI->getAuth()->getActionEndpoint('authenticate')->getResponse());

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Operator;
@@ -22,8 +23,8 @@ class IsNull extends AbstractOperator
 
     public function compile(): array
     {
-        return array(
-            $this->getField() => array(static::$_OPERATOR)
-        );
+        return [
+            $this->getField() => [static::$_OPERATOR],
+        ];
     }
 }

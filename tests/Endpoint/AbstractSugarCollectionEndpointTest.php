@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Tests\Endpoint;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Response;
 use Sugarcrm\REST\Tests\Stubs\Client\Client;
 use Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint;
@@ -15,7 +17,7 @@ use Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint;
  * @coversDefaultClass Sugarcrm\REST\Endpoint\Abstracts\AbstractSugarCollectionEndpoint
  * @group AbstractSugarCollectionEndpointTest
  */
-class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase
+class AbstractSugarCollectionEndpointTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -27,12 +29,12 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase
         //Add Tear Down for static properties here
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -70,13 +72,13 @@ class AbstractSugarCollectionEndpointTest extends \PHPUnit\Framework\TestCase
     public function testConfigurePayload()
     {
         $Endpoint = new SugarCollectionEndpoint();
-        $Reflection = new \ReflectionClass('Sugarcrm\REST\Tests\Stubs\Endpoint\SugarCollectionEndpoint');
+        $Reflection = new \ReflectionClass(SugarCollectionEndpoint::class);
         $configurePayload = $Reflection->getMethod('configurePayload');
         $configurePayload->setAccessible(true);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'offset' => 0,
-            'max_num' => 50
-        ), $configurePayload->invoke($Endpoint)->toArray());
+            'max_num' => 50,
+        ], $configurePayload->invoke($Endpoint)->toArray());
     }
 
     /**

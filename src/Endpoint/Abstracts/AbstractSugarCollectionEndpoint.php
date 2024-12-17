@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Abstracts;
 
+use MRussell\REST\Exception\Endpoint\InvalidRequest;
 use GuzzleHttp\Psr7\Response;
 use MRussell\REST\Endpoint\Data\AbstractEndpointData;
 use MRussell\REST\Endpoint\CollectionEndpoint;
@@ -55,15 +57,15 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
     /**
      * @inehritdoc
      */
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
-        self::PROPERTY_DATA => array(
-            AbstractEndpointData::DATA_PROPERTY_REQUIRED => array(),
-            AbstractEndpointData::DATA_PROPERTY_DEFAULTS => array()
-        )
-    );
+        self::PROPERTY_DATA => [
+            AbstractEndpointData::DATA_PROPERTY_REQUIRED => [],
+            AbstractEndpointData::DATA_PROPERTY_DEFAULTS => [],
+        ],
+    ];
 
-    public function __construct(array $urlArgs = array(), array $properties = array())
+    public function __construct(array $urlArgs = [], array $properties = [])
     {
         parent::__construct($urlArgs, $properties);
         $this->_max_num = $this->defaultLimit();
@@ -153,12 +155,13 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
                 $this->_next_offset = intval($body['next_offset']);
             }
         }
+
         parent::parseResponse($response);
     }
 
     /**
      * @return $this
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function nextPage()
     {
@@ -166,12 +169,13 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
             $this->_offset += $this->_max_num;
             $this->fetch();
         }
+
         return $this;
     }
 
     /**
      * @return $this
-     * @throws \MRussell\REST\Exception\Endpoint\InvalidRequest
+     * @throws InvalidRequest
      */
     public function previousPage()
     {
@@ -179,6 +183,7 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
             $this->_offset -= $this->_max_num;
             $this->fetch();
         }
+
         return $this;
     }
 
@@ -193,7 +198,6 @@ abstract class AbstractSugarCollectionEndpoint extends CollectionEndpoint implem
 
     /**
      * Get the next_offset in collection
-     * @return int
      */
     public function getNextOffset(): int
     {

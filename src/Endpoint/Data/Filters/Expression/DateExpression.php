@@ -1,10 +1,20 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint\Data\Filters\Expression;
 
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\Equals;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotEquals;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\IsNull;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotNull;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual;
+use Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateBetween;
 use Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateRange;
 use Sugarcrm\REST\Exception\Filter\MissingFieldForDateExpression;
 use Sugarcrm\REST\Exception\Filter\UnknownFilterOperator;
@@ -44,9 +54,9 @@ class DateExpression extends AbstractExpression
 {
     public const OPERATOR = '';
 
-    protected $dateField = null;
+    protected $dateField;
 
-    protected $ranges = array(
+    protected $ranges = [
         'yesterday' => 'yesterday',
         'today' => 'today',
         'tomorrow' => 'tomorrow',
@@ -60,40 +70,40 @@ class DateExpression extends AbstractExpression
         'lastYear' => 'last_year',
         'thisYear' => 'this_year',
         'nextYear' => 'next_year',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $operators = array(
-        'equals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\Equals',
-        'notEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotEquals',
-        'isNull' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\IsNull',
-        'notNull' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\NotNull',
-        'lt' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
-        'lessThan' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThan',
-        'lte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
-        'lessThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
-        'lessThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\LessThanOrEqual',
-        'gt' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
-        'greaterThan' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThan',
-        'gte' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
-        'greaterThanOrEqualTo' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
-        'greaterThanOrEquals' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\GreaterThanOrEqual',
-        'dateBetween' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateBetween',
-        'between' => 'Sugarcrm\REST\Endpoint\Data\Filters\Operator\DateBetween'
-    );
+    protected $operators = [
+        'equals' => Equals::class,
+        'notEquals' => NotEquals::class,
+        'isNull' => IsNull::class,
+        'notNull' => NotNull::class,
+        'lt' => LessThan::class,
+        'lessThan' => LessThan::class,
+        'lte' => LessThanOrEqual::class,
+        'lessThanOrEqualTo' => LessThanOrEqual::class,
+        'lessThanOrEquals' => LessThanOrEqual::class,
+        'gt' => GreaterThan::class,
+        'greaterThan' => GreaterThan::class,
+        'gte' => GreaterThanOrEqual::class,
+        'greaterThanOrEqualTo' => GreaterThanOrEqual::class,
+        'greaterThanOrEquals' => GreaterThanOrEqual::class,
+        'dateBetween' => DateBetween::class,
+        'between' => DateBetween::class,
+    ];
 
     /**
      * @var array
      */
-    protected $expressions = array();
+    protected $expressions = [];
 
     /**
      * DateExpression constructor.
      * @param array $arguments
      */
-    public function __construct($arguments = array())
+    public function __construct($arguments = [])
     {
         if (isset($arguments[0])) {
             $this->field($arguments[0]);
@@ -116,7 +126,8 @@ class DateExpression extends AbstractExpression
         if (empty($this->dateField)) {
             throw new MissingFieldForDateExpression();
         }
-        $args = array($this->dateField);
+
+        $args = [$this->dateField];
         if (array_key_exists($name, $this->ranges)) {
             $range = $this->ranges[$name];
             $args[] = $range;
@@ -124,6 +135,7 @@ class DateExpression extends AbstractExpression
             $this->filters[0] = $Op;
             return $this;
         }
+
         if (array_key_exists($name, $this->operators)) {
             $args = array_merge($args, $arguments);
             $Operator = $this->operators[$name];
@@ -131,7 +143,8 @@ class DateExpression extends AbstractExpression
             $this->filters[0] = $O;
             return $this;
         }
-        throw new UnknownFilterOperator(array($name));
+
+        throw new UnknownFilterOperator([$name]);
     }
 
     /**
@@ -142,7 +155,8 @@ class DateExpression extends AbstractExpression
         if (isset($this->filters[0])) {
             return $this->filters[0]->compile();
         }
-        return array();
+
+        return [];
     }
 
     /**

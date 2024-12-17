@@ -1,10 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
 
+use Sugarcrm\REST\Endpoint\Data\BulkRequest;
 use MRussell\REST\Endpoint\Data\EndpointData;
 use Sugarcrm\REST\Endpoint\Abstracts\AbstractSmartSugarEndpoint;
 
@@ -23,19 +25,19 @@ class Bulk extends AbstractSmartSugarEndpoint
     /**
      * @inheritdoc
      */
-    protected static $_DATA_CLASS = 'Sugarcrm\REST\Endpoint\Data\BulkRequest';
+    protected static $_DATA_CLASS = BulkRequest::class;
 
     /**
      * @var array
      */
-    protected static $_DEFAULT_PROPERTIES = array(
+    protected static $_DEFAULT_PROPERTIES = [
         self::PROPERTY_AUTH => true,
         self::PROPERTY_HTTP_METHOD => "POST",
-        self::PROPERTY_DATA => array(
-            EndpointData::DATA_PROPERTY_REQUIRED => array(
-                'requests' => 'array'
-            ),
-            EndpointData::DATA_PROPERTY_DEFAULTS => array()
-        )
-    );
+        self::PROPERTY_DATA => [
+            EndpointData::DATA_PROPERTY_REQUIRED => [
+                'requests' => 'array',
+            ],
+            EndpointData::DATA_PROPERTY_DEFAULTS => [],
+        ],
+    ];
 }

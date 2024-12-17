@@ -1,9 +1,12 @@
 <?php
+
 /**
- * ©[2022] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ * ©[2024] SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
 namespace Sugarcrm\REST\Endpoint;
+
+use GuzzleHttp\Psr7\Request;
 
 /**
  * The base interface for Sugar Endpoints, which adds in functionality for use with Bulk API Endpoint
@@ -15,7 +18,7 @@ interface SugarEndpointInterface
      * Public method to generate a Compiled Request Object based on current Endpoint State
      * - Useful for troubleshooting
      * - Useful for BULK Api Endpoint
-     * @return \GuzzleHttp\Psr7\Request
+     * @return Request
      */
     public function compileRequest();
 }
