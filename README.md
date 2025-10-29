@@ -6,27 +6,6 @@
 
 # SugarCRM REST PHP Client #
 
-## Overview ##
-A simple and intuitive Library for accessing a Sugar 7's REST v10 API. Allows for Object Oriented design around accessing data from a SugarCRM system, so you can easily get your integration project underway.
-
-## Usage
-Check out the [Wiki](https://github.com/sugarcrm/rest-php-client/wiki) for detailed information on 
-* Installation
-* Usage
-* Customization
-* Included endpoints
-* Architecture overview
-
-## Developing the PHP REST Client
-
-#### Requirement:
-You need to have installed: [php 5.3+](https://php.org/)
-
-#### Steps:
-1. With PHP installed, navigate to the repo folder (rest-php-client) via terminal.
-2. Run 'composer install'
-
-### Contributing:
-See [CONTRIBUTING](CONTRIBUTING.md) for how you can contribute changes back into this project.
+Legacy Open Source Library for interacting with SugarCRM Rest API. Please change to the latest library here: https://github.com/sugarcrm-developers/php-rest-client
 
 
